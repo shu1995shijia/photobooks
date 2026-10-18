@@ -29,7 +29,7 @@ Follows [plan.md](plan.md). Do them in order; ⇄ marks tasks that can run in pa
   - Verify: `npm run build` creates 71 pages under `dist/books/`; click through 5 books in `npm run preview`, including both "China" books and a CJK title.
   - Files: `src/pages/books/[slug].astro`, `src/pages/index.astro`, `src/components/Cover.astro`, `src/components/BookMeta.astro`
 
-- [ ] **6. Deploy to GitHub Pages** ⚠️ _ask first: turns on Pages for the repo_
+- [x] **6. Deploy to GitHub Pages** _(done 2026-10-18 at your request; live at https://shu1995shijia.github.io/photobooks/)_
   - Acceptance: `.github/workflows/deploy.yml` builds and deploys on push to `main`; Pages source set to "GitHub Actions".
   - Verify: the Actions run succeeds; `https://shu1995shijia.github.io/photobooks/` loads; a detail page and its CSS load under `/photobooks/`.
   - Files: `.github/workflows/deploy.yml`

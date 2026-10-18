@@ -72,6 +72,26 @@
     "source": "google",
     "origin": "https://books.google.com/books/content?id=fKVTcPFUqGEC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
   },
+  "beijing-a-travel-in-time-susanne-scherer": {
+    "src": "covers/beijing-a-travel-in-time-susanne-scherer-600.webp",
+    "large": "covers/beijing-a-travel-in-time-susanne-scherer-1200.webp",
+    "width": 600,
+    "height": 401,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/beijing-a-travel-in-time-susanne-scherer.jpg",
+    "checksum": "89dc2aadbb5fd5f5"
+  },
+  "china-a-photo-history": {
+    "src": "covers/china-a-photo-history-600.webp",
+    "large": "covers/china-a-photo-history-1200.webp",
+    "width": 600,
+    "height": 658,
+    "dominantColor": "#080808",
+    "source": "upload",
+    "origin": "data/covers/china-a-photo-history.webp",
+    "checksum": "c40d19fec0cf6ada"
+  },
   "china-after-mao-liu-heung-shing": {
     "src": "covers/china-after-mao-liu-heung-shing-600.webp",
     "large": "covers/china-after-mao-liu-heung-shing-1200.webp",
@@ -111,12 +131,22 @@
   "color-photography-a-working-manual-henry-horenstein": {
     "src": "covers/color-photography-a-working-manual-henry-horenstein-600.webp",
     "large": "covers/color-photography-a-working-manual-henry-horenstein-1200.webp",
-    "width": 422,
-    "height": 497,
+    "width": 319,
+    "height": 440,
     "dominantColor": "#E8E8B8",
     "source": "upload",
     "origin": "data/covers/color-photography-a-working-manual-henry-horenstein.webp",
     "checksum": "73deed217adcc405"
+  },
+  "do-i-know-you-eugene-richards": {
+    "src": "covers/do-i-know-you-eugene-richards-600.webp",
+    "large": "covers/do-i-know-you-eugene-richards-1200.webp",
+    "width": 600,
+    "height": 803,
+    "dominantColor": "#B8C8C8",
+    "source": "upload",
+    "origin": "data/covers/do-i-know-you-eugene-richards.jpg",
+    "checksum": "fb30e586e586490d"
   },
   "dorchester-days-eugene-richards": {
     "src": "covers/dorchester-days-eugene-richards-600.webp",
@@ -182,6 +212,16 @@
     "source": "override",
     "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/f4/5Bb9C9dYP_aSYUmA.jpeg"
   },
+  "hong-kong-stokes-hedda-morrison": {
+    "src": "covers/hong-kong-stokes-hedda-morrison-600.webp",
+    "large": "covers/hong-kong-stokes-hedda-morrison-1200.webp",
+    "width": 350,
+    "height": 318,
+    "dominantColor": "#A81838",
+    "source": "upload",
+    "origin": "data/covers/hong-kong-stokes-hedda-morrison.jpg",
+    "checksum": "5ad4b1a3728c2f09"
+  },
   "how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi": {
     "src": "covers/how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi-600.webp",
     "large": "covers/how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi-1200.webp",
@@ -190,6 +230,16 @@
     "dominantColor": "#C81818",
     "source": "google",
     "origin": "https://books.google.com/books/content?id=kPR-EAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "in-this-brief-life-eugene-richards": {
+    "src": "covers/in-this-brief-life-eugene-richards-600.webp",
+    "large": "covers/in-this-brief-life-eugene-richards-1200.webp",
+    "width": 600,
+    "height": 599,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/in-this-brief-life-eugene-richards.jpeg",
+    "checksum": "24a57218527a5b9e"
   },
   "interieurs-cubains-robert-van-der-hilst": {
     "src": "covers/interieurs-cubains-robert-van-der-hilst-600.webp",
@@ -236,6 +286,16 @@
     "source": "upload",
     "origin": "data/covers/lartigue-life-in-color-jacques-henri-lartigue.webp",
     "checksum": "9832fdeb434e8257"
+  },
+  "life-magazine-april-30-1971-inside-china-various-photographers": {
+    "src": "covers/life-magazine-april-30-1971-inside-china-various-photographers-600.webp",
+    "large": "covers/life-magazine-april-30-1971-inside-china-various-photographers-1200.webp",
+    "width": 600,
+    "height": 762,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/life-magazine-april-30-1971-inside-china-various-photographers.webp",
+    "checksum": "8ea3313f7fbb16d5"
   },
   "life-studies-aya-fujioka": {
     "src": "covers/life-studies-aya-fujioka-600.webp",
@@ -310,15 +370,45 @@
     "source": "override",
     "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/c5/97jAwDYwI_Px6Lme.jpeg"
   },
+  "pittsburgh-grease-plant-1944-1946-gordon-parks": {
+    "src": "covers/pittsburgh-grease-plant-1944-1946-gordon-parks-600.webp",
+    "large": "covers/pittsburgh-grease-plant-1944-1946-gordon-parks-1200.webp",
+    "width": 600,
+    "height": 696,
+    "dominantColor": "#080808",
+    "source": "upload",
+    "origin": "data/covers/pittsburgh-grease-plant-1944-1946-gordon-parks.jpg",
+    "checksum": "0eb371327f3c1c97"
+  },
   "pocari-sweat-yoshiyuki-okuyama": {
     "src": "covers/pocari-sweat-yoshiyuki-okuyama-600.webp",
     "large": "covers/pocari-sweat-yoshiyuki-okuyama-1200.webp",
     "width": 600,
-    "height": 386,
+    "height": 387,
     "dominantColor": "#F8F8F8",
     "source": "upload",
     "origin": "data/covers/pocari-sweat-yoshiyuki-okuyama.webp",
     "checksum": "c4e1cc252b0f7407"
+  },
+  "remembrance-garden-eugene-richards": {
+    "src": "covers/remembrance-garden-eugene-richards-600.webp",
+    "large": "covers/remembrance-garden-eugene-richards-1200.webp",
+    "width": 600,
+    "height": 514,
+    "dominantColor": "#485838",
+    "source": "upload",
+    "origin": "data/covers/remembrance-garden-eugene-richards.jpeg",
+    "checksum": "7d017e2a991d5bb4"
+  },
+  "small-trades-irving-penn": {
+    "src": "covers/small-trades-irving-penn-600.webp",
+    "large": "covers/small-trades-irving-penn-1200.webp",
+    "width": 600,
+    "height": 761,
+    "dominantColor": "#F8F8F8",
+    "source": "upload",
+    "origin": "data/covers/small-trades-irving-penn.webp",
+    "checksum": "b78c1e27ef74eb8d"
   },
   "the-americans-robert-frank": {
     "src": "covers/the-americans-robert-frank-600.webp",
@@ -332,11 +422,22 @@
   "the-classic-rollei-a-definitive-guide-john-phillips": {
     "src": "covers/the-classic-rollei-a-definitive-guide-john-phillips-600.webp",
     "large": "covers/the-classic-rollei-a-definitive-guide-john-phillips-1200.webp",
-    "width": 303,
-    "height": 400,
+    "width": 500,
+    "height": 658,
     "dominantColor": "#F8F8F8",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/7630514-L.jpg?default=false"
+    "source": "upload",
+    "origin": "data/covers/the-classic-rollei-a-definitive-guide-john-phillips.webp",
+    "checksum": "20bfb8926e8ecf20"
+  },
+  "the-day-i-was-born-eugene-richards": {
+    "src": "covers/the-day-i-was-born-eugene-richards-600.webp",
+    "large": "covers/the-day-i-was-born-eugene-richards-1200.webp",
+    "width": 600,
+    "height": 818,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/the-day-i-was-born-eugene-richards.png",
+    "checksum": "d16ae049e6a7e97c"
   },
   "the-nature-of-photographs-stephen-shore": {
     "src": "covers/the-nature-of-photographs-stephen-shore-600.webp",

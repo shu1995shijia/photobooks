@@ -252,23 +252,71 @@ const MIN_TRIM_KEEP_UPLOAD = 0.5;
 /** How far (0–255) a pixel may differ from the border colour and still count as border. */
 const TRIM_THRESHOLD = 24;
 
+/** A deep trim must stop at an edge: this share of each side's pixels must stand out from the border… */
+const MIN_EDGE_CONTRAST = 0.5;
+/** …looking this far inside the trimmed image, past the soft edge, and by at least this much (0–255). */
+const EDGE_INSET = 0.02;
+const EDGE_THRESHOLD = 12;
+/** A hairline round the whole image (a scan or screenshot) is shaved off first, up to this wide. */
+const OUTLINE_PX = 3;
+
 /**
  * Cuts away a plain border (white, or a studio backdrop) around the cover,
  * judged from the top-left pixel. A white cover on a white background would be
  * trimmed down to its lettering, so a trim that takes more than a quarter of
- * either side is ignored (by default; see MIN_TRIM_KEEP_UPLOAD).
+ * either side is ignored. Uploads may go deeper (MIN_TRIM_KEEP_UPLOAD), but
+ * only if the trim stops at the book's edge rather than inside a pale cover.
  */
-export async function trimBorder(image: Buffer, minKeep = MIN_TRIM_KEEP): Promise<Buffer> {
+export async function trimBorder(original: Buffer, minKeep = MIN_TRIM_KEEP): Promise<Buffer> {
+  const image = await shaveOutline(original);
   const { width = 0, height = 0 } = await sharp(image).metadata();
   try {
     const { data, info } = await sharp(image)
       .trim({ threshold: TRIM_THRESHOLD })
       .toBuffer({ resolveWithObject: true });
     const kept = Math.min(info.width / width, info.height / height);
-    return kept >= minKeep ? data : image;
+    if (kept >= MIN_TRIM_KEEP) return data;
+    if (kept >= minKeep && (await stopsAtEdge(image, data))) return data;
+    return original;
   } catch {
-    return image; // a single-colour image has nothing to trim to
+    return original; // a single-colour image has nothing to trim to
   }
+}
+
+/** Cuts off a thin line round the image when the corner differs from just inside it. */
+async function shaveOutline(image: Buffer): Promise<Buffer> {
+  const { width = 0, height = 0 } = await sharp(image).metadata();
+  if (width < 100 || height < 100) return image;
+  const pixel = (x: number, y: number) =>
+    sharp(image).removeAlpha().extract({ left: x, top: y, width: 1, height: 1 }).raw().toBuffer();
+  const [corner, inside] = await Promise.all([pixel(0, 0), pixel(OUTLINE_PX, OUTLINE_PX)]);
+  if (Math.max(...[0, 1, 2].map((c) => Math.abs(corner[c] - inside[c]))) <= TRIM_THRESHOLD) return image;
+  return sharp(image)
+    .extract({ left: OUTLINE_PX, top: OUTLINE_PX, width: width - 2 * OUTLINE_PX, height: height - 2 * OUTLINE_PX })
+    .png()
+    .toBuffer();
+}
+
+/** Whether every side of the trimmed image is mostly unlike the original's border colour. */
+async function stopsAtEdge(original: Buffer, trimmed: Buffer): Promise<boolean> {
+  const border = await sharp(original).removeAlpha().extract({ left: 0, top: 0, width: 1, height: 1 }).raw().toBuffer();
+  const { data, info } = await sharp(trimmed).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const stands = (x: number, y: number) => {
+    const i = (y * width + x) * channels;
+    return Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - border[c]))) > EDGE_THRESHOLD;
+  };
+  const share = (points: [number, number][]) => points.filter(([x, y]) => stands(x, y)).length / points.length;
+  const dx = Math.round(width * EDGE_INSET);
+  const dy = Math.round(height * EDGE_INSET);
+  const xs = Array.from({ length: width - 2 * dx }, (_, x) => x + dx);
+  const ys = Array.from({ length: height - 2 * dy }, (_, y) => y + dy);
+  return [
+    xs.map((x): [number, number] => [x, dy]),
+    xs.map((x): [number, number] => [x, height - 1 - dy]),
+    ys.map((y): [number, number] => [dx, y]),
+    ys.map((y): [number, number] => [width - 1 - dx, y]),
+  ].every((side) => share(side) >= MIN_EDGE_CONTRAST);
 }
 
 /** Trims, resizes to WebP in public/covers and returns what the site needs to show it. */

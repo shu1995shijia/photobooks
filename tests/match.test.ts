@@ -309,4 +309,10 @@ describe("matchUploads", () => {
       { file: "holiday.jpg", suggestion: undefined },
     ]);
   });
+
+  test("doesn't guess from one-letter words, as in a shop's file name", () => {
+    expect(matchUploads(["s-l960.webp"], [...slugs, "china-adagio-andrew-s-t-wong"]).unknown).toEqual([
+      { file: "s-l960.webp", suggestion: undefined },
+    ]);
+  });
 });

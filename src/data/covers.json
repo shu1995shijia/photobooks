@@ -227,6 +227,16 @@
     "source": "google",
     "origin": "https://books.google.com/books/content?id=bNxG_NH6NlgC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
   },
+  "lartigue-life-in-color-jacques-henri-lartigue": {
+    "src": "covers/lartigue-life-in-color-jacques-henri-lartigue-600.webp",
+    "large": "covers/lartigue-life-in-color-jacques-henri-lartigue-1200.webp",
+    "width": 413,
+    "height": 462,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/lartigue-life-in-color-jacques-henri-lartigue.webp",
+    "checksum": "9832fdeb434e8257"
+  },
   "life-studies-aya-fujioka": {
     "src": "covers/life-studies-aya-fujioka-600.webp",
     "large": "covers/life-studies-aya-fujioka-1200.webp",

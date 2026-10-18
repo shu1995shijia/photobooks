@@ -329,7 +329,11 @@ export function matchUploads(files: readonly string[], slugs: readonly string[])
 
 /** The slug sharing the most words with a file name like "Pocari Sweat 2018", if it shares at least half. */
 function closestSlug(name: string, slugs: readonly string[]): string | undefined {
-  const words = baseSlug(name).split("-");
+  // One- and two-letter words (the "s" in eBay's "s-l960.jpg") match too much by chance.
+  const words = baseSlug(name)
+    .split("-")
+    .filter((w) => w.length >= 3);
+  if (words.length === 0) return undefined;
   let best: { slug: string; shared: number } | undefined;
   for (const slug of slugs) {
     const own = new Set(slug.split("-"));

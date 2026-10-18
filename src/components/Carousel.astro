@@ -1,0 +1,301 @@
+---
+import { photographerLine, type Book } from "../lib/book";
+import { url } from "../lib/url";
+import BookMeta from "./BookMeta.astro";
+import Cover from "./Cover.astro";
+
+interface Props {
+  books: Book[];
+}
+
+const { books } = Astro.props;
+const total = books.length;
+---
+
+<section
+  class="carousel"
+  aria-roledescription="carousel"
+  aria-label="Photobooks"
+  data-carousel
+>
+  <div class="stage" data-stage>
+    <ol class="slides">
+      {books.map((book, i) => {
+        const byline = photographerLine(book);
+        return (
+          <li
+            class="slide"
+            data-slug={book.slug}
+            data-announce={`${i + 1} of ${total}: ${book.title} by ${byline}`}
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${total}`}
+          >
+            <a
+              class="cover-link"
+              href={url(`books/${book.slug}`)}
+              draggable="false"
+            >
+              <Cover book={book} sizes="(max-width: 720px) 60vw, 360px" />
+            </a>
+            <BookMeta book={book} />
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+
+  <div class="controls" hidden data-controls>
+    <div class="ticks" aria-hidden="true">
+      {books.map((_, i) => (
+        <span class="tick" data-tick={i} />
+      ))}
+    </div>
+    <div class="buttons">
+      <button type="button" data-prev>
+        Previous
+      </button>
+      <span class="counter" aria-hidden="true" data-counter></span>
+      <button type="button" data-next>
+        Next
+      </button>
+    </div>
+    <p class="hint">
+      You can also use the arrow keys, drag the covers, or swipe on a phone.
+    </p>
+    <p class="visually-hidden" aria-live="polite" data-live></p>
+  </div>
+</section>
+
+<script>
+  import { initCarousel } from "../scripts/carousel";
+
+  for (const root of document.querySelectorAll<HTMLElement>(
+    "[data-carousel]",
+  )) {
+    initCarousel(root);
+  }
+</script>
+
+<style>
+  .slides {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Without JavaScript the books are a plain list: cover beside its wall label. */
+  .slide {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 24px 56px;
+    padding-block: 32px;
+  }
+
+  .cover-link {
+    display: block;
+    -webkit-user-drag: none;
+  }
+
+  .slide :global(.cover) {
+    width: clamp(240px, 32vw, 420px);
+  }
+
+  .slide :global(.label) {
+    width: 220px;
+    padding-bottom: 4px;
+  }
+
+  /*
+   * With JavaScript: Cover Flow. Every book sits at the centre of the stage and
+   * is moved into place by its distance from the current one (--d, --abs, and
+   * --side: -1 left, 0 centre, 1 right), all set by carousel.ts.
+   */
+  .carousel:global(.is-enhanced) .stage {
+    --cover-h: clamp(220px, 46vh, 440px);
+    --gap: calc(
+      var(--cover-h) * 0.78
+    ); /* centre to the first book at the side */
+    --step: calc(var(--cover-h) * 0.24); /* between books at the side */
+    --depth: calc(var(--cover-h) * -0.55);
+    --angle: 68deg;
+    --reflection: calc(var(--cover-h) * 0.3);
+    --caption: 128px;
+
+    position: relative;
+    height: calc(24px + var(--cover-h) + var(--reflection) + var(--caption));
+    margin-inline: calc(50% - 50vw);
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .carousel:global(.is-enhanced) .slides {
+    position: absolute;
+    inset: 0;
+    perspective: calc(var(--cover-h) * 2.4);
+    perspective-origin: 50% calc(24px + var(--cover-h) * 0.5);
+  }
+
+  .carousel:global(.is-enhanced) .slide {
+    display: none;
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    padding: 0;
+    transform: translateX(-50%)
+      translateX(
+        calc(var(--side) * (var(--gap) + (var(--abs) - 1) * var(--step)))
+      )
+      translateZ(calc(min(var(--abs), 1) * var(--depth)))
+      rotateY(calc(var(--side) * -1 * var(--angle)));
+    transition:
+      transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.45s ease;
+  }
+
+  .carousel:global(.is-enhanced) .slide[data-pos] {
+    display: block;
+  }
+
+  /* Books arriving from out of sight fade in instead of popping into place. */
+  @starting-style {
+    .carousel:global(.is-enhanced) .slide[data-pos] {
+      opacity: 0;
+    }
+  }
+
+  .carousel:global(.is-enhanced) .slide[data-pos="side"] {
+    cursor: pointer;
+  }
+
+  .carousel:global(.is-enhanced) .slide[data-pos="edge"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .carousel:global(.is-enhanced) :global(.cover) {
+    width: calc(var(--cover-h) * var(--ratio));
+    height: var(--cover-h);
+    aspect-ratio: auto;
+    /* The polished floor: a faint mirror image fading out below each book. */
+    -webkit-box-reflect: below 1px
+      linear-gradient(transparent 68%, rgb(0 0 0 / 0.22));
+    transition: filter 0.45s ease;
+  }
+
+  /* Books at the side are a little in shadow. */
+  .carousel:global(.is-enhanced) .slide[data-pos="side"] :global(.cover) {
+    filter: brightness(0.9);
+  }
+
+  /* Only the book at the front has its label, centred under its reflection. */
+  .carousel:global(.is-enhanced) :global(.label) {
+    position: absolute;
+    top: calc(100% + var(--reflection));
+    left: 50%;
+    width: min(340px, 86vw);
+    translate: -50% 0;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .carousel:global(.is-enhanced) .slide[data-pos="current"] :global(.label) {
+    opacity: 1;
+    transition-delay: 0.15s;
+  }
+
+  .controls:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .ticks {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 16px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .tick {
+    flex-shrink: 0;
+    width: 2px;
+    height: 12px;
+    background: var(--shelf);
+  }
+
+  /* The gallery red dot: the book you're looking at. */
+  .tick[data-current] {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--red-dot);
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .buttons button {
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    min-height: 44px;
+    padding: 0 8px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .counter {
+    min-width: 80px;
+    text-align: center;
+    color: var(--graphite);
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--graphite);
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .slide :global(.cover) {
+      width: min(78vw, 360px);
+    }
+
+    .carousel:global(.is-enhanced) .stage {
+      --cover-h: min(64vw, 300px);
+      --gap: calc(var(--cover-h) * 0.5);
+      --step: calc(var(--cover-h) * 0.14);
+      --caption: 150px;
+    }
+
+    .ticks {
+      gap: 2px;
+    }
+
+    .tick:not([data-current]) {
+      width: 1px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel:global(.is-enhanced) .slide,
+    .carousel:global(.is-enhanced) :global(.cover),
+    .carousel:global(.is-enhanced) :global(.label) {
+      transition: none;
+    }
+  }
+</style>

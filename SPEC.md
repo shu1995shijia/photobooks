@@ -10,20 +10,21 @@ The data comes from my Notion catalog, exported as CSV. Cover images aren't in N
 
 The input is `the Library …_all.csv`: 71 books plus 1 blank row. The columns are:
 
-| Notion column | Filled | Public? | Use on site |
-|---|---|---|---|
-| Name | 71 | yes | title |
-| Author / Photographer | 69 | yes | photographer(s); `;` separates several people (e.g. "Greg Girard; Ian Lambot") |
-| Color Type | 71 | yes | Color / Black & White / Mixed. Used for filtering and as a placeholder hint |
-| Country / Region | 67 | yes | shown on detail page; used for filtering |
-| Genre | 67 | yes | shown on detail page (39 different values, many one-offs) |
-| Publish Year | 68 | yes | sort + display |
-| Publisher | 67 | yes | display |
-| Tags | 23 | yes | values: 中国摄影师, 中国题材 |
-| Purchase Date | 1 | **no** | dropped |
-| Short Description | 7 | **no** | hidden (some entries are wrong); may be revisited later |
+| Notion column         | Filled | Public? | Use on site                                                                    |
+| --------------------- | ------ | ------- | ------------------------------------------------------------------------------ |
+| Name                  | 71     | yes     | title                                                                          |
+| Author / Photographer | 69     | yes     | photographer(s); `;` separates several people (e.g. "Greg Girard; Ian Lambot") |
+| Color Type            | 71     | yes     | Color / Black & White / Mixed. Used for filtering and as a placeholder hint    |
+| Country / Region      | 67     | yes     | shown on detail page; used for filtering                                       |
+| Genre                 | 67     | yes     | shown on detail page (39 different values, many one-offs)                      |
+| Publish Year          | 68     | yes     | sort + display                                                                 |
+| Publisher             | 67     | yes     | display                                                                        |
+| Tags                  | 23     | yes     | values: 中国摄影师, 中国题材                                                   |
+| Purchase Date         | 1      | **no**  | dropped                                                                        |
+| Short Description     | 7      | **no**  | hidden (some entries are wrong); may be revisited later                        |
 
 Problems in the data the importer must handle:
+
 - **No ISBN column.** Cover lookup has to go by title + photographer, so it will miss more often than an ISBN lookup would.
 - **Duplicate title:** "China" appears twice (Hiroji Kubota, 1985; Yann Layma). Slugs include the photographer, e.g. `china-hiroji-kubota`.
 - **Stray whitespace/newlines** in 16 cells (e.g. "A Photographer in Old Peking\n"). Trim everything.
@@ -45,15 +46,20 @@ Problems in the data the importer must handle:
 ### User stories
 
 - **Virtual bookshelf.** As a visitor, I see the books as spines standing on **three separate shelves, one per Color Type: Color, Black & White, Mixed**. Each shelf has a label and a count. Each spine shows the title and photographer, and its color comes from the cover. When I hover over or tap a spine, the book tilts or pulls out. Clicking it opens the book's detail page. Within a shelf, the books follow the chosen sort.
-- **Look and feel: minimal white gallery.** Off-white background, lots of white space, thin hairline shelves rather than wooden ones, and a quiet sans-serif with small uppercase labels. The covers and spines supply the only strong color. The site stays light (no dark theme) so it reads like a gallery wall.
+- **Look and feel: minimal white gallery, hung like an exhibition.** Neutral gallery-white wall (`#F7F7F5`), true black text, graphite (`#55555A`) for secondary text, a gray shelf ledge (`#BDBDB8`), and one accent: the gallery red dot (`#D7262B`), used only to mark "you are here". One typeface, **Libre Franklin** (Google Fonts), with titles in italic as on museum wall labels; CJK and Cyrillic fall back to system fonts (PingFang, Hiragino). Book details are written as museum wall labels (photographer in bold, _Title_, year, then publisher and medium). Sentence case throughout: no all-caps labels, middle-dot separators or arrow glyphs in link text. The covers and spines supply the only strong color. The site stays light (no dark theme) so it reads like a gallery wall. Reference: the mockup at https://claude.ai/artifact/1MFnJuah4dxkK3jMiAvspZ.
 - **Flip-through carousel.** As a visitor, I can switch to a carousel of large covers, one book at a time. I move through it with the arrow keys, by swiping on a phone, or by clicking previous/next. It shows which book I'm on (e.g. "12 / 87").
 - **Book detail page.** Each book has its own page with a stable URL (e.g. `/books/sleeping-by-the-mississippi`). It shows a large cover and every public field from Notion, with previous/next links and a link back to the view I came from.
 - **Ordering and filtering.** I can sort the shelf and carousel by photographer, title or year (default: photographer). I can filter by Color Type, Country / Region and Tags.
 - **Updating.** As the owner, I re-export the CSV from Notion, run one command, and the site rebuilds with new or changed books. Covers already found aren't downloaded again.
 
+## Milestones
+
+1. **Carousel only (current).** Scaffold, CSV import, gallery styles and the carousel view, with typographic placeholder covers. The cover isn't a link yet because detail pages don't exist. No deploy.
+2. Then, in the order of the plan: detail pages, deploy, covers, shelf, sort/filter, polish.
+
 ## Tech Stack
 
-- **Astro 5** (static output). It gives each book its own page and sends very little JavaScript.
+- **Astro 7** (static output). It gives each book its own page and sends very little JavaScript.
 - **TypeScript** for the import/cover scripts and the small interactive parts.
 - **Plain CSS** (CSS custom properties). No UI framework; the shelf and carousel are hand-built.
 - **papaparse** to read the CSV.
@@ -105,7 +111,7 @@ photobooks/
 
 ```ts
 export interface Book {
-  slug: string;            // "the-americans-robert-frank"
+  slug: string; // "the-americans-robert-frank"
   title: string;
   photographers: string[]; // split on ";"; empty when unknown
   colorType?: "Color" | "Black & White" | "Mixed";

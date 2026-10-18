@@ -1,0 +1,326 @@
+{
+  "24-mails-from-railway-cheng-xin-hao": {
+    "src": "covers/24-mails-from-railway-cheng-xin-hao-600.webp",
+    "large": "covers/24-mails-from-railway-cheng-xin-hao-1200.webp",
+    "width": 415,
+    "height": 730,
+    "dominantColor": "#F8F8F8",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/e2/GfMDtCRSd_VjVm1F.jpeg"
+  },
+  "a-photographer-in-old-peking-hedda-morrison": {
+    "src": "covers/a-photographer-in-old-peking-hedda-morrison-600.webp",
+    "large": "covers/a-photographer-in-old-peking-hedda-morrison-1200.webp",
+    "width": 227,
+    "height": 315,
+    "dominantColor": "#F8F8F8",
+    "source": "google",
+    "origin": "https://books.google.com/books/content?id=hnhxAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "american-surfaces-stephen-shore": {
+    "src": "covers/american-surfaces-stephen-shore-600.webp",
+    "large": "covers/american-surfaces-stephen-shore-1200.webp",
+    "width": 407,
+    "height": 500,
+    "dominantColor": "#181818",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/14391974-L.jpg?default=false"
+  },
+  "as-it-is-rinko-kawauchi": {
+    "src": "covers/as-it-is-rinko-kawauchi-600.webp",
+    "large": "covers/as-it-is-rinko-kawauchi-1200.webp",
+    "width": 512,
+    "height": 664,
+    "dominantColor": "#384848",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/35/iv88oBCre_4q6NtU.jpeg"
+  },
+  "atget-john-szarkowski": {
+    "src": "covers/atget-john-szarkowski-600.webp",
+    "large": "covers/atget-john-szarkowski-1200.webp",
+    "width": 352,
+    "height": 410,
+    "dominantColor": "#C8B8A8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/713752-L.jpg?default=false"
+  },
+  "basic-forms-bernd-becher": {
+    "src": "covers/basic-forms-bernd-becher-600.webp",
+    "large": "covers/basic-forms-bernd-becher-1200.webp",
+    "width": 344,
+    "height": 475,
+    "dominantColor": "#D8D8D8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/1030697-L.jpg?default=false"
+  },
+  "behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan": {
+    "src": "covers/behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan-600.webp",
+    "large": "covers/behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan-1200.webp",
+    "width": 600,
+    "height": 478,
+    "dominantColor": "#282828",
+    "source": "google",
+    "origin": "https://books.google.com/books/content?id=fKVTcPFUqGEC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "china-after-mao-liu-heung-shing": {
+    "src": "covers/china-after-mao-liu-heung-shing-600.webp",
+    "large": "covers/china-after-mao-liu-heung-shing-1200.webp",
+    "width": 500,
+    "height": 424,
+    "dominantColor": "#080808",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/9750779-L.jpg?default=false"
+  },
+  "china-yann-layma": {
+    "src": "covers/china-yann-layma-600.webp",
+    "large": "covers/china-yann-layma-1200.webp",
+    "width": 425,
+    "height": 500,
+    "dominantColor": "#A81828",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/2646193-L.jpg?default=false"
+  },
+  "coastline-zhang-xiao": {
+    "src": "covers/coastline-zhang-xiao-600.webp",
+    "large": "covers/coastline-zhang-xiao-1200.webp",
+    "width": 374,
+    "height": 500,
+    "dominantColor": "#D8C8C8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/14355600-L.jpg?default=false"
+  },
+  "cocaine-true-cocaine-blue-eugene-richards": {
+    "src": "covers/cocaine-true-cocaine-blue-eugene-richards-600.webp",
+    "large": "covers/cocaine-true-cocaine-blue-eugene-richards-1200.webp",
+    "width": 351,
+    "height": 475,
+    "dominantColor": "#181818",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/692486-L.jpg?default=false"
+  },
+  "dorchester-days-eugene-richards": {
+    "src": "covers/dorchester-days-eugene-richards-600.webp",
+    "large": "covers/dorchester-days-eugene-richards-1200.webp",
+    "width": 347,
+    "height": 474,
+    "dominantColor": "#282828",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/453861-L.jpg?default=false"
+  },
+  "double-happiness-chien-chi-chang": {
+    "src": "covers/double-happiness-chien-chi-chang-600.webp",
+    "large": "covers/double-happiness-chien-chi-chang-1200.webp",
+    "width": 498,
+    "height": 340,
+    "dominantColor": "#181818",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/2122591-L.jpg?default=false"
+  },
+  "elliott-erwitt-personal-best-elliott-erwitt": {
+    "src": "covers/elliott-erwitt-personal-best-elliott-erwitt-600.webp",
+    "large": "covers/elliott-erwitt-personal-best-elliott-erwitt-1200.webp",
+    "width": 600,
+    "height": 792,
+    "dominantColor": "#E8E8E8",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/34/slRY84I1_OikzyP.jpeg"
+  },
+  "eugene-atget-paris-jean-claude-gautrand": {
+    "src": "covers/eugene-atget-paris-jean-claude-gautrand-600.webp",
+    "large": "covers/eugene-atget-paris-jean-claude-gautrand-1200.webp",
+    "width": 587,
+    "height": 800,
+    "dominantColor": "#F8F8F8",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/02/gBc6R5zhd_4vxXnC.jpeg"
+  },
+  "exiles-josef-koudelka": {
+    "src": "covers/exiles-josef-koudelka-600.webp",
+    "large": "covers/exiles-josef-koudelka-1200.webp",
+    "width": 475,
+    "height": 425,
+    "dominantColor": "#080808",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/13469188-L.jpg?default=false"
+  },
+  "focus-beaumont-newhall": {
+    "src": "covers/focus-beaumont-newhall-600.webp",
+    "large": "covers/focus-beaumont-newhall-1200.webp",
+    "width": 372,
+    "height": 500,
+    "dominantColor": "#D8D8D8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/8173529-L.jpg?default=false"
+  },
+  "hk-pm-hong-kong-night-life-1974-1989-greg-girard": {
+    "src": "covers/hk-pm-hong-kong-night-life-1974-1989-greg-girard-600.webp",
+    "large": "covers/hk-pm-hong-kong-night-life-1974-1989-greg-girard-1200.webp",
+    "width": 580,
+    "height": 800,
+    "dominantColor": "#181818",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/f4/5Bb9C9dYP_aSYUmA.jpeg"
+  },
+  "how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi": {
+    "src": "covers/how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi-600.webp",
+    "large": "covers/how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi-1200.webp",
+    "width": 600,
+    "height": 803,
+    "dominantColor": "#C81818",
+    "source": "google",
+    "origin": "https://books.google.com/books/content?id=kPR-EAAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "interieurs-cubains-robert-van-der-hilst": {
+    "src": "covers/interieurs-cubains-robert-van-der-hilst-600.webp",
+    "large": "covers/interieurs-cubains-robert-van-der-hilst-1200.webp",
+    "width": 475,
+    "height": 391,
+    "dominantColor": "#484848",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/3163042-L.jpg?default=false"
+  },
+  "jal-76-88-greg-girard": {
+    "src": "covers/jal-76-88-greg-girard-600.webp",
+    "large": "covers/jal-76-88-greg-girard-1200.webp",
+    "width": 600,
+    "height": 787,
+    "dominantColor": "#181818",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/93/TEd27oDBd_ODVWXC.jpeg"
+  },
+  "jet-lag-chien-chi-chang": {
+    "src": "covers/jet-lag-chien-chi-chang-600.webp",
+    "large": "covers/jet-lag-chien-chi-chang-1200.webp",
+    "width": 400,
+    "height": 323,
+    "dominantColor": "#181818",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/14805947-L.jpg?default=false"
+  },
+  "kids-at-work-lewis-hine-and-the-crusade-against-child-labor-russell-freedman": {
+    "src": "covers/kids-at-work-lewis-hine-and-the-crusade-against-child-labor-russell-freedman-600.webp",
+    "large": "covers/kids-at-work-lewis-hine-and-the-crusade-against-child-labor-russell-freedman-1200.webp",
+    "width": 600,
+    "height": 512,
+    "dominantColor": "#F8F8F8",
+    "source": "google",
+    "origin": "https://books.google.com/books/content?id=bNxG_NH6NlgC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "life-studies-aya-fujioka": {
+    "src": "covers/life-studies-aya-fujioka-600.webp",
+    "large": "covers/life-studies-aya-fujioka-1200.webp",
+    "width": 600,
+    "height": 403,
+    "dominantColor": "#E8C868",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/f4/3kyn08DEP_2rQH3A.jpeg"
+  },
+  "magnum-china-magnum-photos": {
+    "src": "covers/magnum-china-magnum-photos-600.webp",
+    "large": "covers/magnum-china-magnum-photos-1200.webp",
+    "width": 417,
+    "height": 500,
+    "dominantColor": "#E82828",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/8815191-L.jpg?default=false"
+  },
+  "modern-instances-stephen-shore": {
+    "src": "covers/modern-instances-stephen-shore-600.webp",
+    "large": "covers/modern-instances-stephen-shore-1200.webp",
+    "width": 296,
+    "height": 447,
+    "dominantColor": "#98A8A8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/13313307-L.jpg?default=false"
+  },
+  "parallel-universes-of-children-ugur-gallenkus": {
+    "src": "covers/parallel-universes-of-children-ugur-gallenkus-600.webp",
+    "large": "covers/parallel-universes-of-children-ugur-gallenkus-1200.webp",
+    "width": 600,
+    "height": 600,
+    "dominantColor": "#181818",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/7f/pGILzSFo_PLrrzP.jpeg"
+  },
+  "parallel-universes-of-war-peace-ugur-gallenkus": {
+    "src": "covers/parallel-universes-of-war-peace-ugur-gallenkus-600.webp",
+    "large": "covers/parallel-universes-of-war-peace-ugur-gallenkus-1200.webp",
+    "width": 600,
+    "height": 605,
+    "dominantColor": "#E8E8E8",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/28/QpFv55Oty_sk3kiF.jpeg"
+  },
+  "phantom-shanghai-greg-girard": {
+    "src": "covers/phantom-shanghai-greg-girard-600.webp",
+    "large": "covers/phantom-shanghai-greg-girard-1200.webp",
+    "width": 500,
+    "height": 402,
+    "dominantColor": "#E8E8D8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/1714102-L.jpg?default=false"
+  },
+  "photos-hiroshi-hatano": {
+    "src": "covers/photos-hiroshi-hatano-600.webp",
+    "large": "covers/photos-hiroshi-hatano-1200.webp",
+    "width": 570,
+    "height": 796,
+    "dominantColor": "#E8E8E8",
+    "source": "override",
+    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/c5/97jAwDYwI_Px6Lme.jpeg"
+  },
+  "pocari-sweat-yoshiyuki-okuyama": {
+    "src": "covers/pocari-sweat-yoshiyuki-okuyama-600.webp",
+    "large": "covers/pocari-sweat-yoshiyuki-okuyama-1200.webp",
+    "width": 600,
+    "height": 386,
+    "dominantColor": "#F8F8F8",
+    "source": "override",
+    "origin": "data/covers/pocari-sweat-yoshiyuki-okuyama.webp"
+  },
+  "the-americans-robert-frank": {
+    "src": "covers/the-americans-robert-frank-600.webp",
+    "large": "covers/the-americans-robert-frank-1200.webp",
+    "width": 456,
+    "height": 306,
+    "dominantColor": "#F8F8F8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/3279569-L.jpg?default=false"
+  },
+  "the-classic-rollei-a-definitive-guide-john-phillips": {
+    "src": "covers/the-classic-rollei-a-definitive-guide-john-phillips-600.webp",
+    "large": "covers/the-classic-rollei-a-definitive-guide-john-phillips-1200.webp",
+    "width": 303,
+    "height": 400,
+    "dominantColor": "#F8F8F8",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/7630514-L.jpg?default=false"
+  },
+  "the-nature-of-photographs-stephen-shore": {
+    "src": "covers/the-nature-of-photographs-stephen-shore-600.webp",
+    "large": "covers/the-nature-of-photographs-stephen-shore-1200.webp",
+    "width": 500,
+    "height": 455,
+    "dominantColor": "#080808",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/566516-L.jpg?default=false"
+  },
+  "the-polaroid-book-steve-crist": {
+    "src": "covers/the-polaroid-book-steve-crist-600.webp",
+    "large": "covers/the-polaroid-book-steve-crist-1200.webp",
+    "width": 407,
+    "height": 489,
+    "dominantColor": "#080808",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/12345230-L.jpg?default=false"
+  },
+  "war-is-personal-eugene-richards": {
+    "src": "covers/war-is-personal-eugene-richards-600.webp",
+    "large": "covers/war-is-personal-eugene-richards-1200.webp",
+    "width": 359,
+    "height": 500,
+    "dominantColor": "#080808",
+    "source": "openlibrary",
+    "origin": "https://covers.openlibrary.org/b/id/9122883-L.jpg?default=false"
+  }
+}

@@ -1,0 +1,964 @@
+[
+  {
+    "slug": "china-hiroji-kubota",
+    "title": "China",
+    "photographers": [
+      "Hiroji Kubota"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Documentary",
+    "year": 1985,
+    "publisher": "W. W. Norton & Company",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "china-1948-1958-1959-henri-cartier-bresson",
+    "title": "China 1948–1958, 1959",
+    "photographers": [
+      "Henri Cartier-Bresson"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary",
+    "year": 2019,
+    "publisher": "Thames & Hudson",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "magnum-china-magnum-photos",
+    "title": "Magnum China",
+    "photographers": [
+      "Magnum Photos"
+    ],
+    "colorType": "Mixed",
+    "region": "China",
+    "genre": "Documentary",
+    "year": 2018,
+    "publisher": "Thames & Hudson",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "hong-kong-stokes-hedda-morrison",
+    "title": "Hong Kong Stokes",
+    "photographers": [
+      "Hedda Morrison"
+    ],
+    "colorType": "Black & White",
+    "region": "Hong Kong",
+    "genre": "Documentary",
+    "year": 2005,
+    "publisher": "Hong Kong University Press",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "china-a-photo-history",
+    "title": "China: A Photo History",
+    "photographers": [],
+    "colorType": "Mixed",
+    "region": "China",
+    "genre": "History",
+    "year": 1988,
+    "publisher": "Thames & Hudson",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "china-adagio-andrew-s-t-wong",
+    "title": "China Adagio (漫游中国)",
+    "photographers": [
+      "Andrew S.T. Wong (王身敦)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Personal Documentary",
+    "year": 2022,
+    "publisher": "浙江摄影出版社",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "phantom-shanghai-greg-girard",
+    "title": "Phantom Shanghai",
+    "photographers": [
+      "Greg Girard"
+    ],
+    "colorType": "Color",
+    "region": "China / Shanghai",
+    "genre": "Documentary",
+    "year": 2007,
+    "publisher": "The Magenta Foundation",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "city-of-darkness-life-in-kowloon-walled-city-greg-girard",
+    "title": "City of Darkness: Life in Kowloon Walled City",
+    "photographers": [
+      "Greg Girard",
+      "Ian Lambot"
+    ],
+    "colorType": "Mixed",
+    "region": "Hong Kong",
+    "genre": "Documentary",
+    "year": 1993,
+    "publisher": "Watermark",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "the-americans-robert-frank",
+    "title": "The Americans",
+    "photographers": [
+      "Robert Frank"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary",
+    "year": 1959,
+    "publisher": "Steidl",
+    "tags": []
+  },
+  {
+    "slug": "exiles-josef-koudelka",
+    "title": "Exiles",
+    "photographers": [
+      "Josef Koudelka"
+    ],
+    "colorType": "Black & White",
+    "region": "Europe",
+    "genre": "Documentary",
+    "year": 1988,
+    "publisher": "Aperture",
+    "tags": []
+  },
+  {
+    "slug": "songbook-alec-soth",
+    "title": "Songbook",
+    "photographers": [
+      "Alec Soth"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary",
+    "year": 2015,
+    "publisher": "MACK",
+    "tags": []
+  },
+  {
+    "slug": "small-trades-irving-penn",
+    "title": "Small Trades",
+    "photographers": [
+      "Irving Penn"
+    ],
+    "colorType": "Black & White",
+    "region": "Global",
+    "genre": "Portrait",
+    "year": 2009,
+    "publisher": "J. Paul Getty Museum",
+    "tags": []
+  },
+  {
+    "slug": "remembrance-garden-eugene-richards",
+    "title": "Remembrance Garden",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary",
+    "year": 2024,
+    "publisher": "D.A.P. / Many Voices Press",
+    "tags": []
+  },
+  {
+    "slug": "war-is-personal-eugene-richards",
+    "title": "War Is Personal",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "Global",
+    "genre": "Documentary",
+    "year": 2010,
+    "publisher": "Many Voices Press",
+    "tags": []
+  },
+  {
+    "slug": "the-day-i-was-born-eugene-richards",
+    "title": "The Day I Was Born",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Personal Documentary",
+    "year": 2020,
+    "publisher": "Many Voices Press",
+    "tags": []
+  },
+  {
+    "slug": "american-surfaces-stephen-shore",
+    "title": "American Surfaces",
+    "photographers": [
+      "Stephen Shore"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Documentary",
+    "year": 2005,
+    "publisher": "Phaidon",
+    "tags": []
+  },
+  {
+    "slug": "modern-instances-stephen-shore",
+    "title": "Modern Instances",
+    "photographers": [
+      "Stephen Shore"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Documentary",
+    "year": 2022,
+    "publisher": "MACK",
+    "tags": []
+  },
+  {
+    "slug": "the-nature-of-photographs-stephen-shore",
+    "title": "The Nature of Photographs",
+    "photographers": [
+      "Stephen Shore"
+    ],
+    "colorType": "Mixed",
+    "region": "United States",
+    "genre": "Theory",
+    "year": 2007,
+    "publisher": "Phaidon",
+    "tags": []
+  },
+  {
+    "slug": "atget-john-szarkowski",
+    "title": "Atget",
+    "photographers": [
+      "John Szarkowski"
+    ],
+    "colorType": "Black & White",
+    "region": "France",
+    "genre": "Photography History",
+    "year": 2000,
+    "publisher": "The Museum of Modern Art (MoMA)",
+    "tags": []
+  },
+  {
+    "slug": "focus-beaumont-newhall",
+    "title": "Focus",
+    "photographers": [
+      "Beaumont Newhall"
+    ],
+    "colorType": "Mixed",
+    "region": "Global",
+    "genre": "Photography History",
+    "year": 1993,
+    "publisher": "Little, Brown and Company",
+    "tags": []
+  },
+  {
+    "slug": "old-paris-and-changing-new-york-eugene-atget",
+    "title": "Old Paris and Changing New York",
+    "photographers": [
+      "Eugène Atget",
+      "Berenice Abbott"
+    ],
+    "colorType": "Black & White",
+    "region": "France / USA",
+    "genre": "Urban History",
+    "year": 2018,
+    "publisher": "Yale University Press",
+    "tags": []
+  },
+  {
+    "slug": "un-paese-paul-strand",
+    "title": "Un Paese",
+    "photographers": [
+      "Paul Strand",
+      "Cesare Zavattini"
+    ],
+    "colorType": "Black & White",
+    "region": "Italy",
+    "genre": "Documentary",
+    "year": 1955,
+    "publisher": "Einaudi",
+    "tags": []
+  },
+  {
+    "slug": "sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi",
+    "title": "しなやかな たね（柔韧的种子）",
+    "photographers": [
+      "Rinko Kawauchi"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Personal",
+    "year": 2007,
+    "publisher": "Little More",
+    "tags": []
+  },
+  {
+    "slug": "lartigue-life-in-color-jacques-henri-lartigue",
+    "title": "Lartigue: Life in Color",
+    "photographers": [
+      "Jacques Henri Lartigue"
+    ],
+    "colorType": "Color",
+    "region": "France",
+    "genre": "Personal",
+    "year": 2016,
+    "publisher": "Abrams",
+    "tags": []
+  },
+  {
+    "slug": "elliott-erwitt-personal-best-elliott-erwitt",
+    "title": "Elliott Erwitt: Personal Best",
+    "photographers": [
+      "Elliott Erwitt"
+    ],
+    "colorType": "Black & White",
+    "region": "Global",
+    "genre": "Documentary",
+    "year": 2006,
+    "publisher": "teNeues",
+    "tags": []
+  },
+  {
+    "slug": "history-of-life-cai-dongdong",
+    "title": "生活史 / History of Life",
+    "photographers": [
+      "Cai Dongdong"
+    ],
+    "colorType": "Mixed",
+    "region": "China",
+    "genre": "Conceptual Documentary",
+    "year": 2021,
+    "publisher": "Imageless (无像)",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "parallel-universes-of-children-ugur-gallenkus",
+    "title": "Parallel Universes of Children",
+    "photographers": [
+      "Uğur Gallenkuş"
+    ],
+    "colorType": "Color",
+    "region": "Turkey",
+    "genre": "Conceptual",
+    "year": 2020,
+    "publisher": "Arzu Tunca Publishing",
+    "tags": []
+  },
+  {
+    "slug": "parallel-universes-of-war-peace-ugur-gallenkus",
+    "title": "Parallel Universes of War & Peace",
+    "photographers": [
+      "Uğur Gallenkuş"
+    ],
+    "colorType": "Color",
+    "region": "Turkey",
+    "genre": "Conceptual",
+    "year": 2024,
+    "publisher": "Arzu Tunca Publishing",
+    "tags": []
+  },
+  {
+    "slug": "a-photographer-in-old-peking-hedda-morrison",
+    "title": "A Photographer in Old Peking",
+    "photographers": [
+      "Hedda Morrison"
+    ],
+    "colorType": "Black & White",
+    "region": "Austrilia",
+    "genre": "History",
+    "year": 1985,
+    "publisher": "Oxford University Press",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns",
+    "title": "Assignment Shanghai: Photographs on the Eve of Revolution",
+    "photographers": [
+      "Jack Birns"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 2003,
+    "publisher": "University of California Press",
+    "tags": []
+  },
+  {
+    "slug": "interieurs-cubains-robert-van-der-hilst",
+    "title": "Interieurs cubains",
+    "photographers": [
+      "Robert van der Hilst",
+      "Zoe Valdes"
+    ],
+    "colorType": "Color",
+    "region": "France",
+    "genre": "Documentary Photography",
+    "year": 2002,
+    "publisher": "Editions de l’Oeil",
+    "tags": []
+  },
+  {
+    "slug": "eugene-atget-paris-jean-claude-gautrand",
+    "title": "Eugene Atget: Paris",
+    "photographers": [
+      "Jean-Claude Gautrand (ed.)"
+    ],
+    "colorType": "Black & White",
+    "region": "Germany",
+    "genre": "Photography Monograph",
+    "year": 2007,
+    "publisher": "Taschen",
+    "tags": []
+  },
+  {
+    "slug": "the-polaroid-book-steve-crist",
+    "title": "The Polaroid Book",
+    "photographers": [
+      "Steve Crist",
+      "Barbara Hitchcock (eds.)"
+    ],
+    "colorType": "Color",
+    "region": "Germany",
+    "genre": "Photography / Instant Photography",
+    "year": 2005,
+    "publisher": "Taschen",
+    "tags": []
+  },
+  {
+    "slug": "china-after-mao-liu-heung-shing",
+    "title": "China After Mao",
+    "photographers": [
+      "Liu Heung Shing"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 2004,
+    "publisher": "W. W. Norton & Company",
+    "tags": [
+      "中国摄影师"
+    ]
+  },
+  {
+    "slug": "hk-pm-hong-kong-night-life-1974-1989-greg-girard",
+    "title": "HK PM Hong Kong Night Life 1974-1989",
+    "photographers": [
+      "Greg Girard"
+    ],
+    "colorType": "Color",
+    "region": "Hong Kong",
+    "genre": "Documentary Photography",
+    "year": 2017,
+    "publisher": "Asia One Books",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "do-i-know-you-eugene-richards",
+    "title": "Do I Know You?",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 2006,
+    "publisher": "Aperture",
+    "tags": []
+  },
+  {
+    "slug": "dorchester-days-eugene-richards",
+    "title": "Dorchester Days",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 1978,
+    "publisher": "Aperture",
+    "tags": []
+  },
+  {
+    "slug": "double-happiness-chien-chi-chang",
+    "title": "Double Happiness",
+    "photographers": [
+      "Chien-Chi Chang"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 2003,
+    "publisher": "Twin Palms Publishers",
+    "tags": []
+  },
+  {
+    "slug": "cocaine-true-cocaine-blue-eugene-richards",
+    "title": "Cocaine True Cocaine Blue",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 1994,
+    "publisher": "Aperture",
+    "tags": []
+  },
+  {
+    "slug": "picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann",
+    "title": "Picturesque China: A Journey Through Twelve Provinces",
+    "photographers": [
+      "Ernst Boerschmann"
+    ],
+    "colorType": "Black & White",
+    "region": "Germany",
+    "genre": "Architectural Photography / China Studies",
+    "year": 1925,
+    "publisher": "New York Brentano’s Publishers",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei",
+    "title": "パリ残像(巴黎残影）",
+    "photographers": [
+      "木村伊兵衛"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Street Photography / Documentary Photography",
+    "year": 2016,
+    "publisher": "Crevis / クレヴィス",
+    "tags": []
+  },
+  {
+    "slug": "coastline-zhang-xiao",
+    "title": "Coastline (海岸线)",
+    "photographers": [
+      "Zhang Xiao（张晓）"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Documentary Photography / Contemporary Photography",
+    "year": 2011,
+    "publisher": "Actes Sud",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan",
+    "title": "Behind the Great Wall of China: Photographs from 1870 to the Present",
+    "photographers": [
+      "Metropolitan Museum of Art",
+      "Cornell Capa (ed.)"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Photography History / Documentary Photography",
+    "year": 1972,
+    "publisher": "New York Graphic Society",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "in-this-brief-life-eugene-richards",
+    "title": "In This Brief Life",
+    "photographers": [
+      "Eugene Richards"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography",
+    "year": 2023,
+    "publisher": "Many Voices Press",
+    "tags": []
+  },
+  {
+    "slug": "a-dream-yoshihiko-ueda",
+    "title": "A DREAM (Yu Aoi Photobook)",
+    "photographers": [
+      "Yoshihiko Ueda（上田義彦）"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Portrait / Fashion Photography",
+    "year": 2008,
+    "publisher": "Takarajimasha（宝岛社）",
+    "tags": []
+  },
+  {
+    "slug": "color-photography-a-working-manual-henry-horenstein",
+    "title": "Color Photography: A Working Manual",
+    "photographers": [
+      "Henry Horenstein"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Photography Technique / Color Photography",
+    "year": 1995,
+    "publisher": "Little, Brown and Company",
+    "tags": []
+  },
+  {
+    "slug": "basic-forms-bernd-becher",
+    "title": "Basic Forms",
+    "photographers": [
+      "Bernd Becher",
+      "Hilla Becher",
+      "Thierry de Duve"
+    ],
+    "colorType": "Black & White",
+    "region": "Germany",
+    "genre": "Industrial Photography / Documentary Photography",
+    "year": 2020,
+    "publisher": "Prestel Publishing",
+    "tags": []
+  },
+  {
+    "slug": "kids-at-work-lewis-hine-and-the-crusade-against-child-labor-russell-freedman",
+    "title": "Kids at Work: Lewis Hine and the Crusade Against Child Labor",
+    "photographers": [
+      "Russell Freedman",
+      "Photographs by Lewis Hine"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Photography / Social History",
+    "year": 1998,
+    "publisher": "Clarion Books",
+    "tags": []
+  },
+  {
+    "slug": "pittsburgh-grease-plant-1944-1946-gordon-parks",
+    "title": "Pittsburgh Grease Plant, 1944/1946",
+    "photographers": [
+      "Gordon Parks"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Documentary Photography / Industrial",
+    "year": 2022,
+    "publisher": "Steidl",
+    "tags": []
+  },
+  {
+    "slug": "jet-lag-chien-chi-chang",
+    "title": "Jet-Lag",
+    "photographers": [
+      "Chien-Chi Chang"
+    ],
+    "colorType": "Mixed",
+    "region": "Germany",
+    "genre": "Documentary Photography / Travel & Globalization",
+    "year": 2015,
+    "publisher": "Hatje Cantz",
+    "tags": [
+      "中国摄影师"
+    ]
+  },
+  {
+    "slug": "jal-76-88-greg-girard",
+    "title": "JAL 76-88",
+    "photographers": [
+      "Greg Girard"
+    ],
+    "colorType": "Mixed",
+    "region": "Germany",
+    "genre": "Documentary Photography / Urban Japan",
+    "year": 2023,
+    "publisher": "Kominek Books",
+    "tags": []
+  },
+  {
+    "slug": "the-classic-rollei-a-definitive-guide-john-phillips",
+    "title": "The Classic Rollei: A Definitive Guide",
+    "photographers": [
+      "John Phillips"
+    ],
+    "colorType": "Mixed",
+    "region": "United Kingdom",
+    "genre": "Photography Equipment / Camera Reference",
+    "year": 2010,
+    "publisher": "Ammonite Press",
+    "tags": []
+  },
+  {
+    "slug": "24-mails-from-railway-cheng-xin-hao",
+    "title": "24 Mails from Railway (来自铁路的二十四封信)",
+    "photographers": [
+      "程新皓"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Contemporary Photography / Artist Book",
+    "year": 2023,
+    "publisher": "中国美术学院出版社",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "life-magazine-april-30-1971-inside-china-various-photographers",
+    "title": "LIFE Magazine April 30 1971: Inside China / Mao Tse-Tung",
+    "photographers": [
+      "Various Photographers"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Photojournalism / Documentary / Historical Periodical",
+    "year": 1971,
+    "publisher": "Time Inc.",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "the-decisive-moment-henri-cartier-bresson",
+    "title": "The Decisive Moment",
+    "photographers": [
+      "Henri Cartier-Bresson"
+    ],
+    "colorType": "Black & White",
+    "region": "United States",
+    "genre": "Photography Monograph / Street Photography / Documentary",
+    "year": 1952,
+    "publisher": "Simon and Schuster",
+    "tags": []
+  },
+  {
+    "slug": "how-to-paint-without-a-brush-the-art-of-red-hong-yi-red-hong-yi",
+    "title": "How to Paint Without a Brush: The Art of Red Hong Yi",
+    "photographers": [
+      "Red Hong Yi"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Art / Creative Techniques / Individual Artist Monograph",
+    "year": 2023,
+    "publisher": "Abrams Books",
+    "tags": []
+  },
+  {
+    "slug": "my-home-yoshihiko-ueda",
+    "title": "My Home",
+    "photographers": [
+      "Yoshihiko Ueda（上田義彦）"
+    ],
+    "colorType": "Black & White",
+    "region": "Japan",
+    "genre": "Contemporary Photography / Family Photography",
+    "year": 2010,
+    "publisher": "Little One",
+    "tags": []
+  },
+  {
+    "slug": "travels-of-a-photographer-in-china",
+    "title": "Travels of a photographer in China",
+    "photographers": [],
+    "colorType": "Black & White",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "the-great-cities-hong-kong-brian-brake",
+    "title": "The Great Cities - Hong Kong",
+    "photographers": [
+      "Brian Brake"
+    ],
+    "colorType": "Color",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "china-yann-layma",
+    "title": "China",
+    "photographers": [
+      "Yann Layma"
+    ],
+    "colorType": "Color",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "china-the-1950s-brian-brake",
+    "title": "China The 1950s",
+    "photographers": [
+      "Brian Brake"
+    ],
+    "colorType": "Color",
+    "year": 2009,
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "beijing-a-travel-in-time-susanne-scherer",
+    "title": "Beijing - a Travel In Time (北京 - 时空之旅)",
+    "photographers": [
+      "Susanne Scherer"
+    ],
+    "colorType": "Black & White",
+    "region": "Switzerland",
+    "genre": "Documentary",
+    "year": 2009,
+    "publisher": "Timezone 8",
+    "tags": [
+      "中国题材"
+    ]
+  },
+  {
+    "slug": "life-studies-aya-fujioka",
+    "title": "Life Studies",
+    "photographers": [
+      "Aya Fujioka"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Street Photography / Urban Life / Personal Documentary / Immigrant Narrative",
+    "year": 2025,
+    "publisher": "AKAAKA (赤々舎)",
+    "tags": []
+  },
+  {
+    "slug": "photos-hiroshi-hatano",
+    "title": "Photos",
+    "photographers": [
+      "Hiroshi Hatano"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Portrait / Daily Life / Personal Documentary / Essay & Photography",
+    "year": 2010,
+    "publisher": "Poplar Publishing (ポプラ社)",
+    "tags": []
+  },
+  {
+    "slug": "pocari-sweat-yoshiyuki-okuyama",
+    "title": "Pocari Sweat",
+    "photographers": [
+      "Yoshiyuki Okuyama"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Street Photography / Youth Culture / Documentary Photography / Commercial Art",
+    "year": 2018,
+    "publisher": "EIGENSHA Art Publishing (青幻舎)",
+    "tags": []
+  },
+  {
+    "slug": "as-it-is-rinko-kawauchi",
+    "title": "as it is",
+    "photographers": [
+      "Rinko Kawauchi"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Daily Life / Motherhood / Family / Personal Documentary",
+    "year": 2020,
+    "publisher": "torch press / Chose Commune",
+    "tags": []
+  },
+  {
+    "slug": "miraichan-kotori-kawashima",
+    "title": "Miraichan",
+    "photographers": [
+      "Kotori Kawashima"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Portrait / Childhood / Daily Life / Sado Island / Paris",
+    "year": 2011,
+    "publisher": "Nanarokusha (ナナロク社)",
+    "tags": []
+  },
+  {
+    "slug": "abandoned-cities-of-the-ussr-arseniy-kotov",
+    "title": "Заброшенные города СССР (Abandoned Cities of the USSR)",
+    "photographers": [
+      "Arseniy Kotov (Арсений Котов)"
+    ],
+    "colorType": "Color",
+    "region": "Russia",
+    "genre": "Architecture / Soviet Modernism / Urban Exploration / Ruins / Documentary Photography",
+    "year": 2022,
+    "publisher": "AST (Издательство АСТ)",
+    "tags": []
+  },
+  {
+    "slug": "poles-frank-breuer",
+    "title": "Poles",
+    "photographers": [
+      "Frank Breuer"
+    ],
+    "colorType": "Color",
+    "region": "Germany",
+    "genre": "ndustrial Photography / Typologies / Infrastructure / Düsseldorf School / Minimalist Landscape",
+    "year": 2006,
+    "publisher": "Faulconer Gallery, Grinnell College",
+    "tags": []
+  },
+  {
+    "slug": "coney-island-peter-cranser",
+    "title": "Coney Island",
+    "photographers": [
+      "Peter Cranser"
+    ],
+    "colorType": "Color",
+    "region": "Germany",
+    "genre": "Street Photography / Americana / Urban Decay / Portrait / Beach Culture",
+    "year": 2006,
+    "publisher": "Hatje Cantz",
+    "tags": []
+  },
+  {
+    "slug": "1914-1953-emmy-andriesse",
+    "title": "1914-1953",
+    "photographers": [
+      "Emmy Andriesse"
+    ],
+    "colorType": "Black & White",
+    "region": "Netherlands",
+    "genre": "Post-War Photography / Dutch Documentary / Modernism / Portraits / Street Photography",
+    "year": 1995,
+    "publisher": "Focus Publishing (Amsterdam)",
+    "tags": []
+  }
+]

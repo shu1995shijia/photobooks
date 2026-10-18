@@ -1,0 +1,96 @@
+---
+import { colorTypeLabel, photographerLine, type Book } from "../lib/book";
+
+interface Props {
+  book: Book;
+  /** Adds the fields a wall label leaves out: region, genre and tags. */
+  full?: boolean;
+}
+
+const { book, full = false } = Astro.props;
+
+const extra = full
+  ? [
+      { term: "Country or region", value: book.region },
+      { term: "Genre", value: book.genre },
+      {
+        term: book.tags.length > 1 ? "Tags" : "Tag",
+        value: book.tags.join(", "),
+      },
+    ].filter((row) => row.value)
+  : [];
+---
+
+<div class:list={["label", { full }]}>
+  <p class="label-name">{photographerLine(book)}</p>
+  {/* One expression, so no space slips in before the comma. */}
+  <p class="label-title">
+    {[<em>{book.title}</em>, book.year ? `, ${book.year}` : ""]}
+  </p>
+  {book.publisher && <p class="label-detail">{book.publisher}</p>}
+  {book.colorType && (
+    <p class="label-detail">{colorTypeLabel(book.colorType)}</p>
+  )}
+  {extra.length > 0 && (
+    <dl>
+      {extra.map((row) => (
+        <div>
+          <dt>{row.term}</dt>
+          <dd>{row.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</div>
+
+<style>
+  /* A museum wall label. */
+  .label {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .label p {
+    margin: 0;
+  }
+
+  .label-name {
+    font-weight: 700;
+  }
+
+  .label-detail {
+    color: var(--graphite);
+  }
+
+  .full {
+    font-size: 16px;
+  }
+
+  .full .label-title {
+    font-size: 24px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  dl {
+    margin: 24px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--shelf);
+    display: grid;
+    gap: 8px;
+  }
+
+  dl div {
+    display: grid;
+    grid-template-columns: 9.5em 1fr;
+    gap: 16px;
+  }
+
+  dt {
+    color: var(--graphite);
+  }
+
+  dd {
+    margin: 0;
+  }
+</style>

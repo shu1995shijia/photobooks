@@ -1,0 +1,76 @@
+---
+import { url } from "../lib/url";
+
+interface Props {
+  current?: "carousel";
+}
+
+const { current } = Astro.props;
+
+// The shelf view joins this list once it's built (see tasks/todo.md).
+const views = [
+  { id: "carousel", label: "Carousel", href: url("carousel") },
+] as const;
+---
+
+<header class="header">
+  <a class="site-name" href={url("")}>
+    Photobooks
+  </a>
+  <nav aria-label="Views">
+    {views.map((view) => (
+      <a
+        href={view.href}
+        aria-current={view.id === current ? "page" : undefined}
+        class="view-link"
+      >
+        {view.label}
+      </a>
+    ))}
+  </nav>
+</header>
+
+<style>
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .site-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    gap: 4px;
+  }
+
+  .view-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  .view-link[aria-current="page"] {
+    color: var(--ink);
+  }
+
+  /* The gallery red dot marks the page you're on. */
+  .view-link[aria-current="page"]::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red-dot);
+  }
+</style>

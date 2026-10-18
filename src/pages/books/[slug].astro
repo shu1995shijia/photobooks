@@ -1,0 +1,127 @@
+---
+import type { GetStaticPaths } from "astro";
+import Base from "../../layouts/Base.astro";
+import BookMeta from "../../components/BookMeta.astro";
+import Cover from "../../components/Cover.astro";
+import books from "../../data/books.json";
+import { photographerLine, type Book } from "../../lib/book";
+import { sortBooks } from "../../lib/sort";
+import { url } from "../../lib/url";
+
+// Previous and next follow the carousel's default order, wrapping at the ends.
+export const getStaticPaths = (() => {
+  const sorted = sortBooks(books as Book[], "photographer");
+  const n = sorted.length;
+  return sorted.map((book, i) => ({
+    params: { slug: book.slug },
+    props: {
+      book,
+      prev: sorted[(i - 1 + n) % n],
+      next: sorted[(i + 1) % n],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  book: Book;
+  prev: Book;
+  next: Book;
+}
+
+const { book, prev, next } = Astro.props;
+---
+
+<Base title={`${book.title}, ${photographerLine(book)}: Photobooks`}>
+  <a class="back" href={url(`carousel#${book.slug}`)}>
+    Back to the carousel
+  </a>
+
+  <article class="book">
+    <div class="cover-wrap">
+      <Cover
+        book={book}
+        sizes="(max-width: 720px) calc(100vw - 32px), 520px"
+        eager
+      />
+    </div>
+    <div class="meta">
+      <h1 class="visually-hidden">{book.title}</h1>
+      <BookMeta book={book} full />
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="More books">
+    <a href={url(`books/${prev.slug}`)} rel="prev">
+      <span class="pager-dir">Previous book</span>
+      <em>{prev.title}</em>
+    </a>
+    <a href={url(`books/${next.slug}`)} rel="next">
+      <span class="pager-dir">Next book</span>
+      <em>{next.title}</em>
+    </a>
+  </nav>
+</Base>
+
+<style>
+  .back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin: -16px 0 16px;
+    color: var(--graphite);
+  }
+
+  .book {
+    display: grid;
+    grid-template-columns: minmax(0, 520px) minmax(0, 420px);
+    align-items: end;
+    gap: 32px 72px;
+  }
+
+  /* As wide as the column allows, but never taller than most of the screen. */
+  .cover-wrap :global(.cover) {
+    width: min(100%, 78vh * var(--ratio));
+  }
+
+  .meta {
+    padding-bottom: 4px;
+  }
+
+  .pager {
+    margin-top: 56px;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--shelf);
+  }
+
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 45%;
+    padding-block: 8px;
+    text-decoration: none;
+  }
+
+  .pager a[rel="next"] {
+    text-align: right;
+  }
+
+  .pager a:hover em {
+    text-decoration: underline;
+  }
+
+  .pager-dir {
+    font-size: 13px;
+    color: var(--graphite);
+  }
+
+  @media (max-width: 720px) {
+    .book {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

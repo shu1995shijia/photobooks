@@ -1,0 +1,424 @@
+/**
+ * Finds, downloads and resizes a cover for each book in src/data/books.json.
+ *
+ *   npm run covers
+ *   npm run covers -- --redo   (re-process covers already found, e.g. after changing the trimming)
+ *
+ * Order: an entry in data/cover-overrides.json, then Open Library, then Google
+ * Books. A search result is used only when its title and photographer both
+ * match (see src/lib/match.ts); otherwise the book is listed as a miss and
+ * keeps its typographic placeholder. Covers already in src/data/covers.json
+ * are skipped, so re-runs only look up what's missing.
+ *
+ * Overrides map a slug to an image URL, a local file, or an ISBN:
+ *   { "the-americans-robert-frank": "9783865215840" }
+ *
+ * Put GOOGLE_BOOKS_API_KEY=… in .env (gitignored) to use your own Google Books quota; without it,
+ * Google often answers "quota exceeded" and only Open Library is used.
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
+import type { Book } from "../src/lib/book";
+import type { CoverEntry, CoverIndex } from "../src/lib/cover";
+import { rankMatches, type Candidate } from "../src/lib/match";
+import { latinPart } from "../src/lib/slug";
+
+const BOOKS = "src/data/books.json";
+const INDEX = "src/data/covers.json";
+const OVERRIDES = "data/cover-overrides.json";
+const OUT_DIR = "public/covers";
+const WIDTHS = { small: 600, large: 1200 } as const;
+/** Smaller images are usually "no cover" placeholders or thumbnails. */
+const MIN_WIDTH = 200;
+/** Covers narrower than this are reported as low resolution: they're shown up to 600px wide. */
+const GOOD_WIDTH = 600;
+/** How many close matches per source to try before giving up. */
+const MATCHES_TO_TRY = 3;
+/** How many editions of a matched work to try for a cover. */
+const EDITION_COVERS = 3;
+/** Open Library asks for about one request a second and a User-Agent that says who we are. */
+const REQUEST_GAP_MS = 1000;
+const USER_AGENT =
+  "photobooks/0.1 (+https://github.com/shu1995shijia/photobooks)";
+
+export type Fetcher = (url: string) => Promise<Response>;
+
+/** Wraps fetch so requests are at least REQUEST_GAP_MS apart. */
+export function throttled(gapMs = REQUEST_GAP_MS): Fetcher {
+  let next = 0;
+  return async (url) => {
+    const wait = next - Date.now();
+    next = Math.max(Date.now(), next) + gapMs;
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    return fetch(url, {
+      headers: { "User-Agent": USER_AGENT },
+      signal: AbortSignal.timeout(30_000),
+    });
+  };
+}
+
+/**
+ * Retries a request the server couldn't handle just then (500, 502, 503, 504),
+ * waiting longer each time. Google Books often answers 503 for a moment.
+ */
+export function withRetries(
+  fetcher: Fetcher,
+  delaysMs: readonly number[] = [2000, 5000, 10000],
+): Fetcher {
+  return async (url) => {
+    for (let attempt = 0; ; attempt++) {
+      const res = await fetcher(url);
+      if (![500, 502, 503, 504].includes(res.status) || attempt >= delaysMs.length)
+        return res;
+      await new Promise((r) => setTimeout(r, delaysMs[attempt]));
+    }
+  };
+}
+
+/** The title to search with: the romanized part, without parentheses. */
+function searchTitle(book: Book): string {
+  return latinPart(book.title).replace(/[()（）]/g, " ").trim();
+}
+
+/**
+ * The first photographer's full name, without "(ed.)" or "Photographs by".
+ * A surname alone is too loose: "Frank" also finds Frank Herbert and L. Frank Baum.
+ */
+export function searchAuthor(book: Book): string | undefined {
+  const name = book.photographers[0];
+  if (!name) return undefined;
+  return latinPart(name)
+    .replace(/\(.*?\)/g, "")
+    .replace(/^photographs by\s+/i, "")
+    .trim();
+}
+
+interface OpenLibraryDoc {
+  key?: string;
+  title?: string;
+  subtitle?: string;
+  author_name?: string[];
+  first_publish_year?: number;
+  cover_i?: number;
+}
+
+export async function searchOpenLibrary(
+  book: Book,
+  fetcher: Fetcher,
+): Promise<Candidate[]> {
+  const params = new URLSearchParams({
+    title: searchTitle(book),
+    fields: "key,title,subtitle,author_name,first_publish_year,cover_i",
+    limit: "20",
+  });
+  const author = searchAuthor(book);
+  if (author) params.set("author", author);
+  const res = await fetcher(`https://openlibrary.org/search.json?${params}`);
+  if (!res.ok) throw new Error(`Open Library answered ${res.status}`);
+  const { docs = [] } = (await res.json()) as { docs?: OpenLibraryDoc[] };
+  return docs
+    .filter((d) => d.title)
+    .map((d) => ({
+      title: d.subtitle ? `${d.title}: ${d.subtitle}` : d.title!,
+      authors: d.author_name ?? [],
+      year: d.first_publish_year,
+      imageUrl: d.cover_i ? openLibraryCover(d.cover_i) : undefined,
+      workKey: d.key,
+      source: "openlibrary" as const,
+    }));
+}
+
+function openLibraryCover(id: number): string {
+  return `https://covers.openlibrary.org/b/id/${id}-L.jpg?default=false`;
+}
+
+/** Covers of a work's editions, for when the work itself has none (or only a thumbnail). */
+export async function editionCovers(
+  workKey: string,
+  fetcher: Fetcher,
+): Promise<string[]> {
+  const res = await fetcher(`https://openlibrary.org${workKey}/editions.json?limit=50`);
+  if (!res.ok) return [];
+  const { entries = [] } = (await res.json()) as {
+    entries?: { covers?: number[] }[];
+  };
+  const ids = entries.flatMap((e) => (e.covers ?? []).filter((id) => id > 0));
+  return [...new Set(ids)].slice(0, EDITION_COVERS).map(openLibraryCover);
+}
+
+interface GoogleVolume {
+  volumeInfo?: {
+    title?: string;
+    subtitle?: string;
+    authors?: string[];
+    publishedDate?: string;
+    imageLinks?: { thumbnail?: string };
+  };
+}
+
+/** Thrown when Google Books refuses because the daily quota is used up. */
+export class QuotaError extends Error {}
+
+export async function searchGoogle(
+  book: Book,
+  fetcher: Fetcher,
+  apiKey?: string,
+): Promise<Candidate[]> {
+  let q = `intitle:${searchTitle(book)}`;
+  const author = searchAuthor(book);
+  if (author) q += ` inauthor:${author}`;
+  const params = new URLSearchParams({ q, maxResults: "20", printType: "books" });
+  if (apiKey) params.set("key", apiKey);
+  const res = await fetcher(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  if (res.status === 429) throw new QuotaError("Google Books quota exceeded");
+  if (!res.ok) throw new Error(`Google Books answered ${res.status}`);
+  const { items = [] } = (await res.json()) as { items?: GoogleVolume[] };
+  return items.flatMap(({ volumeInfo: v }) => {
+    const thumb = v?.imageLinks?.thumbnail;
+    if (!v?.title || !thumb) return [];
+    const year = Number.parseInt(v.publishedDate ?? "", 10);
+    return [
+      {
+        title: v.subtitle ? `${v.title}: ${v.subtitle}` : v.title,
+        authors: v.authors ?? [],
+        year: Number.isNaN(year) ? undefined : year,
+        // The thumbnail is tiny; fife=w1200 asks for a larger rendering.
+        imageUrl: `${thumb.replace(/^http:/, "https:").replace("&edge=curl", "")}&fife=w1200`,
+        source: "google" as const,
+      },
+    ];
+  });
+}
+
+export interface Sources {
+  openLibrary: (book: Book) => Promise<Candidate[]>;
+  google?: (book: Book) => Promise<Candidate[]>;
+}
+
+/**
+ * Open Library first, then Google Books. Each close match is handed to `use`,
+ * best first, until one gives a result (a match's image may turn out too small).
+ */
+export async function findCover<T>(
+  book: Book,
+  sources: Sources,
+  use: (match: Candidate) => Promise<T | undefined>,
+): Promise<T | undefined> {
+  for (const search of [sources.openLibrary, sources.google]) {
+    if (!search) continue;
+    for (const match of rankMatches(book, await search(book)).slice(0, MATCHES_TO_TRY)) {
+      const result = await use(match);
+      if (result !== undefined) return result;
+    }
+  }
+  return undefined;
+}
+
+/** "9783865215840" or "isbn:978-3-86521-584-0" → the ISBN digits; anything else → undefined. */
+export function isbnOf(value: string): string | undefined {
+  const digits = value.replace(/^isbn:/i, "").replace(/[\s-]/g, "");
+  return /^(\d{9}[\dX]|\d{13})$/i.test(digits) ? digits : undefined;
+}
+
+async function loadImage(source: string, fetcher: Fetcher): Promise<Buffer> {
+  const isbn = isbnOf(source);
+  const location = isbn
+    ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`
+    : source;
+  if (!/^https?:\/\//.test(location)) return readFileSync(location);
+  const res = await fetcher(location);
+  if (!res.ok) throw new Error(`image download answered ${res.status}`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
+function hex({ r, g, b }: { r: number; g: number; b: number }): string {
+  return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+}
+
+/** A trim must keep at least this share of each side, or it's cutting into a pale cover. */
+const MIN_TRIM_KEEP = 0.75;
+/** How far (0–255) a pixel may differ from the border colour and still count as border. */
+const TRIM_THRESHOLD = 24;
+
+/**
+ * Cuts away a plain border (white, or a studio backdrop) around the cover,
+ * judged from the top-left pixel. A white cover on a white background would be
+ * trimmed down to its lettering, so a trim that takes more than a quarter of
+ * either side is ignored.
+ */
+export async function trimBorder(image: Buffer): Promise<Buffer> {
+  const { width = 0, height = 0 } = await sharp(image).metadata();
+  try {
+    const { data, info } = await sharp(image)
+      .trim({ threshold: TRIM_THRESHOLD })
+      .toBuffer({ resolveWithObject: true });
+    const kept = Math.min(info.width / width, info.height / height);
+    return kept >= MIN_TRIM_KEEP ? data : image;
+  } catch {
+    return image; // a single-colour image has nothing to trim to
+  }
+}
+
+/** Trims, resizes to WebP in public/covers and returns what the site needs to show it. */
+async function saveCover(
+  slug: string,
+  image: Buffer,
+  origin: string,
+  source: CoverEntry["source"],
+): Promise<CoverEntry> {
+  image = await trimBorder(image);
+  const { width = 0 } = await sharp(image).metadata();
+  if (width < MIN_WIDTH) throw new Error(`image is only ${width}px wide`);
+  mkdirSync(OUT_DIR, { recursive: true });
+
+  const sizes = {} as Record<keyof typeof WIDTHS, { width: number; height: number }>;
+  for (const [size, max] of Object.entries(WIDTHS) as [keyof typeof WIDTHS, number][]) {
+    const info = await sharp(image)
+      .resize({ width: max, withoutEnlargement: true })
+      .webp({ quality: 80 })
+      .toFile(`${OUT_DIR}/${slug}-${max}.webp`);
+    sizes[size] = { width: info.width, height: info.height };
+  }
+  const { dominant } = await sharp(image).stats();
+
+  return {
+    src: `covers/${slug}-${WIDTHS.small}.webp`,
+    large: `covers/${slug}-${WIDTHS.large}.webp`,
+    width: sizes.small.width,
+    height: sizes.small.height,
+    dominantColor: hex(dominant),
+    source,
+    origin,
+  };
+}
+
+function readJson<T>(path: string, fallback: T): T {
+  return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as T) : fallback;
+}
+
+async function main(): Promise<void> {
+  const books = readJson<Book[]>(BOOKS, []);
+  const previous = readJson<CoverIndex>(INDEX, {});
+  const overrides = readJson<Record<string, string>>(OVERRIDES, {});
+  const fetcher = throttled();
+  const googleFetcher = withRetries(fetcher);
+  const googleKey = process.env.GOOGLE_BOOKS_API_KEY;
+  // --redo re-processes covers already found, from where they came from, without searching again.
+  const redo = process.argv.includes("--redo");
+  let googleAvailable = true;
+
+  const sources: Sources = {
+    openLibrary: (book) => searchOpenLibrary(book, fetcher),
+    google: async (book) => {
+      if (!googleAvailable) return [];
+      try {
+        return await searchGoogle(book, googleFetcher, googleKey);
+      } catch (error) {
+        if (!(error instanceof QuotaError)) throw error;
+        googleAvailable = false;
+        console.warn("Google Books quota exceeded; using Open Library only for the rest of this run.");
+        return [];
+      }
+    },
+  };
+
+  const index: CoverIndex = {};
+  const misses: string[] = [];
+  let found = 0;
+  let kept = 0;
+
+  for (const [i, book] of books.entries()) {
+    const label = `[${i + 1}/${books.length}] ${book.title}`;
+    const old = previous[book.slug];
+    const override = overrides[book.slug];
+    const fileExists = old && existsSync(`public/${old.src}`);
+
+    try {
+      if (override) {
+        // An override always wins; it's only redone when its value changes.
+        if (fileExists && old.source === "override" && old.origin === override && !redo) {
+          index[book.slug] = old;
+          kept++;
+          continue;
+        }
+        index[book.slug] = await saveCover(
+          book.slug,
+          await loadImage(override, fetcher),
+          override,
+          "override",
+        );
+        console.log(`${label}: override`);
+        found++;
+        continue;
+      }
+
+      if (fileExists && old.source !== "override") {
+        index[book.slug] = redo
+          ? await saveCover(book.slug, await loadImage(old.origin, fetcher), old.origin, old.source)
+          : old;
+        kept++;
+        continue;
+      }
+
+      const problems: string[] = [];
+      const entry = await findCover(book, sources, async (match) => {
+        const urls = match.imageUrl ? [match.imageUrl] : [];
+        if (match.workKey) urls.push(...(await editionCovers(match.workKey, fetcher)));
+        for (const imageUrl of new Set(urls)) {
+          try {
+            const saved = await saveCover(
+              book.slug,
+              await loadImage(imageUrl, fetcher),
+              imageUrl,
+              match.source,
+            );
+            console.log(`${label}: ${match.source} (“${match.title}”, ${match.authors.join(", ")})`);
+            return saved;
+          } catch (error) {
+            problems.push((error as Error).message);
+          }
+        }
+        return undefined;
+      });
+      if (!entry) {
+        misses.push(book.slug);
+        const why = problems.length ? `matched, but ${[...new Set(problems)].join("; ")}` : "no match";
+        console.log(`${label}: ${why}`);
+        continue;
+      }
+      index[book.slug] = entry;
+      found++;
+    } catch (error) {
+      misses.push(book.slug);
+      console.log(`${label}: failed (${(error as Error).message})`);
+    }
+  }
+
+  const sorted = Object.fromEntries(
+    Object.entries(index).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  writeFileSync(INDEX, JSON.stringify(sorted, null, 2) + "\n");
+
+  const total = found + kept;
+  console.log(
+    `\n${total} of ${books.length} books have a cover (${found} new, ${kept} kept); ${misses.length} missed.`,
+  );
+  if (misses.length) {
+    console.log(`Add these to ${OVERRIDES} as an image URL, a local file or an ISBN:`);
+    for (const slug of misses) console.log(`  ${slug}`);
+  }
+
+  // The large file is the source image capped at 1200px, so its width shows the source's.
+  const lowRes: string[] = [];
+  for (const [slug, entry] of Object.entries(sorted)) {
+    const { width = 0 } = await sharp(`public/${entry.large}`).metadata();
+    if (width < GOOD_WIDTH) lowRes.push(`  ${slug} (${width}px wide)`);
+  }
+  if (lowRes.length) {
+    console.log(`\nThese covers are under ${GOOD_WIDTH}px wide and may look soft; a larger image in ${OVERRIDES} would help:`);
+    for (const line of lowRes) console.log(line);
+  }
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) await main();

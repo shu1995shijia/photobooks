@@ -131,8 +131,8 @@
   "color-photography-a-working-manual-henry-horenstein": {
     "src": "covers/color-photography-a-working-manual-henry-horenstein-600.webp",
     "large": "covers/color-photography-a-working-manual-henry-horenstein-1200.webp",
-    "width": 319,
-    "height": 440,
+    "width": 425,
+    "height": 500,
     "dominantColor": "#E8E8B8",
     "source": "upload",
     "origin": "data/covers/color-photography-a-working-manual-henry-horenstein.webp",
@@ -410,14 +410,25 @@
     "origin": "data/covers/small-trades-irving-penn.webp",
     "checksum": "b78c1e27ef74eb8d"
   },
+  "songbook-alec-soth": {
+    "src": "covers/songbook-alec-soth-600.webp",
+    "large": "covers/songbook-alec-soth-1200.webp",
+    "width": 600,
+    "height": 580,
+    "dominantColor": "#989838",
+    "source": "upload",
+    "origin": "data/covers/songbook-alec-soth.png",
+    "checksum": "8eec7b8cb5bca14c"
+  },
   "the-americans-robert-frank": {
     "src": "covers/the-americans-robert-frank-600.webp",
     "large": "covers/the-americans-robert-frank-1200.webp",
-    "width": 456,
-    "height": 306,
-    "dominantColor": "#F8F8F8",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/3279569-L.jpg?default=false"
+    "width": 600,
+    "height": 530,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/the-americans-robert-frank.jpeg",
+    "checksum": "7a999a16e2d73424"
   },
   "the-classic-rollei-a-definitive-guide-john-phillips": {
     "src": "covers/the-classic-rollei-a-definitive-guide-john-phillips-600.webp",

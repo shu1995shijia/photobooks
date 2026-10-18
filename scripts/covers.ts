@@ -265,9 +265,10 @@ const OUTLINE_PX = 3;
  * judged from the top-left pixel. A white cover on a white background would be
  * trimmed down to its lettering, so a trim that takes more than a quarter of
  * either side is ignored. Uploads may go deeper (MIN_TRIM_KEEP_UPLOAD), but
- * only if the trim stops at the book's edge rather than inside a pale cover.
+ * any trim of an upload must stop at the book's edge rather than inside a pale
+ * cover: an upload is often the whole cover, with a pale margin of its own.
  */
-export async function trimBorder(original: Buffer, minKeep = MIN_TRIM_KEEP): Promise<Buffer> {
+export async function trimBorder(original: Buffer, upload = false): Promise<Buffer> {
   const image = await shaveOutline(original);
   const { width = 0, height = 0 } = await sharp(image).metadata();
   try {
@@ -275,9 +276,8 @@ export async function trimBorder(original: Buffer, minKeep = MIN_TRIM_KEEP): Pro
       .trim({ threshold: TRIM_THRESHOLD })
       .toBuffer({ resolveWithObject: true });
     const kept = Math.min(info.width / width, info.height / height);
-    if (kept >= MIN_TRIM_KEEP) return data;
-    if (kept >= minKeep && (await stopsAtEdge(image, data))) return data;
-    return original;
+    if (!upload) return kept >= MIN_TRIM_KEEP ? data : original;
+    return kept >= MIN_TRIM_KEEP_UPLOAD && (await stopsAtEdge(image, data)) ? data : original;
   } catch {
     return original; // a single-colour image has nothing to trim to
   }
@@ -326,7 +326,7 @@ async function saveCover(
   origin: string,
   source: CoverEntry["source"],
 ): Promise<CoverEntry> {
-  image = await trimBorder(image, source === "upload" ? MIN_TRIM_KEEP_UPLOAD : MIN_TRIM_KEEP);
+  image = await trimBorder(image, source === "upload");
   const { width = 0 } = await sharp(image).metadata();
   if (width < MIN_WIDTH) throw new Error(`image is only ${width}px wide`);
   mkdirSync(OUT_DIR, { recursive: true });

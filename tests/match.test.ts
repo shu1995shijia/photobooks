@@ -248,7 +248,7 @@ describe("trimBorder", () => {
     expect(await trimBorder(image)).toBe(image);
   });
 
-  test("won't trim deep into a pale cover, even when asked", async () => {
+  test("won't trim deep into a pale cover, even for an upload", async () => {
     // A white cover on white: all the trim finds is two bits of lettering.
     const mark = await cover(20, "#000000");
     const image = await sharp({ create: { width: 400, height: 400, channels: 3, background: "#ffffff" } })
@@ -258,7 +258,7 @@ describe("trimBorder", () => {
       ])
       .png()
       .toBuffer();
-    expect(await trimBorder(image, 0.25)).toBe(image);
+    expect(await trimBorder(image, true)).toBe(image);
   });
 
   test("shaves a hairline round the image before trimming the border inside it", async () => {
@@ -269,8 +269,8 @@ describe("trimBorder", () => {
     expect(await sharp(await trimBorder(image)).metadata()).toMatchObject({ width: 340, height: 340 });
   });
 
-  test("trims deeper when asked, for a product photo of the book on a backdrop", async () => {
-    const out = await trimBorder(await framed(260, "#28465c"), 0.5);
+  test("trims an upload deeper, for a product photo of the book on a backdrop", async () => {
+    const out = await trimBorder(await framed(260, "#28465c"), true);
     expect(await sharp(out).metadata()).toMatchObject({ width: 260, height: 260 });
   });
 });

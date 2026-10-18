@@ -157,6 +157,7 @@ const total = books.length;
 
   .carousel:global(.is-enhanced) .slide[data-pos] {
     display: block;
+    will-change: transform;
   }
 
   /* Books arriving from out of sight fade in instead of popping into place. */
@@ -176,18 +177,48 @@ const total = books.length;
   }
 
   .carousel:global(.is-enhanced) :global(.cover) {
+    position: relative;
     width: calc(var(--cover-h) * var(--ratio));
     height: var(--cover-h);
     aspect-ratio: auto;
-    /* The polished floor: a faint mirror image fading out below each book. */
-    -webkit-box-reflect: below 1px
-      linear-gradient(transparent 68%, rgb(0 0 0 / 0.22));
-    transition: filter 0.45s ease;
   }
 
-  /* Books at the side are a little in shadow. */
-  .carousel:global(.is-enhanced) .slide[data-pos="side"] :global(.cover) {
-    filter: brightness(0.9);
+  /*
+   * The shade on books at the side, and the reflection, are drawn by the cover
+   * itself, so each book moves as one finished layer. (A brightness filter and
+   * -webkit-box-reflect are redrawn on every move and trail behind the cover.)
+   */
+  .carousel:global(.is-enhanced) :global(.cover)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .carousel:global(.is-enhanced)
+    .slide[data-pos="side"]
+    :global(.cover)::before {
+    opacity: 0.1;
+  }
+
+  /* The polished floor: the bottom of the cover, mirrored and fading out. */
+  .carousel:global(.is-enhanced) :global(.cover)::after {
+    --share: 0.32; /* how much of the cover shows in the reflection */
+    content: "";
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0;
+    width: 100%;
+    height: calc(100% * var(--share));
+    background:
+      var(--cover-image, none) center bottom / 100% calc(100% / var(--share))
+        no-repeat,
+      var(--cover-bg, transparent);
+    transform: scaleY(-1);
+    mask-image: linear-gradient(to top, rgb(0 0 0 / 0.22), transparent);
+    pointer-events: none;
   }
 
   /* Only the book at the front has its label, centred under its reflection. */

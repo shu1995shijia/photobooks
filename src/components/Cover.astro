@@ -21,7 +21,10 @@ function ratio(width: number, height: number): number {
 ---
 
 {cover ? (
-  <div class="cover" style={`--ratio: ${ratio(cover.width, cover.height)}`}>
+  <div
+    class="cover"
+    style={`--ratio: ${ratio(cover.width, cover.height)}; --cover-image: image-set(url("${url(cover.src)}") 1x, url("${url(cover.large)}") 2x)`}
+  >
     <img
       src={url(cover.src)}
       srcset={`${url(cover.src)} 600w, ${url(cover.large)} 1200w`}

@@ -244,6 +244,11 @@ function hex({ r, g, b }: { r: number; g: number; b: number }): string {
 
 /** A trim must keep at least this share of each side, or it's cutting into a pale cover. */
 const MIN_TRIM_KEEP = 0.75;
+/**
+ * Uploads are often a product photo: the book on a backdrop, with room around
+ * it. They're chosen by hand, so a deeper trim is allowed.
+ */
+const MIN_TRIM_KEEP_UPLOAD = 0.5;
 /** How far (0–255) a pixel may differ from the border colour and still count as border. */
 const TRIM_THRESHOLD = 24;
 
@@ -251,16 +256,16 @@ const TRIM_THRESHOLD = 24;
  * Cuts away a plain border (white, or a studio backdrop) around the cover,
  * judged from the top-left pixel. A white cover on a white background would be
  * trimmed down to its lettering, so a trim that takes more than a quarter of
- * either side is ignored.
+ * either side is ignored (by default; see MIN_TRIM_KEEP_UPLOAD).
  */
-export async function trimBorder(image: Buffer): Promise<Buffer> {
+export async function trimBorder(image: Buffer, minKeep = MIN_TRIM_KEEP): Promise<Buffer> {
   const { width = 0, height = 0 } = await sharp(image).metadata();
   try {
     const { data, info } = await sharp(image)
       .trim({ threshold: TRIM_THRESHOLD })
       .toBuffer({ resolveWithObject: true });
     const kept = Math.min(info.width / width, info.height / height);
-    return kept >= MIN_TRIM_KEEP ? data : image;
+    return kept >= minKeep ? data : image;
   } catch {
     return image; // a single-colour image has nothing to trim to
   }
@@ -273,7 +278,7 @@ async function saveCover(
   origin: string,
   source: CoverEntry["source"],
 ): Promise<CoverEntry> {
-  image = await trimBorder(image);
+  image = await trimBorder(image, source === "upload" ? MIN_TRIM_KEEP_UPLOAD : MIN_TRIM_KEEP);
   const { width = 0 } = await sharp(image).metadata();
   if (width < MIN_WIDTH) throw new Error(`image is only ${width}px wide`);
   mkdirSync(OUT_DIR, { recursive: true });

@@ -17,6 +17,16 @@
     "source": "google",
     "origin": "https://books.google.com/books/content?id=hnhxAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
   },
+  "abandoned-cities-of-the-ussr-arseniy-kotov": {
+    "src": "covers/abandoned-cities-of-the-ussr-arseniy-kotov-600.webp",
+    "large": "covers/abandoned-cities-of-the-ussr-arseniy-kotov-1200.webp",
+    "width": 600,
+    "height": 782,
+    "dominantColor": "#8898A8",
+    "source": "upload",
+    "origin": "data/covers/abandoned-cities-of-the-ussr-arseniy-kotov.jpg",
+    "checksum": "b4a6514c2ff00c2d"
+  },
   "american-surfaces-stephen-shore": {
     "src": "covers/american-surfaces-stephen-shore-600.webp",
     "large": "covers/american-surfaces-stephen-shore-1200.webp",
@@ -147,11 +157,12 @@
   "exiles-josef-koudelka": {
     "src": "covers/exiles-josef-koudelka-600.webp",
     "large": "covers/exiles-josef-koudelka-1200.webp",
-    "width": 475,
-    "height": 425,
-    "dominantColor": "#080808",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/13469188-L.jpg?default=false"
+    "width": 600,
+    "height": 535,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/exiles-josef-koudelka.webp",
+    "checksum": "795e215ecdfce121"
   },
   "focus-beaumont-newhall": {
     "src": "covers/focus-beaumont-newhall-600.webp",

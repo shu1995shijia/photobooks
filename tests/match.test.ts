@@ -247,6 +247,11 @@ describe("trimBorder", () => {
     const image = await framed(120, "#000000"); // a small black title on a white cover
     expect(await trimBorder(image)).toBe(image);
   });
+
+  test("trims deeper when asked, for a product photo of the book on a backdrop", async () => {
+    const out = await trimBorder(await framed(260, "#28465c"), 0.5);
+    expect(await sharp(out).metadata()).toMatchObject({ width: 260, height: 260 });
+  });
 });
 
 describe("withRetries", () => {

@@ -98,6 +98,16 @@
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/692486-L.jpg?default=false"
   },
+  "color-photography-a-working-manual-henry-horenstein": {
+    "src": "covers/color-photography-a-working-manual-henry-horenstein-600.webp",
+    "large": "covers/color-photography-a-working-manual-henry-horenstein-1200.webp",
+    "width": 422,
+    "height": 497,
+    "dominantColor": "#E8E8B8",
+    "source": "upload",
+    "origin": "data/covers/color-photography-a-working-manual-henry-horenstein.webp",
+    "checksum": "73deed217adcc405"
+  },
   "dorchester-days-eugene-richards": {
     "src": "covers/dorchester-days-eugene-richards-600.webp",
     "large": "covers/dorchester-days-eugene-richards-1200.webp",
@@ -223,6 +233,16 @@
     "dominantColor": "#E82828",
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/8815191-L.jpg?default=false"
+  },
+  "miraichan-kotori-kawashima": {
+    "src": "covers/miraichan-kotori-kawashima-600.webp",
+    "large": "covers/miraichan-kotori-kawashima-1200.webp",
+    "width": 600,
+    "height": 404,
+    "dominantColor": "#F8F8E8",
+    "source": "upload",
+    "origin": "data/covers/miraichan-kotori-kawashima.webp",
+    "checksum": "e84d5375117b2b15"
   },
   "modern-instances-stephen-shore": {
     "src": "covers/modern-instances-stephen-shore-600.webp",

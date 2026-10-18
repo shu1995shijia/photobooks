@@ -1,0 +1,28 @@
+# Your own covers
+
+Put a cover image here and it replaces whatever cover the book has now.
+
+**Name the file after the book's slug**: the last part of its page address.
+For https://shu1995shijia.github.io/photobooks/books/the-americans-robert-frank
+the file is `the-americans-robert-frank.jpg`.
+
+JPEG, PNG, WebP, AVIF, GIF and TIFF all work. Use an image at least 600px wide
+(1200px or more looks best). A plain white border around the cover is trimmed off.
+
+## On github.com
+
+1. Open this folder (`data/covers`) in the repository.
+2. Choose **Add file → Upload files**, drop the image in and commit it to `main`.
+3. The site rebuilds by itself; the new cover is live in a minute or two.
+   You can follow it under the **Actions** tab.
+
+To replace a cover again, upload a new file with the same name. To go back to
+the cover found online, delete the file; the book shows a placeholder until
+`npm run covers` is run on a computer.
+
+If a file isn't named after a book, it's skipped, and the Actions log
+lists it with the closest name it could find.
+
+## On your computer
+
+Copy the image here, run `npm run covers`, then commit and push.

@@ -8,8 +8,9 @@ export interface CoverEntry {
   width: number; // of the 600px version
   height: number;
   dominantColor: string; // "#A34B24", for spines
-  source: "openlibrary" | "google" | "override";
+  source: "openlibrary" | "google" | "override" | "upload";
   origin: string; // where the image came from
+  checksum?: string; // of an uploaded file, so a replaced file is noticed
 }
 
 export type CoverIndex = Record<string, CoverEntry>;

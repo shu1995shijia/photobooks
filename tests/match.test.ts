@@ -11,6 +11,7 @@ import sharp from "sharp";
 import {
   findCover,
   isbnOf,
+  matchUploads,
   searchAuthor,
   searchOpenLibrary,
   trimBorder,
@@ -275,5 +276,32 @@ describe("withRetries", () => {
     const res = await withRetries(fetcher, [0])("https://example.test");
     expect(res.status).toBe(429);
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("matchUploads", () => {
+  const slugs = ["pocari-sweat-yoshiyuki-okuyama", "the-americans-robert-frank"];
+
+  test("pairs an image named after a slug with that book, whatever its extension's case", () => {
+    const { bySlug, unknown } = matchUploads(
+      ["the-americans-robert-frank.JPG", "pocari-sweat-yoshiyuki-okuyama.webp"],
+      slugs,
+    );
+    expect(bySlug).toEqual({
+      "the-americans-robert-frank": "the-americans-robert-frank.JPG",
+      "pocari-sweat-yoshiyuki-okuyama": "pocari-sweat-yoshiyuki-okuyama.webp",
+    });
+    expect(unknown).toEqual([]);
+  });
+
+  test("ignores files that aren't images, such as the folder's README", () => {
+    expect(matchUploads(["README.md", ".DS_Store"], slugs)).toEqual({ bySlug: {}, unknown: [] });
+  });
+
+  test("reports a misnamed image with the closest slug", () => {
+    expect(matchUploads(["Pocari Sweat 2018.webp", "holiday.jpg"], slugs).unknown).toEqual([
+      { file: "Pocari Sweat 2018.webp", suggestion: "pocari-sweat-yoshiyuki-okuyama" },
+      { file: "holiday.jpg", suggestion: undefined },
+    ]);
   });
 });

@@ -2,10 +2,12 @@
  * Finds, downloads and resizes a cover for each book in src/data/books.json.
  *
  *   npm run covers
- *   npm run covers -- --redo   (re-process covers already found, e.g. after changing the trimming)
+ *   npm run covers -- --redo           (re-process covers already found, e.g. after changing the trimming)
+ *   npm run covers -- --uploads-only   (only process files in data/covers; no network; used by the deploy)
  *
- * Order: an entry in data/cover-overrides.json, then Open Library, then Google
- * Books. A search result is used only when its title and photographer both
+ * Order: an image uploaded to data/covers/ and named after the book's slug
+ * (data/covers/the-americans-robert-frank.jpg), then an entry in
+ * data/cover-overrides.json, then Open Library, then Google Books. A search result is used only when its title and photographer both
  * match (see src/lib/match.ts); otherwise the book is listed as a miss and
  * keeps its typographic placeholder. Covers already in src/data/covers.json
  * are skipped, so re-runs only look up what's missing.
@@ -16,17 +18,21 @@
  * Put GOOGLE_BOOKS_API_KEY=… in .env (gitignored) to use your own Google Books quota; without it,
  * Google often answers "quota exceeded" and only Open Library is used.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import type { Book } from "../src/lib/book";
 import type { CoverEntry, CoverIndex } from "../src/lib/cover";
 import { rankMatches, type Candidate } from "../src/lib/match";
-import { latinPart } from "../src/lib/slug";
+import { baseSlug, latinPart } from "../src/lib/slug";
 
 const BOOKS = "src/data/books.json";
 const INDEX = "src/data/covers.json";
 const OVERRIDES = "data/cover-overrides.json";
+const UPLOADS = "data/covers";
+const IMAGE_TYPES = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".tif", ".tiff"]);
 const OUT_DIR = "public/covers";
 const WIDTHS = { small: 600, large: 1200 } as const;
 /** Smaller images are usually "no cover" placeholders or thumbnails. */
@@ -293,6 +299,45 @@ async function saveCover(
   };
 }
 
+export interface Uploads {
+  bySlug: Record<string, string>; // slug → file name
+  /** Image files whose name isn't a slug, each with the closest slug, if any. */
+  unknown: { file: string; suggestion?: string }[];
+}
+
+/**
+ * Pairs images in data/covers with books by file name: "the-americans-robert-frank.jpg".
+ * Other files (this folder's README) are ignored.
+ */
+export function matchUploads(files: readonly string[], slugs: readonly string[]): Uploads {
+  const known = new Set(slugs);
+  const result: Uploads = { bySlug: {}, unknown: [] };
+  for (const file of [...files].sort()) {
+    const ext = extname(file).toLowerCase();
+    if (!IMAGE_TYPES.has(ext)) continue;
+    const name = file.slice(0, -ext.length).trim().toLowerCase();
+    if (known.has(name)) result.bySlug[name] = file;
+    else result.unknown.push({ file, suggestion: closestSlug(name, slugs) });
+  }
+  return result;
+}
+
+/** The slug sharing the most words with a file name like "Pocari Sweat 2018", if it shares at least half. */
+function closestSlug(name: string, slugs: readonly string[]): string | undefined {
+  const words = baseSlug(name).split("-");
+  let best: { slug: string; shared: number } | undefined;
+  for (const slug of slugs) {
+    const own = new Set(slug.split("-"));
+    const shared = words.filter((w) => own.has(w)).length;
+    if (shared > (best?.shared ?? 0)) best = { slug, shared };
+  }
+  return best && best.shared * 2 >= words.length ? best.slug : undefined;
+}
+
+function checksum(data: Buffer): string {
+  return createHash("sha256").update(data).digest("hex").slice(0, 16);
+}
+
 function readJson<T>(path: string, fallback: T): T {
   return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as T) : fallback;
 }
@@ -306,6 +351,11 @@ async function main(): Promise<void> {
   const googleKey = process.env.GOOGLE_BOOKS_API_KEY;
   // --redo re-processes covers already found, from where they came from, without searching again.
   const redo = process.argv.includes("--redo");
+  const uploadsOnly = process.argv.includes("--uploads-only");
+  const uploads = matchUploads(
+    existsSync(UPLOADS) ? readdirSync(UPLOADS) : [],
+    books.map((b) => b.slug),
+  );
   let googleAvailable = true;
 
   const sources: Sources = {
@@ -332,9 +382,35 @@ async function main(): Promise<void> {
     const label = `[${i + 1}/${books.length}] ${book.title}`;
     const old = previous[book.slug];
     const override = overrides[book.slug];
+    const upload = uploads.bySlug[book.slug];
     const fileExists = old && existsSync(`public/${old.src}`);
 
     try {
+      if (upload) {
+        // An uploaded file wins over everything; it's redone when its contents change.
+        const path = `${UPLOADS}/${upload}`;
+        const data = readFileSync(path);
+        const sum = checksum(data);
+        if (fileExists && old.source === "upload" && old.checksum === sum && !redo) {
+          index[book.slug] = old;
+          kept++;
+          continue;
+        }
+        index[book.slug] = { ...(await saveCover(book.slug, data, path, "upload")), checksum: sum };
+        console.log(`${label}: uploaded file ${upload}`);
+        found++;
+        continue;
+      }
+
+      if (uploadsOnly) {
+        // Keep what's there without searching, unless it came from a file that's since been removed.
+        if (fileExists && old.source !== "upload") {
+          index[book.slug] = old;
+          kept++;
+        } else misses.push(book.slug);
+        continue;
+      }
+
       if (override) {
         // An override always wins; it's only redone when its value changes.
         if (fileExists && old.source === "override" && old.origin === override && !redo) {
@@ -404,8 +480,13 @@ async function main(): Promise<void> {
   console.log(
     `\n${total} of ${books.length} books have a cover (${found} new, ${kept} kept); ${misses.length} missed.`,
   );
-  if (misses.length) {
-    console.log(`Add these to ${OVERRIDES} as an image URL, a local file or an ISBN:`);
+  if (uploads.unknown.length) {
+    console.warn(`\nThese files in ${UPLOADS}/ aren't named after a book, so they weren't used:`);
+    for (const { file, suggestion } of uploads.unknown)
+      console.warn(`  ${file}${suggestion ? ` (did you mean ${suggestion}${extname(file)}?)` : ""}`);
+  }
+  if (misses.length && !uploadsOnly) {
+    console.log(`Upload a cover to ${UPLOADS}/<slug>.jpg, or add one to ${OVERRIDES} as an image URL or an ISBN:`);
     for (const slug of misses) console.log(`  ${slug}`);
   }
 
@@ -416,7 +497,7 @@ async function main(): Promise<void> {
     if (width < GOOD_WIDTH) lowRes.push(`  ${slug} (${width}px wide)`);
   }
   if (lowRes.length) {
-    console.log(`\nThese covers are under ${GOOD_WIDTH}px wide and may look soft; a larger image in ${OVERRIDES} would help:`);
+    console.log(`\nThese covers are under ${GOOD_WIDTH}px wide and may look soft; a larger image in ${UPLOADS}/ would help:`);
     for (const line of lowRes) console.log(line);
   }
 }

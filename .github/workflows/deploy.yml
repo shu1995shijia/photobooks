@@ -1,5 +1,7 @@
 # Builds the site and publishes it to GitHub Pages on every push to main.
 # Covers are committed in public/covers, so the build needs no network or API keys.
+# Images uploaded to data/covers/ (named after a book's slug) are resized here first,
+# so a cover uploaded on github.com goes live without running anything locally.
 name: Deploy
 
 on:
@@ -28,6 +30,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - run: npm run covers -- --uploads-only
       - run: npm run build
       - uses: actions/upload-pages-artifact@v4
         with:

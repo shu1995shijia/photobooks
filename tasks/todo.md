@@ -48,6 +48,10 @@ Follows [plan.md](plan.md). Do them in order; ⇄ marks tasks that can run in pa
   - Verify: add a test override, re-run `npm run covers` and check it's used; open `/dev/covers`; make sure `/dev/` isn't in the production build.
   - Files: `scripts/covers.ts`, `data/cover-overrides.json`, `src/pages/dev/covers.astro`, `src/components/Cover.astro`
 
+- [x] **8a. Upload your own covers on github.com** _(added 2026-10-18 at your request)_
+  - Acceptance: an image in `data/covers/` named `<slug>.<ext>` replaces the book's cover, ahead of overrides and search; replacing the file is noticed (by checksum); the deploy runs `npm run covers -- --uploads-only` (no network) before building; misnamed files are listed with the closest slug; `data/covers/README.md` explains it.
+  - Verify: unit tests for `matchUploads`; a misnamed file in `data/covers/` is reported with a suggestion; an upload on github.com goes live.
+
 **→ Checkpoint B: you check the matched covers and the misses.**
 
 ## Phase C: Browsing views

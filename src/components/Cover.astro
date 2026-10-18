@@ -1,6 +1,6 @@
 ---
 import { photographerLine, type Book } from "../lib/book";
-import { coverFor, placeholderTone } from "../lib/cover";
+import { coverFor, placeholderTone, versioned } from "../lib/cover";
 import { url } from "../lib/url";
 
 interface Props {
@@ -13,6 +13,8 @@ interface Props {
 const { book, sizes, eager = false } = Astro.props;
 const cover = coverFor(book.slug);
 const tone = placeholderTone(book);
+const small = cover && url(versioned(cover, cover.src));
+const large = cover && url(versioned(cover, cover.large));
 
 /** Width ÷ height, kept within book-like limits; odd shapes are cropped to fit. */
 function ratio(width: number, height: number): number {
@@ -23,11 +25,11 @@ function ratio(width: number, height: number): number {
 {cover ? (
   <div
     class="cover"
-    style={`--ratio: ${ratio(cover.width, cover.height)}; --cover-image: image-set(url("${url(cover.src)}") 1x, url("${url(cover.large)}") 2x)`}
+    style={`--ratio: ${ratio(cover.width, cover.height)}; --cover-image: image-set(url("${small}") 1x, url("${large}") 2x)`}
   >
     <img
-      src={url(cover.src)}
-      srcset={`${url(cover.src)} 600w, ${url(cover.large)} 1200w`}
+      src={small}
+      srcset={`${small} 600w, ${large} 1200w`}
       sizes={sizes}
       width={cover.width}
       height={cover.height}

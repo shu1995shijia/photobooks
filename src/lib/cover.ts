@@ -20,6 +20,16 @@ export function coverFor(slug: string): CoverEntry | undefined {
   return (covers as CoverIndex)[slug];
 }
 
+/**
+ * A cover's file path with a version tag, e.g. "covers/x-600.webp?v=3k9f2a".
+ * A replaced cover keeps its file name, so the tag changes with the image
+ * and browsers don't keep showing the old one from their cache.
+ */
+export function versioned(entry: CoverEntry, file: string): string {
+  const id = [entry.origin, entry.checksum, entry.width, entry.height, entry.dominantColor].join("|");
+  return `${file}?v=${hash(id).toString(36)}`;
+}
+
 export interface Tone {
   bg: string;
   fg: string;

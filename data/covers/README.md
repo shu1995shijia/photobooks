@@ -26,3 +26,14 @@ lists it with the closest name it could find.
 ## On your computer
 
 Copy the image here, run `npm run covers`, then commit and push.
+
+## Photos taken at an angle
+
+If the photo shows the book tilted or in perspective, straighten it on a
+computer by giving the cover's four corners (in pixels, clockwise from top left):
+
+    npm run flatten -- data/covers/<slug>.jpg 88,16 761,64 761,748 88,781
+
+The untouched photo is kept in `originals/` (ignored by the site), so you can
+run it again with better corners. Add `--aspect=<width/height>` when a book
+turned sideways comes out too narrow. Then run `npm run covers`.

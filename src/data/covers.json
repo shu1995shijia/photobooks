@@ -1,21 +1,43 @@
 {
+  "1914-1953-emmy-andriesse": {
+    "src": "covers/1914-1953-emmy-andriesse-600.webp",
+    "large": "covers/1914-1953-emmy-andriesse-1200.webp",
+    "width": 455,
+    "height": 639,
+    "dominantColor": "#484848",
+    "source": "upload",
+    "origin": "data/covers/1914-1953-emmy-andriesse.jpg",
+    "checksum": "d701b933401955f0"
+  },
   "24-mails-from-railway-cheng-xin-hao": {
     "src": "covers/24-mails-from-railway-cheng-xin-hao-600.webp",
     "large": "covers/24-mails-from-railway-cheng-xin-hao-1200.webp",
-    "width": 415,
-    "height": 730,
+    "width": 378,
+    "height": 640,
     "dominantColor": "#F8F8F8",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/e2/GfMDtCRSd_VjVm1F.jpeg"
+    "source": "upload",
+    "origin": "data/covers/24-mails-from-railway-cheng-xin-hao.avif",
+    "checksum": "f485cd3869a7d491"
+  },
+  "a-dream-yoshihiko-ueda": {
+    "src": "covers/a-dream-yoshihiko-ueda-600.webp",
+    "large": "covers/a-dream-yoshihiko-ueda-1200.webp",
+    "width": 600,
+    "height": 609,
+    "dominantColor": "#E8D8C8",
+    "source": "upload",
+    "origin": "data/covers/a-dream-yoshihiko-ueda.webp",
+    "checksum": "ea2c9aa11e86814a"
   },
   "a-photographer-in-old-peking-hedda-morrison": {
     "src": "covers/a-photographer-in-old-peking-hedda-morrison-600.webp",
     "large": "covers/a-photographer-in-old-peking-hedda-morrison-1200.webp",
-    "width": 227,
-    "height": 315,
-    "dominantColor": "#F8F8F8",
-    "source": "google",
-    "origin": "https://books.google.com/books/content?id=hnhxAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+    "width": 411,
+    "height": 482,
+    "dominantColor": "#886848",
+    "source": "upload",
+    "origin": "data/covers/a-photographer-in-old-peking-hedda-morrison.avif",
+    "checksum": "8b552e34b6e90766"
   },
   "abandoned-cities-of-the-ussr-arseniy-kotov": {
     "src": "covers/abandoned-cities-of-the-ussr-arseniy-kotov-600.webp",
@@ -44,6 +66,16 @@
     "dominantColor": "#384848",
     "source": "override",
     "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/35/iv88oBCre_4q6NtU.jpeg"
+  },
+  "assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns": {
+    "src": "covers/assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns-600.webp",
+    "large": "covers/assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns-1200.webp",
+    "width": 600,
+    "height": 848,
+    "dominantColor": "#483828",
+    "source": "upload",
+    "origin": "data/covers/assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns.webp",
+    "checksum": "46205955a22d7a51"
   },
   "atget-john-szarkowski": {
     "src": "covers/atget-john-szarkowski-600.webp",
@@ -92,6 +124,16 @@
     "origin": "data/covers/china-a-photo-history.webp",
     "checksum": "c40d19fec0cf6ada"
   },
+  "china-adagio-andrew-s-t-wong": {
+    "src": "covers/china-adagio-andrew-s-t-wong-600.webp",
+    "large": "covers/china-adagio-andrew-s-t-wong-1200.webp",
+    "width": 600,
+    "height": 621,
+    "dominantColor": "#080808",
+    "source": "upload",
+    "origin": "data/covers/china-adagio-andrew-s-t-wong.jpg",
+    "checksum": "3aa382a43d0d83bc"
+  },
   "china-after-mao-liu-heung-shing": {
     "src": "covers/china-after-mao-liu-heung-shing-600.webp",
     "large": "covers/china-after-mao-liu-heung-shing-1200.webp",
@@ -104,11 +146,22 @@
   "china-yann-layma": {
     "src": "covers/china-yann-layma-600.webp",
     "large": "covers/china-yann-layma-1200.webp",
-    "width": 425,
-    "height": 500,
-    "dominantColor": "#A81828",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/2646193-L.jpg?default=false"
+    "width": 400,
+    "height": 513,
+    "dominantColor": "#080808",
+    "source": "upload",
+    "origin": "data/covers/china-yann-layma.jpg",
+    "checksum": "56c0b9b03638a041"
+  },
+  "city-of-darkness-life-in-kowloon-walled-city-greg-girard": {
+    "src": "covers/city-of-darkness-life-in-kowloon-walled-city-greg-girard-600.webp",
+    "large": "covers/city-of-darkness-life-in-kowloon-walled-city-greg-girard-1200.webp",
+    "width": 600,
+    "height": 602,
+    "dominantColor": "#282828",
+    "source": "upload",
+    "origin": "data/covers/city-of-darkness-life-in-kowloon-walled-city-greg-girard.png",
+    "checksum": "808ddb41f8771e8a"
   },
   "coastline-zhang-xiao": {
     "src": "covers/coastline-zhang-xiao-600.webp",
@@ -197,11 +250,22 @@
   "focus-beaumont-newhall": {
     "src": "covers/focus-beaumont-newhall-600.webp",
     "large": "covers/focus-beaumont-newhall-1200.webp",
-    "width": 372,
-    "height": 500,
-    "dominantColor": "#D8D8D8",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/8173529-L.jpg?default=false"
+    "width": 600,
+    "height": 744,
+    "dominantColor": "#484848",
+    "source": "upload",
+    "origin": "data/covers/focus-beaumont-newhall.avif",
+    "checksum": "b24648421dc8c1fd"
+  },
+  "history-of-life-cai-dongdong": {
+    "src": "covers/history-of-life-cai-dongdong-600.webp",
+    "large": "covers/history-of-life-cai-dongdong-1200.webp",
+    "width": 600,
+    "height": 820,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/history-of-life-cai-dongdong.png",
+    "checksum": "48f67688fc2fab3a"
   },
   "hk-pm-hong-kong-night-life-1974-1989-greg-girard": {
     "src": "covers/hk-pm-hong-kong-night-life-1974-1989-greg-girard-600.webp",
@@ -328,11 +392,32 @@
   "modern-instances-stephen-shore": {
     "src": "covers/modern-instances-stephen-shore-600.webp",
     "large": "covers/modern-instances-stephen-shore-1200.webp",
-    "width": 296,
-    "height": 447,
-    "dominantColor": "#98A8A8",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/13313307-L.jpg?default=false"
+    "width": 600,
+    "height": 863,
+    "dominantColor": "#A8B8B8",
+    "source": "upload",
+    "origin": "data/covers/modern-instances-stephen-shore.jpg",
+    "checksum": "eeaa1f44a359789b"
+  },
+  "my-home-yoshihiko-ueda": {
+    "src": "covers/my-home-yoshihiko-ueda-600.webp",
+    "large": "covers/my-home-yoshihiko-ueda-1200.webp",
+    "width": 433,
+    "height": 600,
+    "dominantColor": "#E8E8C8",
+    "source": "upload",
+    "origin": "data/covers/my-home-yoshihiko-ueda.jpg",
+    "checksum": "d3bdb91577f665ac"
+  },
+  "old-paris-and-changing-new-york-eugene-atget": {
+    "src": "covers/old-paris-and-changing-new-york-eugene-atget-600.webp",
+    "large": "covers/old-paris-and-changing-new-york-eugene-atget-1200.webp",
+    "width": 596,
+    "height": 519,
+    "dominantColor": "#C8C8D8",
+    "source": "upload",
+    "origin": "data/covers/old-paris-and-changing-new-york-eugene-atget.avif",
+    "checksum": "a888fd97d2edb920"
   },
   "parallel-universes-of-children-ugur-gallenkus": {
     "src": "covers/parallel-universes-of-children-ugur-gallenkus-600.webp",
@@ -351,6 +436,16 @@
     "dominantColor": "#E8E8E8",
     "source": "override",
     "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/28/QpFv55Oty_sk3kiF.jpeg"
+  },
+  "parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei": {
+    "src": "covers/parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei-600.webp",
+    "large": "covers/parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei-1200.webp",
+    "width": 563,
+    "height": 772,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei.avif",
+    "checksum": "626e42cecc132fb7"
   },
   "phantom-shanghai-greg-girard": {
     "src": "covers/phantom-shanghai-greg-girard-600.webp",
@@ -453,11 +548,12 @@
   "the-nature-of-photographs-stephen-shore": {
     "src": "covers/the-nature-of-photographs-stephen-shore-600.webp",
     "large": "covers/the-nature-of-photographs-stephen-shore-1200.webp",
-    "width": 500,
-    "height": 455,
-    "dominantColor": "#080808",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/566516-L.jpg?default=false"
+    "width": 426,
+    "height": 500,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/the-nature-of-photographs-stephen-shore.avif",
+    "checksum": "4ac18c22437467e2"
   },
   "the-polaroid-book-steve-crist": {
     "src": "covers/the-polaroid-book-steve-crist-600.webp",
@@ -467,6 +563,16 @@
     "dominantColor": "#080808",
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/12345230-L.jpg?default=false"
+  },
+  "un-paese-paul-strand": {
+    "src": "covers/un-paese-paul-strand-600.webp",
+    "large": "covers/un-paese-paul-strand-1200.webp",
+    "width": 600,
+    "height": 825,
+    "dominantColor": "#A8B8A8",
+    "source": "upload",
+    "origin": "data/covers/un-paese-paul-strand.avif",
+    "checksum": "e574111770b197fd"
   },
   "war-is-personal-eugene-richards": {
     "src": "covers/war-is-personal-eugene-richards-600.webp",

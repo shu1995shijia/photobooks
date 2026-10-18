@@ -10,7 +10,8 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "import": "tsx scripts/import.ts",
-    "covers": "tsx --env-file-if-exists=.env scripts/covers.ts"
+    "covers": "tsx --env-file-if-exists=.env scripts/covers.ts",
+    "flatten": "tsx scripts/flatten.ts"
   },
   "dependencies": {
     "astro": "7.3.5",

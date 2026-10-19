@@ -5,14 +5,23 @@ import {
   photographerLine,
   type Book,
 } from "../lib/book";
+import { photographerSlug } from "../lib/photographer";
+import { url } from "../lib/url";
 
 interface Props {
   book: Book;
   /** Adds the fields a wall label leaves out: region, genre, tags and where the copy is kept. */
   full?: boolean;
+  /** Links each photographer's name to the page of all their books. */
+  linkNames?: boolean;
 }
 
-const { book, full = false } = Astro.props;
+const { book, full = false, linkNames = false } = Astro.props;
+
+// "A", "A and B", "A, B and C": the separator that goes before each name.
+const names = book.photographers;
+const before = (i: number) =>
+  i === 0 ? "" : i === names.length - 1 ? " and " : ", ";
 
 const extra = full
   ? [
@@ -28,7 +37,14 @@ const extra = full
 ---
 
 <div class:list={["label", { full }]}>
-  <p class="label-name">{photographerLine(book)}</p>
+  <p class="label-name">
+    {linkNames && names.length > 0
+      ? names.map((name, i) => [
+          before(i),
+          <a href={url(`photographers/${photographerSlug(name)}`)}>{name}</a>,
+        ])
+      : photographerLine(book)}
+  </p>
   {/* One expression, so no space slips in before the comma. */}
   <p class="label-title">
     {[<em>{book.title}</em>, book.year ? `, ${book.year}` : ""]}
@@ -62,6 +78,15 @@ const extra = full
 
   .label-name {
     font-weight: 700;
+  }
+
+  .label-name a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--shelf);
+  }
+
+  .label-name a:hover {
+    text-decoration-color: currentColor;
   }
 
   .label-detail {

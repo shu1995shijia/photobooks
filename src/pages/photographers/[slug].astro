@@ -1,0 +1,119 @@
+---
+import type { GetStaticPaths } from "astro";
+import Base from "../../layouts/Base.astro";
+import Cover from "../../components/Cover.astro";
+import books from "../../data/books.json";
+import type { Book } from "../../lib/book";
+import { photographers, type Photographer } from "../../lib/photographer";
+import { url } from "../../lib/url";
+
+export const getStaticPaths = (() =>
+  photographers(books as Book[]).map((photographer) => ({
+    params: { slug: photographer.slug },
+    props: { photographer },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  photographer: Photographer;
+}
+
+const { photographer } = Astro.props;
+const count = photographer.books.length;
+---
+
+<Base title={`${photographer.name}: Photobooks`}>
+  <section class="photographer">
+    <div class="heading">
+      <h1>{photographer.name}</h1>
+      <p class="count">
+        {count === 1 ? "One book" : `${count} books`} in the collection
+      </p>
+    </div>
+
+    <ul class="books">
+      {photographer.books.map((book) => (
+        <li>
+          <a href={url(`books/${book.slug}`)}>
+            <Cover book={book} sizes="(max-width: 720px) 44vw, 240px" />
+            <span class="caption">
+              {/* One expression, so no space slips in before the comma. */}
+              {[<em>{book.title}</em>, book.year ? `, ${book.year}` : ""]}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .photographer {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .count {
+    margin: 6px 0 0;
+    color: var(--graphite);
+  }
+
+  /* The books stand on a shared baseline, like a shelf. */
+  .books {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    align-items: end;
+    gap: 48px 40px;
+  }
+
+  .books a {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .books a :global(.cover) {
+    /* Full column width, but never taller than 340px. */
+    width: min(100%, 340px * var(--ratio));
+    transition: transform 0.2s ease;
+  }
+
+  .books a:hover :global(.cover) {
+    transform: translateY(-4px);
+  }
+
+  .caption {
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 2.8em; /* two lines, so covers line up even when a title wraps */
+  }
+
+  .books a:hover .caption em {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 720px) {
+    .books {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .books a :global(.cover) {
+      transition: none;
+    }
+  }
+</style>

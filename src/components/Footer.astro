@@ -1,0 +1,27 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <p>© {year} Photobooks. All rights reserved.</p>
+  <p>
+    Cover images and photographs are © their photographers and publishers, shown
+    here only to identify the books in this collection.
+  </p>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--shelf);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--graphite);
+  }
+
+  .footer p {
+    margin: 0;
+    max-width: 60ch;
+  }
+</style>

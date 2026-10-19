@@ -154,6 +154,16 @@
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/9750779-L.jpg?default=false"
   },
+  "china-hiroji-kubota": {
+    "src": "covers/china-hiroji-kubota-600.webp",
+    "large": "covers/china-hiroji-kubota-1200.webp",
+    "width": 600,
+    "height": 559,
+    "dominantColor": "#E8D8B8",
+    "source": "upload",
+    "origin": "data/covers/china-hiroji-kubota.webp",
+    "checksum": "60a07e77d6099fae"
+  },
   "china-yann-layma": {
     "src": "covers/china-yann-layma-600.webp",
     "large": "covers/china-yann-layma-1200.webp",
@@ -201,6 +211,16 @@
     "source": "upload",
     "origin": "data/covers/color-photography-a-working-manual-henry-horenstein.webp",
     "checksum": "73deed217adcc405"
+  },
+  "coney-island-peter-cranser": {
+    "src": "covers/coney-island-peter-cranser-600.webp",
+    "large": "covers/coney-island-peter-cranser-1200.webp",
+    "width": 600,
+    "height": 604,
+    "dominantColor": "#E8E8E8",
+    "source": "upload",
+    "origin": "data/covers/coney-island-peter-cranser.webp",
+    "checksum": "7373086381c75755"
   },
   "do-i-know-you-eugene-richards": {
     "src": "covers/do-i-know-you-eugene-richards-600.webp",

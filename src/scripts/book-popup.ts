@@ -101,7 +101,6 @@ export function initBookPopup(): void {
   const cover = dialog.querySelector<HTMLElement>("[data-spread-cover]")!;
   const page = dialog.querySelector<HTMLElement>("[data-spread-page]")!;
   const text = dialog.querySelector<HTMLElement>("[data-spread-label]")!;
-  const more = dialog.querySelector<HTMLAnchorElement>("[data-spread-link]")!;
   const closeButton = dialog.querySelector<HTMLButtonElement>(
     "[data-spread-close]",
   )!;
@@ -141,7 +140,6 @@ export function initBookPopup(): void {
     from = clicked;
     cover.replaceChildren(coverImage(book));
     text.replaceChildren(label(book));
-    more.href = book.href;
     dialog.setAttribute("aria-label", `${book.title}, ${book.byline}`);
     size(book);
     dialog.showModal();

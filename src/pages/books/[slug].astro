@@ -5,6 +5,7 @@ import BookMeta from "../../components/BookMeta.astro";
 import Cover from "../../components/Cover.astro";
 import books from "../../data/books.json";
 import { photographerLine, type Book } from "../../lib/book";
+import { coverFor, versioned } from "../../lib/cover";
 import { sortBooks } from "../../lib/sort";
 import { url } from "../../lib/url";
 
@@ -29,9 +30,22 @@ interface Props {
 }
 
 const { book, prev, next } = Astro.props;
+
+// The link preview: this book's cover, and "photographer, year · publisher".
+const cover = coverFor(book.slug);
+const description = [
+  [photographerLine(book), book.year].filter(Boolean).join(", "),
+  book.publisher,
+]
+  .filter(Boolean)
+  .join(" · ");
 ---
 
-<Base title={`${book.title}, ${photographerLine(book)}: Photobooks`}>
+<Base
+  title={`${book.title}, ${photographerLine(book)}: Photobooks`}
+  description={description || undefined}
+  image={cover && versioned(cover, cover.large)}
+>
   <a
     class="back"
     href={url(`carousel#${book.slug}`)}

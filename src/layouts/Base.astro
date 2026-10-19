@@ -7,9 +7,23 @@ import { url } from "../lib/url";
 interface Props {
   title: string;
   current?: "carousel" | "tile" | "about";
+  /** One line for link previews (Messages, WeChat, Slack…). */
+  description?: string;
+  /** A site path (e.g. a cover) for the link preview; the site icon otherwise. */
+  image?: string;
 }
 
-const { title, current } = Astro.props;
+const {
+  title,
+  current,
+  description = "A personal photobook collection of Shijia Shu.",
+  image,
+} = Astro.props;
+
+// Link previews need full addresses.
+const site = Astro.site ?? Astro.url;
+const pageUrl = new URL(Astro.url.pathname, site).href;
+const imageUrl = new URL(url(image ?? "apple-touch-icon.png"), site).href;
 ---
 
 <!doctype html>
@@ -27,6 +41,17 @@ const { title, current } = Astro.props;
       sizes="32x32"
     />
     <link rel="apple-touch-icon" href={url("apple-touch-icon.png")} />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Photobooks" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta
+      name="twitter:card"
+      content={image ? "summary_large_image" : "summary"}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

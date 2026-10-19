@@ -9,6 +9,7 @@
  */
 
 import { chosenLocation, onLocation, shows } from "./location";
+import { onShuffle, randomIndex } from "./shuffle";
 
 export function wrap(index: number, total: number): number {
   return ((index % total) + total) % total;
@@ -32,6 +33,23 @@ export function position(d: number): Position | undefined {
   if (abs <= VISIBLE) return "side";
   if (abs <= VISIBLE + PRELOAD) return "edge";
   return undefined;
+}
+
+/** How long the Shuffle spin takes, and the least number of books it passes. */
+const SPIN_MS = 2600;
+const MIN_SPIN = 8;
+
+/**
+ * The pauses between the books a spin passes: short at first, then longer,
+ * like a wheel slowing down, adding up to `totalMs`.
+ */
+export function spinDelays(steps: number, totalMs = SPIN_MS): number[] {
+  const weights = Array.from({ length: steps }, (_, i) => {
+    const t = steps <= 1 ? 1 : i / (steps - 1);
+    return 0.2 + t * t;
+  });
+  const sum = weights.reduce((a, b) => a + b, 0);
+  return weights.map((w) => (totalMs * w) / sum);
 }
 
 /** Drag distance that moves one book, as a share of the stage width. */
@@ -158,6 +176,15 @@ export function initCarousel(root: HTMLElement): void {
       event.preventDefault();
       go(moves[event.key]);
     }
+    // Enter opens the book at the front, unless a link or button has focus and takes it.
+    if (
+      event.key === "Enter" &&
+      total > 0 &&
+      !(focused instanceof Element && focused.closest("a, button, summary"))
+    ) {
+      event.preventDefault();
+      slides[index].querySelector<HTMLAnchorElement>("a[data-popup]")?.click();
+    }
   });
 
   // Dragging scrubs through the books: one book per step of distance.
@@ -217,6 +244,38 @@ export function initCarousel(root: HTMLElement): void {
   );
 
   window.addEventListener("hashchange", () => go(indexFromHash()));
+
+  // Shuffle: spin forward to a random book, slowing down, then open it.
+  onShuffle(async () => {
+    if (total === 0) return;
+    const target = randomIndex(total, index);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      go(target);
+    } else {
+      let steps = wrap(target - index, total);
+      if (steps < MIN_SPIN) steps += total; // a short hop doesn't feel like a spin
+      // Follow the clock rather than counting on each step's pause: when
+      // drawing a frame takes longer, books are skipped, not time added.
+      const at = spinDelays(steps).map((_, i, all) =>
+        all.slice(0, i + 1).reduce((a, b) => a + b, 0),
+      );
+      const start = index;
+      const began = performance.now();
+      let done = 0;
+      while (done < steps) {
+        await new Promise(requestAnimationFrame);
+        const elapsed = performance.now() - began;
+        let due = done;
+        while (due < steps && at[due] - at[0] <= elapsed) due++;
+        if (due > done) {
+          done = due;
+          go(start + done);
+        }
+      }
+      await new Promise((r) => setTimeout(r, 450)); // let the last book settle
+    }
+    slides[index].querySelector<HTMLAnchorElement>("a[data-popup]")?.click();
+  });
 
   root.classList.add("is-enhanced");
   controls.hidden = false;

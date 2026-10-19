@@ -62,6 +62,9 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
     </div>
   </div>
   <nav aria-label="Site">
+    <button type="button" class="view-link shuffle" hidden data-shuffle>
+      Shuffle
+    </button>
     <div class="views" data-views>
       <button
         type="button"
@@ -91,6 +94,12 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
     </a>
   </nav>
 </header>
+
+<script>
+  import { initShuffle } from "../scripts/shuffle";
+
+  initShuffle();
+</script>
 
 <script>
   // A tap (no hover on a phone) opens and closes the views menu.
@@ -172,6 +181,14 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
     where.classList.add("is-enhanced");
   }
 </script>
+
+<style is:global>
+  /* The cover the Shuffle highlight is on. */
+  a.is-shuffle-pick .cover {
+    outline: 4px solid var(--red-dot);
+    outline-offset: -4px;
+  }
+</style>
 
 <style>
   .header {
@@ -299,6 +316,30 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
 
   .view-link:hover {
     color: var(--ink);
+  }
+
+  .shuffle {
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .shuffle[hidden] {
+    display: none;
+  }
+
+  .shuffle[aria-busy="true"] {
+    color: var(--ink);
+  }
+
+  /* While shuffling, the gallery red dot runs ahead of the book being picked. */
+  .shuffle[aria-busy="true"]::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red-dot);
   }
 
   .views {

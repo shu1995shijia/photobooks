@@ -66,6 +66,73 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
   };
   onLocation(filter);
   filter(chosenLocation(known));
+
+  // The arrow keys move between covers (↑ ↓ to the nearest in the next row),
+  // and Enter opens the one with focus, or the first when none has it.
+  const links = () =>
+    tiles
+      .filter((tile) => !tile.hidden)
+      .map((tile) => tile.querySelector<HTMLAnchorElement>("a")!);
+
+  /** The link in the row above (-1) or below (1) whose middle is nearest `from`'s. */
+  function nearestInRow(all: HTMLAnchorElement[], from: number, dir: 1 | -1) {
+    const box = all[from].getBoundingClientRect();
+    const middle = box.left + box.width / 2;
+    let row: number | undefined;
+    let best = from;
+    let bestGap = Infinity;
+    for (let i = from + dir; i >= 0 && i < all.length; i += dir) {
+      const r = all[i].getBoundingClientRect();
+      if (r.top === box.top) continue;
+      row ??= r.top;
+      if (r.top !== row) break;
+      const gap = Math.abs(r.left + r.width / 2 - middle);
+      if (gap < bestGap) [best, bestGap] = [i, gap];
+    }
+    return best;
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+      return;
+    // A book open over the tiles has the keys.
+    if (document.querySelector("dialog[open]")) return;
+    const focused = document.activeElement;
+    if (focused?.closest("input, select, textarea, [contenteditable]")) return;
+    const all = links();
+    if (all.length === 0) return;
+    const at = all.indexOf(focused as HTMLAnchorElement);
+
+    if (event.key === "Enter") {
+      // A focused link or button opens itself.
+      if (focused?.closest("a, button, summary")) return;
+      event.preventDefault();
+      all[0].click();
+      return;
+    }
+    const moves: Record<string, () => number> = {
+      ArrowLeft: () => Math.max(0, at - 1),
+      ArrowRight: () => Math.min(all.length - 1, at + 1),
+      ArrowUp: () => nearestInRow(all, at, -1),
+      ArrowDown: () => nearestInRow(all, at, 1),
+      Home: () => 0,
+      End: () => all.length - 1,
+    };
+    if (!(event.key in moves)) return;
+    // With no cover picked, → (or Home, End) picks one; the other arrows
+    // still scroll the page, and header controls keep their keys.
+    if (
+      at === -1 &&
+      (focused !== document.body ||
+        !["ArrowRight", "Home", "End"].includes(event.key))
+    )
+      return;
+    event.preventDefault();
+    const next =
+      at === -1 && event.key === "ArrowRight" ? 0 : moves[event.key]();
+    all[next].focus();
+    all[next].scrollIntoView({ block: "nearest" });
+  });
 </script>
 
 <style>
@@ -126,7 +193,8 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
   }
 
   .tile a:hover .caption,
-  .tile a:focus-visible .caption {
+  .tile a:focus-visible .caption,
+  .tile a:global(.is-shuffle-pick) .caption {
     opacity: 1;
   }
 

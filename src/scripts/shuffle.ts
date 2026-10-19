@@ -2,8 +2,8 @@
  * The header's two chance buttons.
  *
  * Shuffle puts the covers in a random order, each one gliding to its new
- * place. By default it reorders every [data-shuffle-list]; the carousel does
- * its own with onReorder(). A reload brings back the usual order.
+ * place. It reorders every [data-shuffle-list] (the Tile view's), and only
+ * appears on pages that have one. A reload brings back the usual order.
  *
  * Pick for me chooses a book at random from those on show and opens it, like
  * pulling one off the shelf: a highlight flickers across the covers, slows
@@ -13,16 +13,10 @@
 
 type Action = () => Promise<void> | void;
 let customPick: Action | undefined;
-let customReorder: Action | undefined;
 
 /** Replaces the default flicker with this page's own way of picking a book. */
 export function onPick(pick: Action): void {
   customPick = pick;
-}
-
-/** Replaces the default reordering of [data-shuffle-list] with this page's own. */
-export function onReorder(reorder: Action): void {
-  customReorder = reorder;
 }
 
 const PICKED = "is-shuffle-pick";
@@ -157,8 +151,8 @@ export function initShuffle(): void {
   // Each button only appears where it can do something.
   wire(
     "[data-shuffle]",
-    () => !!document.querySelector("[data-shuffle-list], [data-carousel]"),
-    () => (customReorder ?? reorderLists)(),
+    () => !!document.querySelector("[data-shuffle-list]"),
+    reorderLists,
   );
   wire(
     "[data-pick]",

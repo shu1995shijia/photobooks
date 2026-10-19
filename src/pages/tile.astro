@@ -169,6 +169,7 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
 
   .tile a {
     display: block;
+    overflow: hidden; /* the hover zoom stays inside the tile */
     color: #fff;
     text-decoration: none;
   }
@@ -176,6 +177,13 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
   .tile :global(.cover) {
     width: 100%;
     box-shadow: none;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* Hovering zooms in slightly on the cover, within its own tile. */
+  .tile a:hover :global(.cover),
+  .tile a:focus-visible :global(.cover) {
+    transform: scale(1.06);
   }
 
   /* The title and photographer rise over the cover on hover or focus. */
@@ -222,7 +230,8 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .caption {
+    .caption,
+    .tile :global(.cover) {
       transition: none;
     }
   }

@@ -9,7 +9,7 @@
  */
 
 import { chosenLocation, onLocation, shows } from "./location";
-import { onPick, onReorder, randomIndex, shuffled } from "./shuffle";
+import { onPick, randomIndex } from "./shuffle";
 
 export function wrap(index: number, total: number): number {
   return ((index % total) + total) % total;
@@ -247,22 +247,6 @@ export function initCarousel(root: HTMLElement): void {
   );
 
   window.addEventListener("hashchange", () => go(indexFromHash()));
-
-  // Shuffle: every book but the one in front moves to a random place, and
-  // the books on either side glide to their new positions. Only the order
-  // the carousel uses changes; the elements stay put (moving them would
-  // restart them, so they'd fade in rather than glide).
-  onReorder(() => {
-    if (total === 0) return;
-    const order = shuffled(allSlides.map((_, i) => i));
-    const newSlides = order.map((i) => allSlides[i]);
-    const newTicks = order.map((i) => allTicks[i]);
-    allSlides.splice(0, allSlides.length, ...newSlides);
-    allTicks.splice(0, allTicks.length, ...newTicks);
-    // The ticks are plain marks, so they can move: the red dot keeps showing where you are.
-    allTicks[0]?.parentElement?.append(...newTicks);
-    filter(place); // recounts, staying on the book in front
-  });
 
   // Pick for me: spin forward to a random book, slowing down, then open it.
   onPick(async () => {

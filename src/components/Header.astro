@@ -4,7 +4,7 @@ import { LOCATIONS, locationOf, type Book } from "../lib/book";
 import { url } from "../lib/url";
 
 interface Props {
-  current?: "carousel";
+  current?: "carousel" | "tile";
 }
 
 const { current } = Astro.props;
@@ -19,7 +19,9 @@ const everywhere = "all locations";
 // The shelf view joins this list once it's built (see tasks/todo.md).
 const views = [
   { id: "carousel", label: "Carousel", href: url("carousel") },
+  { id: "tile", label: "Tile", href: url("tile") },
 ] as const;
+const currentView = views.find((view) => view.id === current);
 
 const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
 ---
@@ -59,21 +61,59 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
       </span>
     </div>
   </div>
-  <nav aria-label="Views">
-    {views.map((view) => (
-      <a
-        href={view.href}
-        aria-current={view.id === current ? "page" : undefined}
-        class="view-link"
+  <nav aria-label="Site">
+    <div class="views" data-views>
+      <button
+        type="button"
+        class="view-link views-button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-label={`View: ${currentView?.label ?? "none"}. Choose a view`}
+        data-views-button
       >
-        {view.label}
-      </a>
-    ))}
+        {currentView?.label ?? "Views"}
+      </button>
+      <ul class="views-menu">
+        {views.map((view) => (
+          <li>
+            <a
+              href={view.href}
+              aria-current={view.id === current ? "page" : undefined}
+            >
+              {view.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
     <a class="view-link" href={INSTAGRAM} rel="me noopener" target="_blank">
       Instagram
     </a>
   </nav>
 </header>
+
+<script>
+  // A tap (no hover on a phone) opens and closes the views menu.
+  for (const views of document.querySelectorAll<HTMLElement>("[data-views]")) {
+    const button = views.querySelector<HTMLButtonElement>(
+      "[data-views-button]",
+    )!;
+    const open = (yes: boolean) =>
+      button.setAttribute("aria-expanded", String(yes));
+    button.addEventListener("click", () =>
+      open(button.getAttribute("aria-expanded") !== "true"),
+    );
+    views.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        open(false);
+        button.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!views.contains(event.target as Node)) open(false);
+    });
+  }
+</script>
 
 <script>
   import {
@@ -261,16 +301,72 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
     color: var(--ink);
   }
 
-  .view-link[aria-current="page"] {
+  .views {
+    position: relative;
+  }
+
+  .views-button {
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
     color: var(--ink);
   }
 
-  /* The gallery red dot marks the page you're on. */
-  .view-link[aria-current="page"]::before {
+  .views-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 10;
+    min-width: 160px;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: var(--wall);
+    border: 1px solid var(--shelf);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.08);
+  }
+
+  /* Opens on hover or keyboard focus (no script needed), or on a tap. */
+  .views:hover .views-menu,
+  .views:focus-within .views-menu,
+  .views-button[aria-expanded="true"] + .views-menu {
+    display: block;
+  }
+
+  .views:hover .views-button,
+  .views:focus-within .views-button {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .views-menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 14px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .views-menu a:hover,
+  .views-menu a:focus-visible {
+    background: rgb(0 0 0 / 0.04);
+  }
+
+  /* The gallery red dot marks the view you're on. */
+  .views-menu a::before {
     content: "";
-    width: 9px;
-    height: 9px;
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
+  }
+
+  .views-menu a[aria-current="page"]::before {
     background: var(--red-dot);
   }
 </style>

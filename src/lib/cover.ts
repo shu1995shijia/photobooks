@@ -36,6 +36,19 @@ export function versioned(entry: CoverEntry, file: string): string {
   return `${file}?v=${hash(id).toString(36)}`;
 }
 
+/** Placeholder covers are drawn at this width ÷ height. */
+const PLACEHOLDER_RATIO = 0.8;
+
+/**
+ * A book's cover as width ÷ height, kept within book-like limits (odd shapes
+ * are cropped to fit). The placeholder's when there's no cover.
+ */
+export function coverRatio(slug: string): number {
+  const cover = coverFor(slug);
+  if (!cover) return PLACEHOLDER_RATIO;
+  return Math.min(1.6, Math.max(0.62, cover.width / cover.height));
+}
+
 export interface Tone {
   bg: string;
   fg: string;

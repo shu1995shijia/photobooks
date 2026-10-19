@@ -1,0 +1,154 @@
+---
+import Base from "../layouts/Base.astro";
+import Cover from "../components/Cover.astro";
+import books from "../data/books.json";
+import {
+  LOCATIONS,
+  locationOf,
+  photographerLine,
+  type Book,
+} from "../lib/book";
+import { coverRatio } from "../lib/cover";
+import { sortBooks } from "../lib/sort";
+import { url } from "../lib/url";
+
+const sorted = sortBooks(books as Book[], "photographer");
+// Every location the header's menu offers, so a remembered choice is recognised here too.
+const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
+---
+
+<Base title="Photobooks: tile" current="tile">
+  <h1 class="visually-hidden">All {sorted.length} photobooks, side by side</h1>
+
+  <!--
+    Stitched covers: each tile is as wide as its cover's proportions allow at
+    the row height, then the row stretches to the full width. Tiles grow in
+    proportion to their width, so every cover in a row stays the same height.
+  -->
+  <ul class="tiles" data-tiles data-locations={JSON.stringify(places)}>
+    {sorted.map((book) => (
+      <li
+        class="tile"
+        style={`--ratio: ${coverRatio(book.slug)}`}
+        data-location={locationOf(book)}
+      >
+        <a href={url(`books/${book.slug}`)}>
+          <Cover book={book} sizes="(max-width: 720px) 45vw, 320px" />
+          <span class="caption">
+            <em>{book.title}</em>
+            <span>{photographerLine(book)}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="none" hidden data-none></p>
+</Base>
+
+<script>
+  import { chosenLocation, onLocation, shows } from "../scripts/location";
+
+  // Show only the books kept at the location chosen in the header.
+  const list = document.querySelector<HTMLElement>("[data-tiles]")!;
+  const tiles = [...list.querySelectorAll<HTMLElement>("[data-location]")];
+  const none = document.querySelector<HTMLElement>("[data-none]")!;
+  const known: string[] = JSON.parse(list.dataset.locations ?? "[]");
+  const filter = (place: string | null) => {
+    let shown = 0;
+    for (const tile of tiles) {
+      tile.hidden = !shows(place, tile.dataset.location);
+      if (!tile.hidden) shown++;
+    }
+    none.hidden = shown > 0;
+    none.textContent = `No books are kept in ${place} yet.`;
+  };
+  onLocation(filter);
+  filter(chosenLocation(known));
+</script>
+
+<style>
+  .tiles {
+    --row: 230px; /* the height a row aims for before it stretches to fit */
+
+    list-style: none;
+    margin: 0 calc(50% - 50vw);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* Keeps the last row from stretching a few covers across the whole width. */
+  .tiles::after {
+    content: "";
+    flex-grow: 1000000;
+  }
+
+  .tile {
+    position: relative;
+    flex-grow: var(--ratio);
+    flex-basis: calc(var(--ratio) * var(--row));
+  }
+
+  .tile[hidden] {
+    display: none;
+  }
+
+  .tile a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .tile :global(.cover) {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  /* The title and photographer rise over the cover on hover or focus. */
+  .caption {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 28px 12px 10px;
+    font-size: 13px;
+    line-height: 1.3;
+    background: linear-gradient(transparent, rgb(0 0 0 / 0.72));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .caption em {
+    font-size: 14px;
+  }
+
+  .tile a:hover .caption,
+  .tile a:focus-visible .caption {
+    opacity: 1;
+  }
+
+  .tile a:focus-visible {
+    outline-offset: -3px;
+    outline-color: #fff;
+  }
+
+  .none {
+    margin: 0;
+    padding: 120px 0;
+    text-align: center;
+    color: var(--graphite);
+  }
+
+  @media (max-width: 720px) {
+    .tiles {
+      --row: 140px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caption {
+      transition: none;
+    }
+  }
+</style>

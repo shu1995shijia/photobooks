@@ -1,6 +1,6 @@
 ---
 import { photographerLine, type Book } from "../lib/book";
-import { coverFor, placeholderTone, versioned } from "../lib/cover";
+import { coverFor, coverRatio, placeholderTone, versioned } from "../lib/cover";
 import { url } from "../lib/url";
 
 interface Props {
@@ -15,17 +15,13 @@ const cover = coverFor(book.slug);
 const tone = placeholderTone(book);
 const small = cover && url(versioned(cover, cover.src));
 const large = cover && url(versioned(cover, cover.large));
-
-/** Width ÷ height, kept within book-like limits; odd shapes are cropped to fit. */
-function ratio(width: number, height: number): number {
-  return Math.min(1.6, Math.max(0.62, width / height));
-}
+const ratio = coverRatio(book.slug);
 ---
 
 {cover ? (
   <div
     class="cover"
-    style={`--ratio: ${ratio(cover.width, cover.height)}; --cover-image: image-set(url("${small}") 1x, url("${large}") 2x)`}
+    style={`--ratio: ${ratio}; --cover-image: image-set(url("${small}") 1x, url("${large}") 2x)`}
   >
     <img
       src={small}
@@ -45,7 +41,7 @@ function ratio(width: number, height: number): number {
     class="cover placeholder"
     role="img"
     aria-label={`Cover placeholder for ${book.title}`}
-    style={`--ratio: 0.8; --cover-bg: ${tone.bg}; --cover-fg: ${tone.fg}`}
+    style={`--ratio: ${ratio}; --cover-bg: ${tone.bg}; --cover-fg: ${tone.fg}`}
   >
     <div class="cover-inner">
       <span class="cover-byline">{photographerLine(book)}</span>

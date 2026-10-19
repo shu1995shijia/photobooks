@@ -92,7 +92,10 @@ export function surnames(book: Pick<Book, "photographers">): string[] {
 }
 
 /** True when any candidate author has one of the book's photographers' surnames as a whole word. */
-export function authorMatches(book: Pick<Book, "photographers">, authors: string[]): boolean {
+export function authorMatches(
+  book: Pick<Book, "photographers">,
+  authors: string[],
+): boolean {
   const wanted = surnames(book);
   return authors.some((author) => {
     const name = ` ${normalize(author)} `;
@@ -117,7 +120,8 @@ export function rankMatches(
     const names = [...book.photographers, ...candidate.authors];
     let score = titleScore(book.title, candidate.title, names);
     if (book.photographers.length > 0) {
-      if (score < TITLE_THRESHOLD || !authorMatches(book, candidate.authors)) continue;
+      if (score < TITLE_THRESHOLD || !authorMatches(book, candidate.authors))
+        continue;
     } else if (score < 1 || !book.year || candidate.year !== book.year) {
       continue;
     }

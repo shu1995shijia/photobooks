@@ -26,7 +26,13 @@ export function coverFor(slug: string): CoverEntry | undefined {
  * and browsers don't keep showing the old one from their cache.
  */
 export function versioned(entry: CoverEntry, file: string): string {
-  const id = [entry.origin, entry.checksum, entry.width, entry.height, entry.dominantColor].join("|");
+  const id = [
+    entry.origin,
+    entry.checksum,
+    entry.width,
+    entry.height,
+    entry.dominantColor,
+  ].join("|");
   return `${file}?v=${hash(id).toString(36)}`;
 }
 

@@ -120,5 +120,86 @@
     "year": 2026,
     "publisher": "The Eriskay Connection",
     "tags": []
+  },
+  {
+    "slug": "uruklyn-hailun-ma",
+    "title": "Üruklyn (乌鲁克林)",
+    "photographers": [
+      "Hailun Ma (马海伦)"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Portrait / Youth Culture / Xinjiang",
+    "year": 2025,
+    "publisher": "Jiazazi (假杂志)",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "lang-jingshan-1892-1995-lang-jingshan",
+    "title": "郎静山 1892—1995 (Lang Jingshan 1892–1995)",
+    "photographers": [
+      "Lang Jingshan (郎静山)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Photography Monograph / Composite Photography / Pictorialism",
+    "year": 2025,
+    "publisher": "浙江摄影出版社",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "country-of-ambition-yan-ming",
+    "title": "大国志 (Country of Ambition)",
+    "photographers": [
+      "Yan Ming (严明)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Contemporary China",
+    "year": 2025,
+    "publisher": "山东画报出版社",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "haru-and-mina-hideaki-hamada",
+    "title": "Haru and Mina",
+    "photographers": [
+      "Hideaki Hamada (濱田英明)"
+    ],
+    "colorType": "Color",
+    "region": "Japan",
+    "genre": "Personal Documentary / Family / Childhood",
+    "year": 2025,
+    "publisher": "Seisodo (青艸堂)",
+    "tags": [],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "china-1981-1982-ryoji-akiyama",
+    "title": "中国 1981–1982 (China 1981–1982)",
+    "photographers": [
+      "Ryoji Akiyama (秋山亮二)"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Documentary Photography / Daily Life / Reform-Era China",
+    "year": 2025,
+    "publisher": "Seisodo (青艸堂)",
+    "tags": [
+      "中国题材"
+    ],
+    "location": "Beijing, China"
   }
 ]

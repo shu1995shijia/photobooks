@@ -135,6 +135,16 @@
     "origin": "data/covers/china-1948-1958-1959-henri-cartier-bresson.jpg",
     "checksum": "b60cdbf295876789"
   },
+  "china-1981-1982-ryoji-akiyama": {
+    "src": "covers/china-1981-1982-ryoji-akiyama-600.webp",
+    "large": "covers/china-1981-1982-ryoji-akiyama-1200.webp",
+    "width": 600,
+    "height": 770,
+    "dominantColor": "#98B888",
+    "source": "upload",
+    "origin": "data/covers/china-1981-1982-ryoji-akiyama.png",
+    "checksum": "d5dafbbc019fe5dd"
+  },
   "china-a-photo-history": {
     "src": "covers/china-a-photo-history-600.webp",
     "large": "covers/china-a-photo-history-1200.webp",
@@ -242,6 +252,16 @@
     "origin": "data/covers/coney-island-peter-cranser.webp",
     "checksum": "7373086381c75755"
   },
+  "country-of-ambition-yan-ming": {
+    "src": "covers/country-of-ambition-yan-ming-600.webp",
+    "large": "covers/country-of-ambition-yan-ming-1200.webp",
+    "width": 600,
+    "height": 492,
+    "dominantColor": "#A8A8A8",
+    "source": "upload",
+    "origin": "data/covers/country-of-ambition-yan-ming.png",
+    "checksum": "60183909b8334563"
+  },
   "do-i-know-you-eugene-richards": {
     "src": "covers/do-i-know-you-eugene-richards-600.webp",
     "large": "covers/do-i-know-you-eugene-richards-1200.webp",
@@ -329,6 +349,16 @@
     "origin": "data/covers/four-seasons-lu-nan.jpg",
     "checksum": "ef3d1d9ed2a1404c"
   },
+  "haru-and-mina-hideaki-hamada": {
+    "src": "covers/haru-and-mina-hideaki-hamada-600.webp",
+    "large": "covers/haru-and-mina-hideaki-hamada-1200.webp",
+    "width": 600,
+    "height": 600,
+    "dominantColor": "#88B8C8",
+    "source": "upload",
+    "origin": "data/covers/haru-and-mina-hideaki-hamada.png",
+    "checksum": "4498c9829e60f9e5"
+  },
   "history-of-life-cai-dongdong": {
     "src": "covers/history-of-life-cai-dongdong-600.webp",
     "large": "covers/history-of-life-cai-dongdong-1200.webp",
@@ -412,6 +442,16 @@
     "dominantColor": "#F8F8F8",
     "source": "google",
     "origin": "https://books.google.com/books/content?id=bNxG_NH6NlgC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+  },
+  "lang-jingshan-1892-1995-lang-jingshan": {
+    "src": "covers/lang-jingshan-1892-1995-lang-jingshan-600.webp",
+    "large": "covers/lang-jingshan-1892-1995-lang-jingshan-1200.webp",
+    "width": 600,
+    "height": 934,
+    "dominantColor": "#684838",
+    "source": "upload",
+    "origin": "data/covers/lang-jingshan-1892-1995-lang-jingshan.png",
+    "checksum": "075ecd9321f9dc34"
   },
   "lartigue-life-in-color-jacques-henri-lartigue": {
     "src": "covers/lartigue-life-in-color-jacques-henri-lartigue-600.webp",
@@ -755,6 +795,16 @@
     "source": "upload",
     "origin": "data/covers/un-paese-paul-strand.avif",
     "checksum": "e574111770b197fd"
+  },
+  "uruklyn-hailun-ma": {
+    "src": "covers/uruklyn-hailun-ma-600.webp",
+    "large": "covers/uruklyn-hailun-ma-1200.webp",
+    "width": 600,
+    "height": 786,
+    "dominantColor": "#D8B898",
+    "source": "upload",
+    "origin": "data/covers/uruklyn-hailun-ma.png",
+    "checksum": "7f1c4ade6114c0a7"
   },
   "war-is-personal-eugene-richards": {
     "src": "covers/war-is-personal-eugene-richards-600.webp",

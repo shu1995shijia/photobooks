@@ -825,6 +825,16 @@
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/9122883-L.jpg?default=false"
   },
+  "wei-you-zhu-er-hou-zhi-chen-chuanxing": {
+    "src": "covers/wei-you-zhu-er-hou-zhi-chen-chuanxing-600.webp",
+    "large": "covers/wei-you-zhu-er-hou-zhi-chen-chuanxing-1200.webp",
+    "width": 600,
+    "height": 695,
+    "dominantColor": "#080818",
+    "source": "upload",
+    "origin": "data/covers/wei-you-zhu-er-hou-zhi-chen-chuanxing.png",
+    "checksum": "962d9bbbd8b7a1f7"
+  },
   "yesterday-s-youth-ren-shulin": {
     "src": "covers/yesterday-s-youth-ren-shulin-600.webp",
     "large": "covers/yesterday-s-youth-ren-shulin-1200.webp",

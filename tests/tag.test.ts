@@ -33,6 +33,9 @@ describe("tags", () => {
   test("gives every tag in the catalog a different page", () => {
     const list = tags(books as Book[]);
     expect(new Set(list.map((t) => t.slug)).size).toBe(list.length);
-    expect(list.find((t) => t.name === "中国题材")?.books).toHaveLength(24);
+    const tagged = (books as Book[]).filter((b) => b.tags.includes("中国题材"));
+    expect(list.find((t) => t.name === "中国题材")?.books).toHaveLength(
+      tagged.length,
+    );
   });
 });

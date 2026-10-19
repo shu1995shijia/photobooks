@@ -164,6 +164,16 @@
     "origin": "data/covers/china-hiroji-kubota.webp",
     "checksum": "60a07e77d6099fae"
   },
+  "china-the-1950s-brian-brake": {
+    "src": "covers/china-the-1950s-brian-brake-600.webp",
+    "large": "covers/china-the-1950s-brian-brake-1200.webp",
+    "width": 600,
+    "height": 683,
+    "dominantColor": "#888888",
+    "source": "upload",
+    "origin": "data/covers/china-the-1950s-brian-brake.png",
+    "checksum": "65ab32f273413f01"
+  },
   "china-yann-layma": {
     "src": "covers/china-yann-layma-600.webp",
     "large": "covers/china-yann-layma-1200.webp",
@@ -496,6 +506,16 @@
     "dominantColor": "#E8E8E8",
     "source": "override",
     "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/c5/97jAwDYwI_Px6Lme.jpeg"
+  },
+  "picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann": {
+    "src": "covers/picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann-600.webp",
+    "large": "covers/picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann-1200.webp",
+    "width": 600,
+    "height": 841,
+    "dominantColor": "#B83828",
+    "source": "upload",
+    "origin": "data/covers/picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann.jpg",
+    "checksum": "922985a09e52e166"
   },
   "pittsburgh-grease-plant-1944-1946-gordon-parks": {
     "src": "covers/pittsburgh-grease-plant-1944-1946-gordon-parks-600.webp",

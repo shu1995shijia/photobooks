@@ -14,6 +14,10 @@ const EASE = "cubic-bezier(0.2, 0.7, 0.2, 1)";
 /** The page's width beside the cover, and the most of the screen the book may take. */
 const PAGE_W = 380;
 const MAX_H = 640;
+/** On a phone: the page's widest, the popup's padding above and below, and the smallest the cover may shrink to. */
+const PHONE_PAGE_W = 440;
+const PHONE_PAD = 64 + 24;
+const PHONE_MIN_COVER = 0.3;
 
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -125,11 +129,21 @@ export function initBookPopup(): void {
 
   const closedPage = () => (narrow() ? "rotateX(180deg)" : "rotateY(-180deg)");
 
+  /** Needs the dialog open, since on a phone it measures the page. */
   function size(book: PopupBook): void {
     spread.style.setProperty("--ratio", String(book.ratio));
     if (narrow()) {
-      const w = Math.min(innerWidth * 0.86, innerHeight * 0.44 * book.ratio);
-      spread.style.setProperty("--w", `${Math.round(w)}px`);
+      // The page keeps a readable width; the cover gets the height it leaves.
+      const pageW = Math.min(innerWidth * 0.86, PHONE_PAGE_W);
+      spread.style.setProperty("--page-w", `${Math.round(pageW)}px`);
+      const coverH = Math.min(
+        pageW / book.ratio,
+        Math.max(
+          innerHeight * PHONE_MIN_COVER,
+          innerHeight - PHONE_PAD - page.offsetHeight,
+        ),
+      );
+      spread.style.setProperty("--w", `${Math.round(coverH * book.ratio)}px`);
     } else {
       const pageW = Math.min(PAGE_W, innerWidth * 0.4);
       const h = Math.min(
@@ -155,8 +169,9 @@ export function initBookPopup(): void {
     cover.replaceChildren(coverImage(book));
     text.replaceChildren(label(book));
     dialog.setAttribute("aria-label", `${book.title}, ${book.byline}`);
-    size(book);
     dialog.showModal();
+    size(book);
+    dialog.scrollTop = 0;
     closeButton.focus();
     if (push) {
       history.pushState({ bookPopup: slug }, "", book.href);

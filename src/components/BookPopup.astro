@@ -103,7 +103,6 @@ const data = popupData(books as Book[]);
     padding: 36px 32px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     gap: 20px;
     overflow-y: auto;
     background: var(--page);
@@ -114,7 +113,9 @@ const data = popupData(books as Book[]);
     backface-visibility: hidden;
   }
 
+  /* Sits at the foot of the page, but stays scrollable when it's longer. */
   .spread-label {
+    margin-top: auto;
     font-size: 15px;
     line-height: 1.45;
   }
@@ -187,9 +188,20 @@ const data = popupData(books as Book[]);
     text-underline-offset: 4px;
   }
 
-  /* On a phone the page opens downward, under the cover. */
+  /* On a phone the page opens downward, under the cover, and shows every
+     detail: the cover shrinks to make room, and if it still doesn't fit the
+     popup scrolls. */
   @media (max-width: 720px) {
+    .book-popup[open] {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: 64px 0 24px;
+      overflow-y: auto;
+    }
+
     .spread {
+      margin: auto;
       flex-direction: column;
       align-items: center;
     }
@@ -200,14 +212,22 @@ const data = popupData(books as Book[]);
     }
 
     .spread-page {
-      width: var(--w);
+      width: var(--page-w);
       height: auto;
-      max-height: 46dvh;
+      overflow: visible;
       padding: 24px 20px;
       transform-origin: center top;
       box-shadow:
         inset 0 14px 18px -14px rgb(0 0 0 / 0.18),
         0 18px 40px rgb(0 0 0 / 0.12);
+    }
+
+    .spread-label dl div {
+      grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr);
+    }
+
+    .spread-label dd {
+      overflow-wrap: anywhere;
     }
   }
 </style>

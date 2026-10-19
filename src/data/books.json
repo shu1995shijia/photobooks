@@ -1041,5 +1041,18 @@
       "中国摄影师"
     ],
     "location": "Beijing, China"
+  },
+  {
+    "slug": "family-business-mitch-epstein",
+    "title": "Family Business",
+    "photographers": [
+      "Mitch Epstein"
+    ],
+    "colorType": "Color",
+    "region": "United States",
+    "genre": "Personal Documentary / Family / Small-Town America",
+    "year": 2003,
+    "publisher": "Steidl",
+    "tags": []
   }
 ]

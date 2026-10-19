@@ -1,6 +1,8 @@
 ---
-import { url } from "../lib/url";
+import CarouselPage from "./carousel.astro";
 
-// Until the shelf view is built, the home page opens the carousel.
-return Astro.redirect(url("carousel"));
+// Until the shelf view is built, the home page shows the carousel itself
+// (a redirect on a static site is a meta-refresh page that flashes first).
 ---
+
+<CarouselPage />

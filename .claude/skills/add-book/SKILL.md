@@ -37,8 +37,9 @@ Fill in these fields, following the conventions already in `books.json`:
 | `publisher` | Publisher of this edition | |
 | `tags` | Ask the user (step 4) | Work out which existing tags fit, to suggest them: today `"中国题材"` (China as subject) and `"中国摄影师"` (a Chinese photographer). |
 | `location` | Ask the user (step 4) | Where this copy is kept. Leave the field out for `"Brooklyn, NY"`, the default; include it for anywhere else. |
+| `acquired` | Ask the user (step 4) | When this copy joined the collection (the date it was bought): `"2024-02-28"`, or `"2024-02"` / `"2024"` when only the month or year is known. Shown on the book page as "In the collection since"; search ignores it. Leave it out if the user doesn't know. |
 
-Never add anything private: purchase dates, prices paid or personal notes.
+Never add anything private: prices paid or personal notes. (The date a book was bought is fine: it's `acquired`, asked for in step 4.)
 
 ## 4. Confirm, then add
 
@@ -55,10 +56,11 @@ Before adding anything, show the user **every attribute that will be added**, so
 | Publisher | |
 | Tags | the tags the user chose in the tag question (below), or "none" |
 | Location | the location the user chose in the location question (below) |
+| In the collection since | the date the user gave in the date question (below), written out as the site shows it ("February 28, 2024"), or "not given" |
 | Page address | `/books/<slug>`, worked out the way `npm run add-book` will (title, then first photographer, lowercased and hyphenated) |
 | Cover | where the image comes from (the user's file, or the page you found it on), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed). If no cover was found, say **"Not found: the book will show a placeholder"** |
 
-First ask two questions in one AskUserQuestion call: where the book is kept, and its tags.
+First ask three questions in one AskUserQuestion call: where the book is kept, its tags, and when it joined the collection.
 
 **Tags.** List every tag in use on the site today, with how many books have it:
 
@@ -69,6 +71,8 @@ node -e 'const c={};for(const b of require("./src/data/books.json"))for(const t 
 Ask with `multiSelect: true`. Give one option per tag (label: the tag; description: what it means, how many books have it, and "Suggested" if your research says it fits), plus a **No tags** option. AskUserQuestion allows at most four options, so if there are more than three tags, offer the three most used plus No tags, and list the rest in the question text so the user can type them under "Other". The user can also type a new tag there. Write a new tag the way the existing ones are written. Each tag gets its own page on the site (`/tags/<slug>`), so a new tag creates one. Put the chosen tags in the Tags row and in the JSON (`[]` for none).
 
 **Location.** Ask with one option for each place in `LOCATIONS` in `src/lib/book.ts` (today **Brooklyn, NY** and **Beijing, China**), with Brooklyn, NY first and marked as the default. The user can type another place under "Other". Write a new place the way the existing ones are written ("City, State" in the US, "City, Country" elsewhere). Put the answer in the Location row. For anything other than Brooklyn, NY, add `"location"` to the JSON. For a place that isn't in `LOCATIONS` yet, also add it to that list, so it shows in the site's location menu, and commit that change with the book in step 7.
+
+**Date added to the collection.** Ask when the book was bought or otherwise joined the collection. Offer **Today** (with today's date in the description), **This month**, and **Don't know**; the user types any other date under "Other". Turn the answer into `"acquired"`: a full date as `"YYYY-MM-DD"`, a month as `"YYYY-MM"`, a year as `"YYYY"`. For "Don't know", leave the field out. It is shown on the book page and in the popup as "In the collection since", but it is not part of the search.
 
 Give the source for each researched value in a third column, and mark anything uncertain. Under the table, also show the exact JSON you'll pass to `npm run add-book`. Then ask once with AskUserQuestion: **Add it** / **Change something**. Their "Add it" also covers publishing in step 7. If they change something, show the whole table again before adding. Then:
 
@@ -133,4 +137,4 @@ Tell the user:
 - The book's address: `https://shu1995shijia.github.io/photobooks/books/<slug>`
 - The fields you filled in, with what was uncertain.
 - Where the cover came from and what was done to it, or that **no cover was found**, so the book shows a placeholder, and how to add one later.
-- **A reminder to add the book to Notion too**, with the row ready to paste: Name, Author / Photographer (`;`-separated), Color Type, Country / Region, Genre, Publish Year, Publisher, Tags. Notion is the master catalog. Once the book is there, the next `npm run import` uses the Notion row and says to remove the entry from `data/added-books.json`.
+- **A reminder to add the book to Notion too**, with the row ready to paste: Name, Author / Photographer (`;`-separated), Color Type, Country / Region, Genre, Publish Year, Publisher, Purchase Date (as Notion writes it, e.g. "February 28, 2024"), Tags. Notion is the master catalog. Once the book is there, the next `npm run import` uses the Notion row and says to remove the entry from `data/added-books.json`.

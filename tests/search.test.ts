@@ -123,3 +123,9 @@ describe("suggestions", () => {
     expect(suggest(all, "吕").map((s) => s.kind)).toEqual(["Photographer"]);
   });
 });
+
+test("a book isn't found by the date it joined the collection", () => {
+  const bought = { ...atget, acquired: "2024-02-28" };
+  expect(searchText(bought)).toBe(searchText(atget));
+  expect(suggestions([bought]).map((s) => s.value)).not.toContain("2024-02-28");
+});

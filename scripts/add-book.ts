@@ -12,7 +12,7 @@
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { COLOR_TYPES, type Book } from "../src/lib/book";
+import { ACQUIRED_DATE, COLOR_TYPES, type Book } from "../src/lib/book";
 import { baseSlug, uniqueSlug } from "../src/lib/slug";
 
 export const ADDED = "data/added-books.json";
@@ -28,6 +28,7 @@ const FIELDS = [
   "publisher",
   "tags",
   "location",
+  "acquired",
 ];
 
 /** Checks and tidies a book from the command line; throws on anything the site can't show. */
@@ -71,6 +72,12 @@ export function validate(input: unknown): Omit<Book, "slug"> {
   )
     throw new Error("year must be a four-digit number");
 
+  const acquired = text("acquired");
+  if (acquired && !ACQUIRED_DATE.test(acquired))
+    throw new Error(
+      'acquired must be a date: "2024-02-28", "2024-02" or "2024"',
+    );
+
   const book: Omit<Book, "slug"> = {
     title,
     photographers: texts("photographers"),
@@ -81,6 +88,7 @@ export function validate(input: unknown): Omit<Book, "slug"> {
     publisher: text("publisher"),
     tags: texts("tags"),
     location: text("location"),
+    acquired,
   };
   // Leave out empty fields, as the importer does.
   return Object.fromEntries(

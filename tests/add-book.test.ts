@@ -41,10 +41,19 @@ describe("validate", () => {
       "colorType",
     );
     expect(() => validate({ title: "X", year: "2004" })).toThrow("year");
+    expect(() => validate({ title: "X", acquired: "Feb 2024" })).toThrow(
+      "acquired",
+    );
     expect(() => validate({ title: "X", isbn: "123" })).toThrow(
       "unknown fields: isbn",
     );
   });
+});
+
+test("validate keeps the date the book joined the collection", () => {
+  expect(validate({ title: "X", acquired: "2024-02-28" }).acquired).toBe(
+    "2024-02-28",
+  );
 });
 
 describe("addTo", () => {

@@ -20,7 +20,7 @@ The input is `the Library …_all.csv`: 71 books plus 1 blank row. The columns a
 | Publish Year          | 68     | yes     | sort + display                                                                 |
 | Publisher             | 67     | yes     | display                                                                        |
 | Tags                  | 23     | yes     | values: 中国摄影师, 中国题材                                                   |
-| Purchase Date         | 1      | **no**  | dropped                                                                        |
+| Purchase Date         | 1      | yes     | shown as "In the collection since" (not searchable)                            |
 | Short Description     | 7      | **no**  | hidden (some entries are wrong); may be revisited later                        |
 
 Problems in the data the importer must handle:
@@ -40,7 +40,7 @@ Problems in the data the importer must handle:
 3. The site is fully static (plain HTML/CSS/JS files), with no server and no database.
 4. Covers are fetched **once at build time** and saved in the project. They are not hotlinked from other sites when the page loads.
 5. Some photobooks (small presses, self-published, zines) won't be found online. Those get a typographic placeholder cover and can be fixed by hand.
-6. Purchase Date (and any other column not on the public list) must **not** appear on the public site.
+6. Columns not on the public list (such as Short Description) must **not** appear on the public site. Purchase Date was made public on 2026-10-18: it shows on the book page, but search ignores it.
 7. It needs to work on desktop and phone browsers. Old browsers aren't supported.
 
 ### User stories
@@ -138,7 +138,7 @@ export interface Book {
 
 ## Success Criteria
 
-1. Running `npm run import` on the real CSV gives exactly 71 books, with no blank rows, no Purchase Date, trimmed values and 71 unique slugs (both "China" books kept).
+1. Running `npm run import` on the real CSV gives exactly 71 books, with no blank rows, no private columns, trimmed values and 71 unique slugs (both "China" books kept).
 2. `npm run covers` finds a correct cover for at least 60% of books automatically. With no ISBNs and many small presses, that's a realistic target. Every miss is listed in the output so I can add it to `cover-overrides.json`. Books with no cover show a placeholder and don't break the layout.
 3. The shelf shows all books (under 100) in a layout that works on 375px-wide phones and 1440px desktops.
 4. The carousel works with ←/→ keys, swiping, and buttons, and shows "n / total".

@@ -6,53 +6,178 @@ import { photographers } from "../lib/photographer";
 import { url } from "../lib/url";
 
 const all = books as Book[];
+// The book the collection began with: its title links to the carousel,
+// opened at that book.
+const firstInCarousel = url("carousel#china-hiroji-kubota");
 const years = all.map((b) => b.year).filter((y): y is number => !!y);
+const oldest = Math.min(...years);
+const newest = Math.max(...years);
 const places = [...new Set(all.map(locationOf))];
 const placesLine =
   places.length > 1
     ? `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`
     : places[0];
+const photographerCount = photographers(all).length;
 
 // Counted from the catalog at build time, so they stay current as books are added.
-const facts = [
-  { term: "Books", value: String(all.length) },
-  { term: "Photographers", value: String(photographers(all).length) },
-  {
-    term: "Published",
-    value: `${Math.min(...years)} to ${Math.max(...years)}`,
-  },
-  { term: "Kept in", value: placesLine },
-];
+const facts = {
+  en: [
+    { term: "Books", value: String(all.length) },
+    { term: "Photographers", value: String(photographerCount) },
+    { term: "Published", value: `${oldest} to ${newest}` },
+    { term: "Kept in", value: placesLine },
+  ],
+  zh: [
+    { term: "藏书", value: `${all.length} 本` },
+    { term: "摄影师", value: `${photographerCount} 位` },
+    { term: "出版年代", value: `${oldest} 年至 ${newest} 年` },
+    { term: "收藏地", value: placesLine },
+  ],
+};
+const instagram = "https://www.instagram.com/jimmy_novacaine/";
 ---
 
 <Base title="About: Photobooks" current="about">
-  <article class="about">
-    <h1>About</h1>
-    <p class="lede">A personal photobook collection of Shijia Shu.</p>
+  <article class="about" data-about>
+    <!-- The heading, with the language toggle right beside it. One language
+         shows at a time; without JavaScript, both are shown. -->
+    <div class="title-row">
+      <h1 lang="en" data-lang="en">About</h1>
+      <h1 lang="zh-Hans" data-lang="zh">关于</h1>
+      <div class="langs" role="group" aria-label="Language" hidden data-langs>
+        <button type="button" lang="en" data-set-lang="en">EN</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" lang="zh-Hans" data-set-lang="zh">中文</button>
+      </div>
+    </div>
 
-    <dl class="facts">
-      {facts.map((fact) => (
-        <div>
-          <dt>{fact.term}</dt>
-          <dd>{fact.value}</dd>
-        </div>
-      ))}
-    </dl>
+    <section class="version" lang="en" data-lang="en">
+      <p class="lede">A personal photobook collection of Shijia Shu.</p>
+      <div class="story">
+        <p>
+          Photography has always been my passion. A photograph holds on to a
+          moment that can never happen again. When I started shooting film and
+          printing in the darkroom, I began reading into the history of
+          photography and the photographers of the film era, and that is when I
+          fell for photobooks. Collecting them slowly became a hobby.
+        </p>
+        <p>
+          Opening a photobook is more than a ritual: it is a conversation with
+          the photographer, and a way to let time slow down.
+        </p>
+        <p>
+          My collection began with Hiroji Kubota’s {
+            [
+              <a href={firstInCarousel}><em>China</em></a>,
+              ". Thank you for stopping by.",
+            ]
+          }
+        </p>
+      </div>
+    </section>
 
-    <p class="links">
-      Browse the books in the <a href={url("carousel")}>carousel</a> or as{" "}
-      <a href={url("tile")}>tiles</a>, or follow along on{" "}
-      <a
-        href="https://www.instagram.com/jimmy_novacaine/"
-        rel="me noopener"
-        target="_blank"
-      >
-        Instagram
-      </a>
-      .
+    <section class="version" lang="zh-Hans" data-lang="zh">
+      <p class="lede">Shijia Shu 的个人摄影书收藏。</p>
+      <div class="story">
+        <p>
+          摄影一直是我的热爱。影像能留住那些永远无法重来的瞬间。开始拍胶片、进暗房之后，我渐渐深入摄影史，去了解胶片时代的摄影师，也从那时起迷上了摄影书，慢慢成了一份长久的爱好。
+        </p>
+        <p>
+          每一次翻开摄影书，不只是一种仪式感，更像是与作者的一次对话，让时间慢下来。
+        </p>
+        <p>
+          {
+            [
+              "这段收藏之旅，始于久保田博二的",
+              <a href={firstInCarousel}>《China》</a>,
+              "。谢谢你的到来。",
+            ]
+          }
+        </p>
+      </div>
+    </section>
+
+    {
+      (["en", "zh"] as const).map((lang) => (
+        <dl
+          class="facts"
+          lang={lang === "zh" ? "zh-Hans" : "en"}
+          data-lang={lang}
+        >
+          {facts[lang].map((fact) => (
+            <div>
+              <dt>{fact.term}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ))
+    }
+
+    <p class="links" lang="en" data-lang="en">
+      {
+        [
+          "Browse the books in the ",
+          <a href={url("carousel")}>carousel</a>,
+          " or as ",
+          <a href={url("tile")}>tiles</a>,
+          ", or follow along on ",
+          <a href={instagram} rel="me noopener" target="_blank">
+            Instagram
+          </a>,
+          ".",
+        ]
+      }
+    </p>
+    <p class="links" lang="zh-Hans" data-lang="zh">
+      {
+        [
+          "可以在 ",
+          <a href={url("carousel")}>Carousel</a>,
+          " 或 ",
+          <a href={url("tile")}>Tile</a>,
+          " 视图中浏览这些书，也欢迎关注我的 ",
+          <a href={instagram} rel="me noopener" target="_blank">
+            Instagram
+          </a>,
+          "。",
+        ]
+      }
     </p>
   </article>
 </Base>
+
+<script>
+  // EN | 中文: shows one language and remembers the choice in this browser.
+  const KEY = "photobooks.aboutLang";
+  const about = document.querySelector<HTMLElement>("[data-about]")!;
+  const toggle = about.querySelector<HTMLElement>("[data-langs]")!;
+  const buttons = [
+    ...toggle.querySelectorAll<HTMLButtonElement>("[data-set-lang]"),
+  ];
+
+  function show(lang: string): void {
+    about.dataset.show = lang;
+    for (const b of buttons)
+      b.setAttribute("aria-pressed", String(b.dataset.setLang === lang));
+    try {
+      localStorage.setItem(KEY, lang);
+    } catch {
+      // Not remembered (storage blocked); still shown.
+    }
+  }
+
+  let saved: string | null = null;
+  try {
+    saved = localStorage.getItem(KEY);
+  } catch {
+    saved = null;
+  }
+  for (const b of buttons)
+    b.addEventListener("click", () => show(b.dataset.setLang!));
+  toggle.hidden = false;
+  show(saved === "zh" ? "zh" : "en");
+</script>
 
 <style>
   .about {
@@ -61,6 +186,57 @@ const facts = [
     flex-direction: column;
     gap: 28px;
     padding-block: 24px 48px;
+  }
+
+  /* Once the toggle works, only the chosen language is shown. */
+  .about[data-show="en"] [data-lang="zh"],
+  .about[data-show="zh"] [data-lang="en"] {
+    display: none;
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 18px;
+  }
+
+  .langs {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--shelf);
+  }
+
+  .langs[hidden] {
+    display: none;
+  }
+
+  .langs button {
+    font: inherit;
+    min-height: 32px;
+    padding: 0 4px;
+    color: var(--graphite);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .langs button:hover {
+    color: var(--ink);
+  }
+
+  .langs button[aria-pressed="true"] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .version {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
   }
 
   h1 {
@@ -74,6 +250,30 @@ const facts = [
     margin: 0;
     font-size: 22px;
     line-height: 1.35;
+  }
+
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .story p {
+    margin: 0;
+  }
+
+  /* Chinese reads more comfortably a touch more open. */
+  .version:lang(zh) .story {
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+  }
+
+  /* Without JavaScript both versions show; a line sets the Chinese apart. */
+  .about:not([data-show]) .version:lang(zh) {
+    padding-top: 20px;
+    border-top: 1px solid var(--shelf);
   }
 
   /* Set out like the facts on a wall label. */

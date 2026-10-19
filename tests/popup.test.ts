@@ -12,6 +12,7 @@ describe("popupData", () => {
     year: 1993,
     publisher: "Watermark",
     tags: ["中国题材"],
+    acquired: "2024-02-28",
   };
 
   test("carries the wall label, with each photographer linked", () => {
@@ -35,6 +36,7 @@ describe("popupData", () => {
         ],
       ],
       ["Location", "Brooklyn, NY"],
+      ["In the collection since", "February 28, 2024"],
     ]);
     expect(entry.href).toMatch(new RegExp(`/books/${book.slug}$`));
   });

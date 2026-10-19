@@ -12,6 +12,7 @@ export interface Book {
   publisher?: string;
   tags: string[];
   location?: string; // where this copy is kept, when it isn't COLLECTION_LOCATION
+  acquired?: string; // when this copy joined the collection: "2024-02-28", "2024-02" or "2024"
 }
 
 /** The places books are kept, offered in the header's location menu. */
@@ -42,4 +43,22 @@ export function colorTypeLabel(colorType?: ColorType): string | undefined {
     default:
       return colorType;
   }
+}
+
+/** A date as "2024-02-28", "2024-02" or "2024". */
+export const ACQUIRED_DATE =
+  /^\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?)?$/;
+
+/** "2024-02-28" → "February 28, 2024"; "2024-02" → "February 2024"; "2024" stays. */
+export function acquiredLabel(acquired?: string): string | undefined {
+  if (!acquired || !ACQUIRED_DATE.test(acquired)) return undefined;
+  const [year, month, day] = acquired.split("-").map(Number);
+  if (!month) return String(year);
+  const date = new Date(Date.UTC(year, month - 1, day ?? 1));
+  return date.toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "long",
+    ...(day ? { day: "numeric" } : {}),
+  });
 }

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
+  acquiredLabel,
   COLLECTION_LOCATION,
   colorTypeLabel,
   locationOf,
@@ -156,5 +157,15 @@ describe("locationOf", () => {
     expect(COLLECTION_LOCATION).toBe("Brooklyn, NY");
     expect(locationOf({})).toBe("Brooklyn, NY");
     expect(locationOf({ location: "Shanghai" })).toBe("Shanghai");
+  });
+});
+
+describe("acquiredLabel", () => {
+  test("writes the date out as much as it's known", () => {
+    expect(acquiredLabel("2024-02-28")).toBe("February 28, 2024");
+    expect(acquiredLabel("2024-02")).toBe("February 2024");
+    expect(acquiredLabel("2024")).toBe("2024");
+    expect(acquiredLabel(undefined)).toBeUndefined();
+    expect(acquiredLabel("someday")).toBeUndefined();
   });
 });

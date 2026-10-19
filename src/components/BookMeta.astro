@@ -1,5 +1,6 @@
 ---
 import {
+  acquiredLabel,
   colorTypeLabel,
   locationOf,
   photographerLine,
@@ -11,7 +12,7 @@ import { url } from "../lib/url";
 
 interface Props {
   book: Book;
-  /** Adds the fields a wall label leaves out: region, genre, tags and where the copy is kept. */
+  /** Adds the fields a wall label leaves out: region, genre, tags, where the copy is kept and since when. */
   full?: boolean;
   /** Links each photographer's name to the page of all their books. */
   linkNames?: boolean;
@@ -38,6 +39,7 @@ const extra = full
         })),
       },
       { term: "Location", value: locationOf(book) },
+      { term: "In the collection since", value: acquiredLabel(book.acquired) },
     ].filter((row) => row.value)
   : [];
 ---

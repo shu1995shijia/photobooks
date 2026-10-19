@@ -1,4 +1,5 @@
 import {
+  acquiredLabel,
   colorTypeLabel,
   locationOf,
   photographerLine,
@@ -41,6 +42,7 @@ export function popupData(books: readonly Book[]): Record<string, PopupBook> {
       ["Genre", book.genre],
       [tags.length > 1 ? "Tags" : "Tag", tags.length ? tags : undefined],
       ["Location", locationOf(book)],
+      ["In the collection since", acquiredLabel(book.acquired)],
     ];
     data[book.slug] = {
       href: url(`books/${book.slug}`),

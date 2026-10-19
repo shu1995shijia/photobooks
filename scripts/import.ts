@@ -5,7 +5,7 @@
  *   npm run import -- <path to another export>
  *
  * Only the columns in COLUMNS and OPTIONAL_COLUMNS reach the site; everything else in the export
- * (Purchase Date, Short Description, …) is dropped. Slugs already in
+ * (Short Description, …) is dropped. Slugs already in
  * books.json are kept, so book URLs don't change on re-import. Books added
  * with `npm run add-book` (data/added-books.json) are merged in after the
  * Notion rows, until the same book turns up in Notion.
@@ -13,7 +13,12 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import Papa from "papaparse";
-import { COLOR_TYPES, type Book, type ColorType } from "../src/lib/book";
+import {
+  ACQUIRED_DATE,
+  COLOR_TYPES,
+  type Book,
+  type ColorType,
+} from "../src/lib/book";
 import { baseSlug, uniqueSlug } from "../src/lib/slug";
 
 const OUTPUT = "src/data/books.json";
@@ -35,6 +40,7 @@ const COLUMNS = {
 /** Public columns that may be missing from an export. */
 const OPTIONAL_COLUMNS = {
   location: "Location", // where the copy is kept; COLLECTION_LOCATION otherwise
+  acquired: "Purchase Date", // when the copy joined the collection
 } as const;
 
 type Row = Record<string, string | undefined>;
@@ -46,6 +52,17 @@ function clean(value: string | undefined): string {
 
 function optional(value: string): string | undefined {
   return value === "" ? undefined : value;
+}
+
+/** Notion's "February 28, 2024" (or "2024-02-28") → "2024-02-28"; undefined if it isn't a date. */
+export function isoDate(value: string): string | undefined {
+  if (ACQUIRED_DATE.test(value)) return value;
+  const match = /^([A-Za-z]+) (\d{1,2}), (\d{4})$/.exec(value);
+  if (!match) return undefined;
+  const date = new Date(`${match[1]} ${match[2]}, ${match[3]} UTC`);
+  return Number.isNaN(date.getTime())
+    ? undefined
+    : date.toISOString().slice(0, 10);
 }
 
 function list(value: string, separator: RegExp): string[] {
@@ -104,6 +121,12 @@ export function parseCatalog(
       warnings.push(`"${title}": Publish Year "${rawYear}" is not a year`);
     }
 
+    const rawAcquired = clean(row[OPTIONAL_COLUMNS.acquired]);
+    const acquired = isoDate(rawAcquired);
+    if (rawAcquired && acquired === undefined) {
+      warnings.push(`"${title}": Purchase Date "${rawAcquired}" is not a date`);
+    }
+
     const book: Book = {
       slug: "",
       title,
@@ -115,6 +138,7 @@ export function parseCatalog(
       publisher: optional(clean(row[COLUMNS.publisher])),
       tags: list(clean(row[COLUMNS.tags]), /,/),
       location: optional(clean(row[OPTIONAL_COLUMNS.location])),
+      acquired,
     };
     books.push(book);
   }

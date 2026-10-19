@@ -1054,5 +1054,20 @@
     "year": 2003,
     "publisher": "Steidl",
     "tags": []
+  },
+  {
+    "slug": "always-dream-yoshihiko-ueda",
+    "title": "Always Dream (いつでも夢を / 永远要憧憬)",
+    "photographers": [
+      "Yoshihiko Ueda（上田義彦）"
+    ],
+    "colorType": "Color",
+    "region": "China",
+    "genre": "Commercial Photography / Portrait / Street Photography / China",
+    "year": 2023,
+    "publisher": "Akaaka (赤々舎)",
+    "tags": [],
+    "location": "Beijing, China",
+    "acquired": "2024-06"
   }
 ]

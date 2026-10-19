@@ -49,6 +49,16 @@
     "origin": "data/covers/abandoned-cities-of-the-ussr-arseniy-kotov.jpg",
     "checksum": "b4a6514c2ff00c2d"
   },
+  "always-dream-yoshihiko-ueda": {
+    "src": "covers/always-dream-yoshihiko-ueda-600.webp",
+    "large": "covers/always-dream-yoshihiko-ueda-1200.webp",
+    "width": 600,
+    "height": 840,
+    "dominantColor": "#0888E8",
+    "source": "upload",
+    "origin": "data/covers/always-dream-yoshihiko-ueda.jpg",
+    "checksum": "83dcc0da4670e89c"
+  },
   "american-surfaces-stephen-shore": {
     "src": "covers/american-surfaces-stephen-shore-600.webp",
     "large": "covers/american-surfaces-stephen-shore-1200.webp",

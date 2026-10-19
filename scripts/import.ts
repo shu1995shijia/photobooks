@@ -1,11 +1,14 @@
 /**
  * Turns the Notion CSV export into src/data/books.json.
  *
- *   npm run import -- data/notion-export.csv
+ *   npm run import                 (reads data/notion-export.csv)
+ *   npm run import -- <path to another export>
  *
  * Only the columns in COLUMNS and OPTIONAL_COLUMNS reach the site; everything else in the export
  * (Purchase Date, Short Description, …) is dropped. Slugs already in
- * books.json are kept, so book URLs don't change on re-import.
+ * books.json are kept, so book URLs don't change on re-import. Books added
+ * with `npm run add-book` (data/added-books.json) are merged in after the
+ * Notion rows, until the same book turns up in Notion.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -14,6 +17,8 @@ import { COLOR_TYPES, type Book, type ColorType } from "../src/lib/book";
 import { baseSlug, uniqueSlug } from "../src/lib/slug";
 
 const OUTPUT = "src/data/books.json";
+const DEFAULT_INPUT = "data/notion-export.csv";
+const ADDED = "data/added-books.json";
 
 /** Notion column → what it becomes. The allowlist of public columns. */
 const COLUMNS = {
@@ -133,20 +138,54 @@ export function parseCatalog(
   return { books, warnings };
 }
 
+/**
+ * Appends books added by hand after the Notion ones. A book that Notion now
+ * has too (same title and photographers) is left out, with a warning to
+ * remove it from data/added-books.json; the others keep their slugs.
+ */
+export function mergeAdded(
+  fromNotion: readonly Book[],
+  added: readonly Book[],
+): ImportResult {
+  const warnings: string[] = [];
+  const inNotion = new Set(fromNotion.map(identity));
+  const taken = new Set(fromNotion.map((b) => b.slug));
+  const books = [...fromNotion];
+  for (const book of added) {
+    if (inNotion.has(identity(book))) {
+      warnings.push(
+        `"${book.title}" is in Notion now; remove it from ${ADDED}`,
+      );
+      continue;
+    }
+    const slug = taken.has(book.slug)
+      ? uniqueSlug(book.slug, taken)
+      : book.slug;
+    taken.add(slug);
+    books.push({ ...book, slug });
+  }
+  return { books, warnings };
+}
+
 function main(): void {
-  const input = process.argv[2];
-  if (!input) {
-    console.error("Usage: npm run import -- <path to Notion CSV export>");
+  const input = process.argv[2] ?? DEFAULT_INPUT;
+  if (!existsSync(input)) {
+    console.error(
+      `No export at ${input}. Usage: npm run import -- <path to Notion CSV export>`,
+    );
     process.exit(1);
   }
 
   const previous: Book[] = existsSync(OUTPUT)
     ? JSON.parse(readFileSync(OUTPUT, "utf8"))
     : [];
-  const { books, warnings } = parseCatalog(
-    readFileSync(input, "utf8"),
-    previous,
-  );
+  const fromNotion = parseCatalog(readFileSync(input, "utf8"), previous);
+  const added: Book[] = existsSync(ADDED)
+    ? JSON.parse(readFileSync(ADDED, "utf8"))
+    : [];
+  const merged = mergeAdded(fromNotion.books, added);
+  const books = merged.books;
+  const warnings = [...fromNotion.warnings, ...merged.warnings];
 
   writeFileSync(OUTPUT, JSON.stringify(books, null, 2) + "\n");
   for (const w of warnings) console.warn(`Warning: ${w}`);

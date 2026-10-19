@@ -302,12 +302,12 @@
   "family-business-mitch-epstein": {
     "src": "covers/family-business-mitch-epstein-600.webp",
     "large": "covers/family-business-mitch-epstein-1200.webp",
-    "width": 600,
-    "height": 671,
-    "dominantColor": "#180808",
+    "width": 424,
+    "height": 469,
+    "dominantColor": "#282828",
     "source": "upload",
-    "origin": "data/covers/family-business-mitch-epstein.jpg",
-    "checksum": "1ea2e3544ad767ab"
+    "origin": "data/covers/family-business-mitch-epstein.webp",
+    "checksum": "aa5710079d5b48e6"
   },
   "focus-beaumont-newhall": {
     "src": "covers/focus-beaumont-newhall-600.webp",

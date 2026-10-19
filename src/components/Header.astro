@@ -13,8 +13,8 @@ const { current } = Astro.props;
 const places = [
   ...new Set([...LOCATIONS, ...(books as Book[]).map(locationOf)]),
 ];
-// The default, showing every book: "New York City, NY and Beijing, China".
-const everywhere = `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`;
+// The default, showing every book.
+const everywhere = "all locations";
 
 // The shelf view joins this list once it's built (see tasks/todo.md).
 const views = [

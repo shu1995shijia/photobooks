@@ -809,12 +809,12 @@
   "ttp-hayahisa-tomiyasu": {
     "src": "covers/ttp-hayahisa-tomiyasu-600.webp",
     "large": "covers/ttp-hayahisa-tomiyasu-1200.webp",
-    "width": 287,
-    "height": 386,
-    "dominantColor": "#C8B8B8",
+    "width": 284,
+    "height": 392,
+    "dominantColor": "#E8E8E8",
     "source": "upload",
     "origin": "data/covers/ttp-hayahisa-tomiyasu.jpg",
-    "checksum": "492d97cec98b12d0"
+    "checksum": "40f0d28f1708823f"
   },
   "un-paese-paul-strand": {
     "src": "covers/un-paese-paul-strand-600.webp",

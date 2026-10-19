@@ -62,5 +62,22 @@
     "year": 2025,
     "publisher": "Witty Books",
     "tags": []
+  },
+  {
+    "slug": "memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun",
+    "title": "城市街道与市民记忆——西安东大街：图像、文字与口述 (Memories of the East Street in Xi'an: Images, Words and Narratives)",
+    "photographers": [
+      "Song Qun (宋群) (ed.)"
+    ],
+    "colorType": "Mixed",
+    "region": "China",
+    "genre": "Documentary / Urban History / Oral History",
+    "year": 2023,
+    "publisher": "陕西师范大学出版总社",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
   }
 ]

@@ -41,6 +41,7 @@ const places = [...new Set([...LOCATIONS, ...books.map(locationOf)])];
           >
             <a
               class="cover-link"
+              data-popup
               href={url(`books/${book.slug}`)}
               draggable="false"
             >

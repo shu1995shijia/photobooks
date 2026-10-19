@@ -140,6 +140,8 @@ export function initCarousel(root: HTMLElement): void {
   document.addEventListener("keydown", (event) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
       return;
+    // A book open over the carousel has the keys.
+    if (document.querySelector("dialog[open]")) return;
     const focused = event.target;
     if (
       focused instanceof Element &&

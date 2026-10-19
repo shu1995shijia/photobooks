@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import BookPopup from "../components/BookPopup.astro";
 import Carousel from "../components/Carousel.astro";
 import books from "../data/books.json";
 import type { Book } from "../lib/book";
@@ -11,4 +12,5 @@ const sorted = sortBooks(books as Book[], "photographer");
 <Base title="Photobooks: carousel" current="carousel">
   <h1 class="visually-hidden">All {sorted.length} photobooks, one at a time</h1>
   <Carousel books={sorted} />
+  <BookPopup />
 </Base>

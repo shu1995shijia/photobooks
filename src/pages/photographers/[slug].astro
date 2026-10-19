@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Base from "../../layouts/Base.astro";
+import BookPopup from "../../components/BookPopup.astro";
 import Cover from "../../components/Cover.astro";
 import books from "../../data/books.json";
 import { locationOf, type Book } from "../../lib/book";
@@ -33,7 +34,7 @@ const count = photographer.books.length;
     <ul class="books">
       {photographer.books.map((book) => (
         <li data-location={locationOf(book)}>
-          <a href={url(`books/${book.slug}`)}>
+          <a href={url(`books/${book.slug}`)} data-popup>
             <Cover book={book} sizes="(max-width: 720px) 44vw, 240px" />
             <span class="caption">
               {/* One expression, so no space slips in before the comma. */}
@@ -45,6 +46,7 @@ const count = photographer.books.length;
     </ul>
     <p class="none" hidden data-none></p>
   </section>
+  <BookPopup />
 </Base>
 
 <script>

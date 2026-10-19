@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import BookPopup from "../components/BookPopup.astro";
 import Cover from "../components/Cover.astro";
 import books from "../data/books.json";
 import {
@@ -32,7 +33,7 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
         style={`--ratio: ${coverRatio(book.slug)}`}
         data-location={locationOf(book)}
       >
-        <a href={url(`books/${book.slug}`)}>
+        <a href={url(`books/${book.slug}`)} data-popup>
           <Cover book={book} sizes="(max-width: 720px) 45vw, 320px" />
           <span class="caption">
             <em>{book.title}</em>
@@ -43,6 +44,7 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
     ))}
   </ul>
   <p class="none" hidden data-none></p>
+  <BookPopup />
 </Base>
 
 <script>

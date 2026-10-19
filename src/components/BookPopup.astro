@@ -1,0 +1,219 @@
+---
+/**
+ * Opens a book over the page instead of going to its detail page: a link with
+ * data-popup (pointing at /books/<slug>) shows the cover and the book's wall
+ * label as an opened book. The details are built here, at build time, so the
+ * popup needs no extra requests. See src/scripts/book-popup.ts.
+ */
+import books from "../data/books.json";
+import type { Book } from "../lib/book";
+import { popupData } from "../lib/popup";
+
+const data = popupData(books as Book[]);
+---
+
+<script
+  type="application/json"
+  id="book-popup-data"
+  set:html={JSON.stringify(data).replace(/</g, "\\u003c")}
+/>
+<dialog class="book-popup" aria-label="Book" data-book-popup>
+  <div class="spread" data-spread>
+    <div class="spread-cover" data-spread-cover></div>
+    <div class="spread-page" data-spread-page>
+      <div class="spread-label" data-spread-label></div>
+      <p class="spread-more">
+        <a data-spread-link>Open the book's page</a>
+      </p>
+    </div>
+  </div>
+  <button type="button" class="spread-close" data-spread-close>
+    Close
+  </button>
+</dialog>
+
+<script>
+  import { initBookPopup } from "../scripts/book-popup";
+
+  initBookPopup();
+</script>
+
+<style is:global>
+  .book-popup {
+    --page: #fdfdfb;
+
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .book-popup::backdrop {
+    background: rgb(247 247 245 / 0.94);
+    backdrop-filter: blur(3px);
+  }
+
+  .book-popup[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  /* The opened book: cover on the left, its page swinging open on the right. */
+  .spread {
+    display: flex;
+    perspective: 2200px;
+  }
+
+  .spread-cover {
+    position: relative;
+    z-index: 1;
+    height: var(--h);
+    aspect-ratio: var(--ratio);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.18);
+  }
+
+  .spread-cover img,
+  .spread-cover .spread-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .spread-placeholder {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8.5cqi;
+    background: var(--cover-bg);
+    color: var(--cover-fg);
+  }
+
+  .spread-placeholder span:last-child {
+    font-size: 9.5cqi;
+    line-height: 1.05;
+  }
+
+  .spread-page {
+    width: var(--page-w);
+    height: var(--h);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 20px;
+    overflow-y: auto;
+    background: var(--page);
+    box-shadow:
+      inset 14px 0 18px -14px rgb(0 0 0 / 0.18),
+      0 18px 40px rgb(0 0 0 / 0.12);
+    transform-origin: left center;
+    backface-visibility: hidden;
+  }
+
+  .spread-label {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .spread-label p {
+    margin: 0;
+  }
+
+  .spread-label .name {
+    font-weight: 700;
+  }
+
+  .spread-label .name a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--shelf);
+  }
+
+  .spread-label .name a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .spread-label .title {
+    font-size: 22px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .spread-label .detail {
+    color: var(--graphite);
+  }
+
+  .spread-label dl {
+    margin: 20px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--shelf);
+    display: grid;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .spread-label dl div {
+    display: grid;
+    grid-template-columns: 9em 1fr;
+    gap: 12px;
+  }
+
+  .spread-label dt {
+    color: var(--graphite);
+  }
+
+  .spread-label dd {
+    margin: 0;
+  }
+
+  .spread-more {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .spread-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    min-height: 44px;
+    padding: 0 12px;
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* On a phone the page opens downward, under the cover. */
+  @media (max-width: 720px) {
+    .spread {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .spread-cover {
+      height: auto;
+      width: var(--w);
+    }
+
+    .spread-page {
+      width: var(--w);
+      height: auto;
+      max-height: 46dvh;
+      padding: 24px 20px;
+      transform-origin: center top;
+      box-shadow:
+        inset 0 14px 18px -14px rgb(0 0 0 / 0.18),
+        0 18px 40px rgb(0 0 0 / 0.12);
+    }
+  }
+</style>

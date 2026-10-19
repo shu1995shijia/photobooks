@@ -52,12 +52,12 @@
   "always-dream-yoshihiko-ueda": {
     "src": "covers/always-dream-yoshihiko-ueda-600.webp",
     "large": "covers/always-dream-yoshihiko-ueda-1200.webp",
-    "width": 600,
-    "height": 840,
-    "dominantColor": "#0888E8",
+    "width": 505,
+    "height": 752,
+    "dominantColor": "#086888",
     "source": "upload",
-    "origin": "data/covers/always-dream-yoshihiko-ueda.jpg",
-    "checksum": "83dcc0da4670e89c"
+    "origin": "data/covers/always-dream-yoshihiko-ueda.png",
+    "checksum": "222f7b9c29e6f6e5"
   },
   "american-surfaces-stephen-shore": {
     "src": "covers/american-surfaces-stephen-shore-600.webp",

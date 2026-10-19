@@ -567,6 +567,16 @@
     "origin": "data/covers/poles-frank-breuer.webp",
     "checksum": "fba19455f293a6b4"
   },
+  "poppy-promises-thomas-duffield": {
+    "src": "covers/poppy-promises-thomas-duffield-600.webp",
+    "large": "covers/poppy-promises-thomas-duffield-1200.webp",
+    "width": 600,
+    "height": 734,
+    "dominantColor": "#587888",
+    "source": "upload",
+    "origin": "data/covers/poppy-promises-thomas-duffield.jpg",
+    "checksum": "40a69c0c1d384f9e"
+  },
   "remembrance-garden-eugene-richards": {
     "src": "covers/remembrance-garden-eugene-richards-600.webp",
     "large": "covers/remembrance-garden-eugene-richards-1200.webp",

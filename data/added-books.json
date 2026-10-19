@@ -49,5 +49,18 @@
       "中国题材"
     ],
     "location": "Beijing, China"
+  },
+  {
+    "slug": "poppy-promises-thomas-duffield",
+    "title": "Poppy Promises",
+    "photographers": [
+      "Thomas Duffield"
+    ],
+    "colorType": "Color",
+    "region": "United Kingdom",
+    "genre": "Personal Documentary / Family / Portrait / Still Life",
+    "year": 2025,
+    "publisher": "Witty Books",
+    "tags": []
   }
 ]

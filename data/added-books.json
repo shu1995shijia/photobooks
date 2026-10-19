@@ -201,5 +201,39 @@
       "中国题材"
     ],
     "location": "Beijing, China"
+  },
+  {
+    "slug": "yesterday-s-youth-ren-shulin",
+    "title": "昨天的青春：八十年代中学生 (Yesterday's Youth)",
+    "photographers": [
+      "Ren Shulin (任曙林)"
+    ],
+    "colorType": "Mixed",
+    "region": "China",
+    "genre": "Documentary Photography / Youth / School Life / 1980s Beijing",
+    "year": 2016,
+    "publisher": "北京联合出版公司 (后浪)",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "migrant-workers-tang-haowu",
+    "title": "农民工 (Migrant Workers)",
+    "photographers": [
+      "Tang Haowu (唐浩武)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Migrant Labor / Social Documentary",
+    "year": 2019,
+    "publisher": "上海文化出版社",
+    "tags": [
+      "中国题材",
+      "中国摄影师"
+    ],
+    "location": "Beijing, China"
   }
 ]

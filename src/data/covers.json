@@ -501,6 +501,16 @@
     "origin": "data/covers/memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun.jpg",
     "checksum": "1d64ec06499c8f83"
   },
+  "migrant-workers-tang-haowu": {
+    "src": "covers/migrant-workers-tang-haowu-600.webp",
+    "large": "covers/migrant-workers-tang-haowu-1200.webp",
+    "width": 402,
+    "height": 459,
+    "dominantColor": "#282828",
+    "source": "upload",
+    "origin": "data/covers/migrant-workers-tang-haowu.jpg",
+    "checksum": "1ec4ec9b9ce271c5"
+  },
   "miraichan-kotori-kawashima": {
     "src": "covers/miraichan-kotori-kawashima-600.webp",
     "large": "covers/miraichan-kotori-kawashima-1200.webp",
@@ -814,5 +824,15 @@
     "dominantColor": "#080808",
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/9122883-L.jpg?default=false"
+  },
+  "yesterday-s-youth-ren-shulin": {
+    "src": "covers/yesterday-s-youth-ren-shulin-600.webp",
+    "large": "covers/yesterday-s-youth-ren-shulin-1200.webp",
+    "width": 506,
+    "height": 736,
+    "dominantColor": "#B8D8D8",
+    "source": "upload",
+    "origin": "data/covers/yesterday-s-youth-ren-shulin.jpg",
+    "checksum": "3bcb303192bd8d89"
   }
 }

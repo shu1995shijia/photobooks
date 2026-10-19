@@ -4,8 +4,11 @@
  * dragging or swiping (several books per drag), sideways trackpad scrolling,
  * or a click on any book at the side. The current book is kept in the URL
  * hash (#slug), so a reload or a shared link opens the same book. Clicking
- * the book at the front opens its detail page.
+ * the book at the front opens its detail page. Only books kept at the
+ * location chosen in the header are shown.
  */
+
+import { chosenLocation, onLocation, shows } from "./location";
 
 export function wrap(index: number, total: number): number {
   return ((index % total) + total) % total;
@@ -39,16 +42,21 @@ const CLICK_SLOP = 6;
 const ANNOUNCE_DELAY_MS = 400;
 
 export function initCarousel(root: HTMLElement): void {
-  const slides = [...root.querySelectorAll<HTMLElement>(".slide")];
-  const ticks = [...root.querySelectorAll<HTMLElement>("[data-tick]")];
+  const allSlides = [...root.querySelectorAll<HTMLElement>(".slide")];
+  const allTicks = [...root.querySelectorAll<HTMLElement>("[data-tick]")];
   const counter = root.querySelector<HTMLElement>("[data-counter]")!;
   const live = root.querySelector<HTMLElement>("[data-live]")!;
   const stage = root.querySelector<HTMLElement>("[data-stage]")!;
   const controls = root.querySelector<HTMLElement>("[data-controls]")!;
-  const total = slides.length;
-  if (total === 0) return;
+  const empty = root.querySelector<HTMLElement>("[data-empty]")!;
+  if (allSlides.length === 0) return;
+  const places: string[] = JSON.parse(root.dataset.locations ?? "[]");
 
-  const slugs = slides.map((s) => s.dataset.slug!);
+  // The books shown for the chosen location, and their ticks.
+  let slides = allSlides;
+  let ticks = allTicks;
+  let slugs = slides.map((s) => s.dataset.slug!);
+  let total = slides.length;
 
   const indexFromHash = (): number => {
     const slug = decodeURIComponent(location.hash.slice(1));
@@ -58,7 +66,32 @@ export function initCarousel(root: HTMLElement): void {
   let index = indexFromHash();
   let announceTimer: ReturnType<typeof setTimeout> | undefined;
 
+  /** Shows only the books kept at `place` (all when null), staying on the current book if it's among them. */
+  function filter(place: string | null): void {
+    const current = slugs[index];
+    const keep = allSlides.map((s) => shows(place, s.dataset.location));
+    slides = allSlides.filter((_, i) => keep[i]);
+    ticks = allTicks.filter((_, i) => keep[i]);
+    allSlides.forEach((slide, i) => {
+      if (keep[i]) return;
+      delete slide.dataset.pos;
+      slide.setAttribute("aria-hidden", "true");
+    });
+    allTicks.forEach((tick, i) => (tick.hidden = !keep[i]));
+    slugs = slides.map((s) => s.dataset.slug!);
+    total = slides.length;
+    index = Math.max(0, slugs.indexOf(current));
+
+    const none = total === 0;
+    stage.hidden = none;
+    controls.hidden = none;
+    empty.hidden = !none;
+    if (none) empty.textContent = `No books are kept in ${place} yet.`;
+    else render(false);
+  }
+
   function render(announce: boolean): void {
+    if (total === 0) return;
     slides.forEach((slide, i) => {
       const d = offset(i, index, total);
       const pos = position(d);
@@ -69,6 +102,7 @@ export function initCarousel(root: HTMLElement): void {
       slide.style.setProperty("--side", String(Math.sign(d)));
       slide.style.zIndex = String(total - Math.abs(d));
       slide.toggleAttribute("aria-hidden", pos !== "current");
+      slide.setAttribute("aria-label", `${i + 1} of ${total}`);
       // Only the book at the front can be tabbed to.
       slide
         .querySelector("a")
@@ -83,12 +117,13 @@ export function initCarousel(root: HTMLElement): void {
       // Wait until a drag or a run of key presses settles, so a screen reader hears one book.
       clearTimeout(announceTimer);
       announceTimer = setTimeout(() => {
-        live.textContent = slides[index].dataset.announce ?? "";
+        live.textContent = `${index + 1} of ${total}: ${slides[index].dataset.announce ?? ""}`;
       }, ANNOUNCE_DELAY_MS);
     }
   }
 
   function go(next: number): void {
+    if (total === 0) return;
     next = wrap(next, total);
     if (next === index) return;
     index = next;
@@ -183,5 +218,6 @@ export function initCarousel(root: HTMLElement): void {
 
   root.classList.add("is-enhanced");
   controls.hidden = false;
-  render(false);
+  onLocation(filter);
+  filter(chosenLocation(places));
 }

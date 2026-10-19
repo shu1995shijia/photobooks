@@ -1,6 +1,6 @@
 ---
 import books from "../data/books.json";
-import { locationOf, type Book } from "../lib/book";
+import { LOCATIONS, locationOf, type Book } from "../lib/book";
 import { url } from "../lib/url";
 
 interface Props {
@@ -9,17 +9,24 @@ interface Props {
 
 const { current } = Astro.props;
 
-// "New York City, NY", or "New York City, NY and Shanghai" once books are kept in more than one place.
-const places = [...new Set((books as Book[]).map(locationOf))];
-const where =
-  places.length > 1
-    ? `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`
-    : places[0];
+// The listed locations, plus any a book names that isn't listed yet.
+const places = [
+  ...new Set([...LOCATIONS, ...(books as Book[]).map(locationOf)]),
+];
+// With every location chosen, name the places that actually have books:
+// "New York City, NY", or "New York City, NY and Beijing, China".
+const withBooks = [...new Set((books as Book[]).map(locationOf))];
+const everywhere =
+  withBooks.length > 1
+    ? `${withBooks.slice(0, -1).join(", ")} and ${withBooks[withBooks.length - 1]}`
+    : withBooks[0];
 
 // The shelf view joins this list once it's built (see tasks/todo.md).
 const views = [
   { id: "carousel", label: "Carousel", href: url("carousel") },
 ] as const;
+
+const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
 ---
 
 <header class="header">
@@ -27,7 +34,35 @@ const views = [
     <a class="site-name" href={url("")}>
       Photobooks
     </a>
-    <p class="location">A collection in {where}</p>
+    <div class="where" data-where data-everywhere={everywhere}>
+      <span>A collection in</span>{" "}
+      <span class="picker">
+        <button
+          type="button"
+          class="picked"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label={`Location: ${everywhere}. Choose a location`}
+          data-where-button
+        >
+          {everywhere}
+        </button>
+        <ul class="menu" data-where-menu>
+          <li>
+            <button type="button" data-value="">
+              All locations
+            </button>
+          </li>
+          {places.map((place) => (
+            <li>
+              <button type="button" data-value={place}>
+                {place}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </span>
+    </div>
   </div>
   <nav aria-label="Views">
     {views.map((view) => (
@@ -39,8 +74,69 @@ const views = [
         {view.label}
       </a>
     ))}
+    <a class="view-link" href={INSTAGRAM} rel="me noopener" target="_blank">
+      Instagram
+    </a>
   </nav>
 </header>
+
+<script>
+  import {
+    chooseLocation,
+    chosenLocation,
+    onLocation,
+  } from "../scripts/location";
+
+  for (const where of document.querySelectorAll<HTMLElement>("[data-where]")) {
+    const button = where.querySelector<HTMLButtonElement>(
+      "[data-where-button]",
+    )!;
+    const options = [
+      ...where.querySelectorAll<HTMLButtonElement>("[data-value]"),
+    ];
+    const known = options.map((o) => o.dataset.value!).filter(Boolean);
+    const everywhere = where.dataset.everywhere!;
+
+    const show = (location: string | null) => {
+      button.textContent = location ?? everywhere;
+      button.setAttribute(
+        "aria-label",
+        `Location: ${location ?? everywhere}. Choose a location`,
+      );
+      for (const option of options)
+        option.toggleAttribute(
+          "data-chosen",
+          (option.dataset.value || null) === location,
+        );
+    };
+    const open = (yes: boolean) =>
+      button.setAttribute("aria-expanded", String(yes));
+
+    // A tap (no hover on a phone) or Enter/Space opens and closes the menu.
+    button.addEventListener("click", () =>
+      open(button.getAttribute("aria-expanded") !== "true"),
+    );
+    for (const option of options)
+      option.addEventListener("click", () => {
+        chooseLocation(option.dataset.value || null);
+        open(false);
+        button.focus();
+      });
+    where.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        open(false);
+        button.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!where.contains(event.target as Node)) open(false);
+    });
+
+    onLocation(show);
+    show(chosenLocation(known));
+    where.classList.add("is-enhanced");
+  }
+</script>
 
 <style>
   .header {
@@ -57,10 +153,91 @@ const views = [
     gap: 2px;
   }
 
-  .location {
-    margin: 0;
+  .where {
     font-size: 13px;
     color: var(--graphite);
+  }
+
+  .picker {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Reads as plain text until the menu opens. */
+  .picked {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: default;
+  }
+
+  .where.is-enhanced .picked {
+    cursor: pointer;
+  }
+
+  .menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -12px;
+    z-index: 10;
+    min-width: 200px;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: var(--wall);
+    border: 1px solid var(--shelf);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.08);
+  }
+
+  /* Only on hover (or keyboard focus, or a tap), and only when it works. */
+  .where.is-enhanced .picker:hover .menu,
+  .where.is-enhanced .picker:focus-within .menu,
+  .where.is-enhanced .picked[aria-expanded="true"] + .menu {
+    display: block;
+  }
+
+  .where.is-enhanced .picker:hover .picked,
+  .where.is-enhanced .picker:focus-within .picked {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 36px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    text-align: left;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .menu button:hover,
+  .menu button:focus-visible {
+    background: rgb(0 0 0 / 0.04);
+  }
+
+  /* The gallery red dot marks the chosen location. */
+  .menu button::before {
+    content: "";
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .menu button[data-chosen]::before {
+    background: var(--red-dot);
   }
 
   .site-name {
@@ -83,6 +260,10 @@ const views = [
     padding: 0 14px;
     color: var(--graphite);
     text-decoration: none;
+  }
+
+  .view-link:hover {
+    color: var(--ink);
   }
 
   .view-link[aria-current="page"] {

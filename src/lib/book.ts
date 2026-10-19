@@ -14,8 +14,11 @@ export interface Book {
   location?: string; // where this copy is kept, when it isn't COLLECTION_LOCATION
 }
 
-/** Where the collection is kept. A book's own location, when it has one, wins. */
-export const COLLECTION_LOCATION = "New York City, NY";
+/** The places books are kept, offered in the header's location menu. */
+export const LOCATIONS = ["New York City, NY", "Beijing, China"] as const;
+
+/** Where a book is kept unless it says otherwise. */
+export const COLLECTION_LOCATION: string = LOCATIONS[0];
 
 export function locationOf(book: Pick<Book, "location">): string {
   return book.location ?? COLLECTION_LOCATION;

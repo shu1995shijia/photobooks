@@ -474,12 +474,12 @@
   "on-the-road-lu-nan": {
     "src": "covers/on-the-road-lu-nan-600.webp",
     "large": "covers/on-the-road-lu-nan-1200.webp",
-    "width": 378,
-    "height": 356,
-    "dominantColor": "#584848",
+    "width": 600,
+    "height": 606,
+    "dominantColor": "#685858",
     "source": "upload",
     "origin": "data/covers/on-the-road-lu-nan.jpg",
-    "checksum": "3a4286009f7bbe36"
+    "checksum": "15c98bbc5f7ed590"
   },
   "parallel-universes-of-children-ugur-gallenkus": {
     "src": "covers/parallel-universes-of-children-ugur-gallenkus-600.webp",
@@ -650,12 +650,12 @@
   "the-forgotten-people-lu-nan": {
     "src": "covers/the-forgotten-people-lu-nan-600.webp",
     "large": "covers/the-forgotten-people-lu-nan-1200.webp",
-    "width": 377,
-    "height": 355,
-    "dominantColor": "#484848",
+    "width": 600,
+    "height": 604,
+    "dominantColor": "#585858",
     "source": "upload",
     "origin": "data/covers/the-forgotten-people-lu-nan.jpg",
-    "checksum": "2c6812dfd881ef0e"
+    "checksum": "ecfbdc4ef54162c7"
   },
   "the-great-cities-hong-kong-brian-brake": {
     "src": "covers/the-great-cities-hong-kong-brian-brake-600.webp",

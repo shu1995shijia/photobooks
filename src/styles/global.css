@@ -48,3 +48,17 @@ a {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/*
+ * Discourage saving the covers: no dragging an image out of the page, and
+ * no "Save image" on a long press (iOS). With the script in Base.astro,
+ * which blocks the right-click menu on images. Not a lock: a screenshot or
+ * the browser's developer tools still get them.
+ */
+img,
+.cover,
+.spread-cover {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}

@@ -32,6 +32,19 @@ const { title, current } = Astro.props;
       </main>
       <Footer />
     </div>
+    <script>
+      // No right-click menu ("Save image as…") and no dragging out, on the
+      // covers. Text links keep their menu.
+      const isImage = (target: EventTarget | null) =>
+        target instanceof Element &&
+        target.closest("img, .cover, .spread-cover") !== null;
+      document.addEventListener("contextmenu", (event) => {
+        if (isImage(event.target)) event.preventDefault();
+      });
+      document.addEventListener("dragstart", (event) => {
+        if (isImage(event.target)) event.preventDefault();
+      });
+    </script>
   </body>
 </html>
 

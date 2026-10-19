@@ -56,7 +56,7 @@ Before adding anything, show the user **every attribute that will be added**, so
 | Tags | the tags the user chose in the tag question (below), or "none" |
 | Location | the location the user chose in the location question (below) |
 | Page address | `/books/<slug>`, worked out the way `npm run add-book` will (title, then first photographer, lowercased and hyphenated) |
-| Cover | where the image comes from (the user's file, or a URL), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed) |
+| Cover | where the image comes from (the user's file, or the page you found it on), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed). If no cover was found, say **"Not found: the book will show a placeholder"** |
 
 First ask two questions in one AskUserQuestion call: where the book is kept, and its tags.
 
@@ -80,7 +80,18 @@ It validates the fields, refuses duplicates, writes the book to `data/added-book
 
 ## 5. Prepare the cover
 
-Copy or rename the image to `data/covers/<slug>.<ext>`, keeping its extension. If there is no image, skip to `npm run covers` in step 6, which searches Open Library and Google Books.
+Copy or rename the image to `data/covers/<slug>.<ext>`, keeping its extension.
+
+**If the user gave no image, look for the cover online** before showing the table in step 4, so the Cover row can say what you found:
+
+1. Check the pages you found in step 3, the publisher's first and then photobook shops, magazines and galleries. Read each page's `og:image` with `curl -sL -A "Mozilla/5.0" <url> | grep -o -i '<meta[^>]*og:image[^>]*>'`. Many shops serve a larger version if you change the size in the image address (`_1024x` → `_2048x`, `w=1200` → `w=2400`, or the size part removed).
+2. Download the candidates into a new, empty folder in the scratchpad (never into the project), convert each to a PNG preview, and look at them. Prefer, in order:
+   - a flat image of the front cover;
+   - a photo of the book that can be straightened;
+   - a mock-up on a plain background.
+   Pick the largest of these that shows **this edition** (the same cover as the publisher's). Never use a photo of the inside pages, an exhibition view, or a different edition.
+3. If nothing usable turns up, run `npm run covers` after adding the book (step 6). It searches Open Library and Google Books.
+4. **If there is still no cover, tell the user plainly**: the book will show a typographic placeholder for now, and they can add a cover any time by putting an image in `data/covers/<slug>.jpg` (on their computer or on github.com) and asking you to process it.
 
 Then decide what the image needs:
 
@@ -121,5 +132,5 @@ gh run watch $(gh run list --workflow deploy.yml --limit 1 --json databaseId -q 
 Tell the user:
 - The book's address: `https://shu1995shijia.github.io/photobooks/books/<slug>`
 - The fields you filled in, with what was uncertain.
-- What was done to the cover.
+- Where the cover came from and what was done to it, or that **no cover was found**, so the book shows a placeholder, and how to add one later.
 - **A reminder to add the book to Notion too**, with the row ready to paste: Name, Author / Photographer (`;`-separated), Color Type, Country / Region, Genre, Publish Year, Publisher, Tags. Notion is the master catalog. Once the book is there, the next `npm run import` uses the Notion row and says to remove the entry from `data/added-books.json`.

@@ -960,5 +960,56 @@
     "year": 1995,
     "publisher": "Focus Publishing (Amsterdam)",
     "tags": []
+  },
+  {
+    "slug": "the-forgotten-people-lu-nan",
+    "title": "被遗忘的人 (The Forgotten People)",
+    "photographers": [
+      "Lu Nan (吕楠)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Mental Illness",
+    "year": 2014,
+    "publisher": "中国民族摄影艺术出版社",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "on-the-road-lu-nan",
+    "title": "在路上 (On the Road)",
+    "photographers": [
+      "Lu Nan (吕楠)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Religion / Catholicism in China",
+    "year": 2014,
+    "publisher": "中国民族摄影艺术出版社",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "four-seasons-lu-nan",
+    "title": "四季 (Four Seasons)",
+    "photographers": [
+      "Lu Nan (吕楠)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Rural Life / Tibet",
+    "year": 2014,
+    "publisher": "中国民族摄影艺术出版社",
+    "tags": [
+      "中国摄影师",
+      "中国题材"
+    ],
+    "location": "Beijing, China"
   }
 ]

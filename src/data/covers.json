@@ -627,6 +627,16 @@
     "origin": "data/covers/the-decisive-moment-henri-cartier-bresson.avif",
     "checksum": "da39a5a70a5493c3"
   },
+  "the-great-cities-hong-kong-brian-brake": {
+    "src": "covers/the-great-cities-hong-kong-brian-brake-600.webp",
+    "large": "covers/the-great-cities-hong-kong-brian-brake-1200.webp",
+    "width": 444,
+    "height": 558,
+    "dominantColor": "#080818",
+    "source": "upload",
+    "origin": "data/covers/the-great-cities-hong-kong-brian-brake.jpg",
+    "checksum": "151d61c4c5998d1d"
+  },
   "the-nature-of-photographs-stephen-shore": {
     "src": "covers/the-nature-of-photographs-stephen-shore-600.webp",
     "large": "covers/the-nature-of-photographs-stephen-shore-1200.webp",
@@ -645,6 +655,16 @@
     "dominantColor": "#080808",
     "source": "openlibrary",
     "origin": "https://covers.openlibrary.org/b/id/12345230-L.jpg?default=false"
+  },
+  "travels-of-a-photographer-in-china": {
+    "src": "covers/travels-of-a-photographer-in-china-600.webp",
+    "large": "covers/travels-of-a-photographer-in-china-1200.webp",
+    "width": 419,
+    "height": 494,
+    "dominantColor": "#A88858",
+    "source": "upload",
+    "origin": "data/covers/travels-of-a-photographer-in-china.jpg",
+    "checksum": "74c1fe954657e5d6"
   },
   "un-paese-paul-strand": {
     "src": "covers/un-paese-paul-strand-600.webp",

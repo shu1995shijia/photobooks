@@ -10,6 +10,7 @@ import {
   type Book,
 } from "../lib/book";
 import { coverRatio } from "../lib/cover";
+import { searchText } from "../lib/search";
 import { sortBooks } from "../lib/sort";
 import { url } from "../lib/url";
 
@@ -37,6 +38,7 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
         class="tile"
         style={`--ratio: ${coverRatio(book.slug)}`}
         data-location={locationOf(book)}
+        data-search={searchText(book)}
       >
         <a href={url(`books/${book.slug}`)} data-popup>
           <Cover book={book} sizes="(max-width: 720px) 45vw, 320px" />
@@ -54,23 +56,41 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
 
 <script>
   import { chosenLocation, onLocation, shows } from "../scripts/location";
+  import {
+    currentSearch,
+    matchesSearch,
+    noneText,
+    onSearch,
+  } from "../scripts/search";
 
-  // Show only the books kept at the location chosen in the header.
+  // Show only the books kept at the location chosen in the header that match the search.
   const list = document.querySelector<HTMLElement>("[data-tiles]")!;
   const tiles = [...list.querySelectorAll<HTMLElement>("[data-location]")];
   const none = document.querySelector<HTMLElement>("[data-none]")!;
   const known: string[] = JSON.parse(list.dataset.locations ?? "[]");
-  const filter = (place: string | null) => {
+  let place = chosenLocation(known);
+  let query = currentSearch();
+  const filter = () => {
     let shown = 0;
     for (const tile of tiles) {
-      tile.hidden = !shows(place, tile.dataset.location);
+      tile.hidden = !(
+        shows(place, tile.dataset.location) &&
+        matchesSearch(tile.dataset.search ?? "", query)
+      );
       if (!tile.hidden) shown++;
     }
     none.hidden = shown > 0;
-    none.textContent = `No books are kept in ${place} yet.`;
+    none.textContent = noneText(query, place);
   };
-  onLocation(filter);
-  filter(chosenLocation(known));
+  onLocation((p) => {
+    place = p;
+    filter();
+  });
+  onSearch((q) => {
+    query = q;
+    filter();
+  });
+  filter();
 
   // The arrow keys move between covers (↑ ↓ to the nearest in the next row),
   // and Enter opens the one with focus, or the first when none has it.

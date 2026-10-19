@@ -2,11 +2,10 @@
 import type { GetStaticPaths } from "astro";
 import Base from "../../layouts/Base.astro";
 import BookPopup from "../../components/BookPopup.astro";
-import Cover from "../../components/Cover.astro";
+import Shelf from "../../components/Shelf.astro";
 import books from "../../data/books.json";
-import { locationOf, type Book } from "../../lib/book";
+import type { Book } from "../../lib/book";
 import { photographers, type Photographer } from "../../lib/photographer";
-import { url } from "../../lib/url";
 
 export const getStaticPaths = (() =>
   photographers(books as Book[]).map((photographer) => ({
@@ -31,57 +30,12 @@ const count = photographer.books.length;
       </p>
     </div>
 
-    <ul class="books">
-      {photographer.books.map((book) => (
-        <li data-location={locationOf(book)}>
-          <a href={url(`books/${book.slug}`)} data-popup>
-            <Cover book={book} sizes="(max-width: 720px) 44vw, 240px" />
-            <span class="caption">
-              {/* One expression, so no space slips in before the comma. */}
-              {[<em>{book.title}</em>, book.year ? `, ${book.year}` : ""]}
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-    <p class="none" hidden data-none></p>
+    <Shelf books={photographer.books} />
   </section>
   <BookPopup />
 </Base>
 
-<script>
-  import { chosenLocation, onLocation, shows } from "../../scripts/location";
-
-  // Show only the books kept at the location chosen in the header.
-  const items = [...document.querySelectorAll<HTMLElement>("[data-location]")];
-  const none = document.querySelector<HTMLElement>("[data-none]")!;
-  const menu = [
-    ...document.querySelectorAll<HTMLElement>("[data-where-menu] [data-value]"),
-  ];
-  const known = menu.map((o) => o.dataset.value!).filter(Boolean);
-  const filter = (place: string | null) => {
-    let shown = 0;
-    for (const item of items) {
-      item.hidden = !shows(place, item.dataset.location);
-      if (!item.hidden) shown++;
-    }
-    none.hidden = shown > 0;
-    none.textContent = `None of these books are kept in ${place} yet.`;
-  };
-  onLocation(filter);
-  filter(chosenLocation(known));
-</script>
-
 <style>
-  .none {
-    margin: 0;
-    color: var(--graphite);
-  }
-
-  .books li[hidden] {
-    display: none;
-  }
-
   .photographer {
     display: flex;
     flex-direction: column;
@@ -98,57 +52,5 @@ const count = photographer.books.length;
   .count {
     margin: 6px 0 0;
     color: var(--graphite);
-  }
-
-  /* The books stand on a shared baseline, like a shelf. */
-  .books {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    align-items: end;
-    gap: 48px 40px;
-  }
-
-  .books a {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    text-decoration: none;
-  }
-
-  .books a :global(.cover) {
-    /* Full column width, but never taller than 340px. */
-    width: min(100%, 340px * var(--ratio));
-    transition: transform 0.2s ease;
-  }
-
-  .books a:hover :global(.cover) {
-    transform: translateY(-4px);
-  }
-
-  .caption {
-    font-size: 14px;
-    line-height: 1.4;
-    min-height: 2.8em; /* two lines, so covers line up even when a title wraps */
-  }
-
-  .books a:hover .caption em {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  @media (max-width: 720px) {
-    .books {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 20px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .books a :global(.cover) {
-      transition: none;
-    }
   }
 </style>

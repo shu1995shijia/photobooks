@@ -1,0 +1,147 @@
+---
+/**
+ * A page's books in a grid of covers, filtered to the location chosen in the
+ * header. Used by the photographer and tag pages.
+ */
+import Cover from "./Cover.astro";
+import { locationOf, photographerLine, type Book } from "../lib/book";
+import { searchText } from "../lib/search";
+import { url } from "../lib/url";
+
+interface Props {
+  books: Book[];
+  /** Puts each book's photographers above its title, for shelves of many photographers. */
+  showNames?: boolean;
+}
+
+const { books, showNames = false } = Astro.props;
+---
+
+<ul class="books">
+  {books.map((book) => (
+    <li data-location={locationOf(book)} data-search={searchText(book)}>
+      <a href={url(`books/${book.slug}`)} data-popup>
+        <Cover book={book} sizes="(max-width: 720px) 44vw, 240px" />
+        <span class:list={["caption", { named: showNames }]}>
+          {showNames && <span class="name">{photographerLine(book)}</span>}
+          {/* One expression, so no space slips in before the comma. */}
+          <span>
+            {[<em>{book.title}</em>, book.year ? `, ${book.year}` : ""]}
+          </span>
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>
+<p class="none" hidden data-none></p>
+
+<script>
+  import { chosenLocation, onLocation, shows } from "../scripts/location";
+  import { currentSearch, matchesSearch, onSearch } from "../scripts/search";
+
+  // Show only the books kept at the location chosen in the header that match the search.
+  const items = [...document.querySelectorAll<HTMLElement>("[data-location]")];
+  const none = document.querySelector<HTMLElement>("[data-none]")!;
+  const menu = [
+    ...document.querySelectorAll<HTMLElement>("[data-where-menu] [data-value]"),
+  ];
+  const known = menu.map((o) => o.dataset.value!).filter(Boolean);
+  let place = chosenLocation(known);
+  let query = currentSearch();
+  const filter = () => {
+    let shown = 0;
+    for (const item of items) {
+      item.hidden = !(
+        shows(place, item.dataset.location) &&
+        matchesSearch(item.dataset.search ?? "", query)
+      );
+      if (!item.hidden) shown++;
+    }
+    none.hidden = shown > 0;
+    none.textContent = query
+      ? `None of these books match “${query}”.`
+      : `None of these books are kept in ${place} yet.`;
+  };
+  onLocation((p) => {
+    place = p;
+    filter();
+  });
+  onSearch((q) => {
+    query = q;
+    filter();
+  });
+  filter();
+</script>
+
+<style>
+  .none {
+    margin: 0;
+    color: var(--graphite);
+  }
+
+  .books li[hidden] {
+    display: none;
+  }
+
+  /* The books stand on a shared baseline, like a shelf. */
+  .books {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    align-items: end;
+    gap: 48px 40px;
+  }
+
+  .books a {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .books a :global(.cover) {
+    /* Full column width, but never taller than 340px. */
+    width: min(100%, 340px * var(--ratio));
+    transition: transform 0.2s ease;
+  }
+
+  .books a:hover :global(.cover) {
+    transform: translateY(-4px);
+  }
+
+  .caption {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 2.8em; /* two lines, so covers line up even when a title wraps */
+  }
+
+  .caption.named {
+    min-height: 4.2em; /* a line of names, then two of title */
+  }
+
+  .caption .name {
+    font-weight: 700;
+  }
+
+  .books a:hover .caption em {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 720px) {
+    .books {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .books a :global(.cover) {
+      transition: none;
+    }
+  }
+</style>

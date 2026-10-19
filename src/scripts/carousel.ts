@@ -9,6 +9,7 @@
  */
 
 import { chosenLocation, onLocation, shows } from "./location";
+import { currentSearch, matchesSearch, noneText, onSearch } from "./search";
 import { onPick, randomIndex } from "./shuffle";
 
 export function wrap(index: number, total: number): number {
@@ -85,12 +86,17 @@ export function initCarousel(root: HTMLElement): void {
   let announceTimer: ReturnType<typeof setTimeout> | undefined;
 
   let place: string | null = null;
+  let query = currentSearch();
 
-  /** Shows only the books kept at `chosen` (all when null), staying on the current book if it's among them. */
+  /** Shows only the books kept at `chosen` (all when null) that match the search, staying on the current book if it's among them. */
   function filter(chosen: string | null): void {
     place = chosen;
     const current = slugs[index];
-    const keep = allSlides.map((s) => shows(place, s.dataset.location));
+    const keep = allSlides.map(
+      (s) =>
+        shows(place, s.dataset.location) &&
+        matchesSearch(s.dataset.search ?? "", query),
+    );
     slides = allSlides.filter((_, i) => keep[i]);
     ticks = allTicks.filter((_, i) => keep[i]);
     allSlides.forEach((slide, i) => {
@@ -107,7 +113,7 @@ export function initCarousel(root: HTMLElement): void {
     stage.hidden = none;
     controls.hidden = none;
     empty.hidden = !none;
-    if (none) empty.textContent = `No books are kept in ${place} yet.`;
+    if (none) empty.textContent = noneText(query, place);
     else render(false);
   }
 
@@ -283,5 +289,9 @@ export function initCarousel(root: HTMLElement): void {
   root.classList.add("is-enhanced");
   controls.hidden = false;
   onLocation(filter);
+  onSearch((q) => {
+    query = q;
+    filter(place);
+  });
   filter(chosenLocation(places));
 }

@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from "astro";
+import Base from "../../layouts/Base.astro";
+import BookPopup from "../../components/BookPopup.astro";
+import Shelf from "../../components/Shelf.astro";
+import books from "../../data/books.json";
+import type { Book } from "../../lib/book";
+import { tags, type Tag } from "../../lib/tag";
+
+export const getStaticPaths = (() =>
+  tags(books as Book[]).map((tag) => ({
+    params: { slug: tag.slug },
+    props: { tag },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  tag: Tag;
+}
+
+const { tag } = Astro.props;
+const count = tag.books.length;
+---
+
+<Base title={`Tagged ${tag.name}: Photobooks`}>
+  <section class="tag">
+    <div class="heading">
+      <p class="kicker">Tag</p>
+      <h1>{tag.name}</h1>
+      <p class="count">
+        {count === 1 ? "One book" : `${count} books`} in the collection
+      </p>
+    </div>
+
+    <Shelf books={tag.books} showNames />
+  </section>
+  <BookPopup />
+</Base>
+
+<style>
+  .tag {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .kicker {
+    margin: 0 0 6px;
+    color: var(--graphite);
+  }
+
+  .count {
+    margin: 6px 0 0;
+    color: var(--graphite);
+  }
+</style>

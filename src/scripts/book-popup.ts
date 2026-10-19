@@ -5,7 +5,7 @@
  * page, so a reload or a shared link still works, and Back closes it. Esc, ←,
  * the Close button or a click outside close it too, in reverse.
  */
-import type { PopupBook } from "../lib/popup";
+import type { PopupBook, PopupLink } from "../lib/popup";
 
 const OPEN_MS = 450;
 const PAGE_MS = 650;
@@ -24,6 +24,18 @@ function el<K extends keyof HTMLElementTagNameMap>(
   if (className) node.className = className;
   if (text !== undefined) node.textContent = text;
   return node;
+}
+
+/** "A, B": each one a link. */
+function links(list: PopupLink[]): DocumentFragment {
+  const out = document.createDocumentFragment();
+  list.forEach(({ name, href }, i) => {
+    if (i > 0) out.append(", ");
+    const a = el("a", undefined, name);
+    a.href = href;
+    out.append(a);
+  });
+  return out;
 }
 
 /** The wall label: names (linked), title and year, publisher and medium, then the rest. */
@@ -47,7 +59,9 @@ function label(book: PopupBook): DocumentFragment {
     const dl = el("dl");
     for (const [term, value] of book.rows) {
       const row = el("div");
-      row.append(el("dt", undefined, term), el("dd", undefined, value));
+      const dd = el("dd");
+      dd.append(typeof value === "string" ? value : links(value));
+      row.append(el("dt", undefined, term), dd);
       dl.append(row);
     }
     out.append(dl);

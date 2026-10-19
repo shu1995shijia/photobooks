@@ -6,6 +6,7 @@ import {
   type Book,
 } from "../lib/book";
 import { photographerSlug } from "../lib/photographer";
+import { tagSlug } from "../lib/tag";
 import { url } from "../lib/url";
 
 interface Props {
@@ -30,6 +31,11 @@ const extra = full
       {
         term: book.tags.length > 1 ? "Tags" : "Tag",
         value: book.tags.join(", "),
+        // Each tag links to the page of every book with it.
+        links: book.tags.map((tag) => ({
+          name: tag,
+          href: url(`tags/${tagSlug(tag)}`),
+        })),
       },
       { term: "Location", value: locationOf(book) },
     ].filter((row) => row.value)
@@ -58,7 +64,14 @@ const extra = full
       {extra.map((row) => (
         <div>
           <dt>{row.term}</dt>
-          <dd>{row.value}</dd>
+          <dd>
+            {"links" in row
+              ? row.links.map((link, i) => [
+                  i > 0 ? ", " : "",
+                  <a href={link.href}>{link.name}</a>,
+                ])
+              : row.value}
+          </dd>
         </div>
       ))}
     </dl>
@@ -123,5 +136,14 @@ const extra = full
 
   dd {
     margin: 0;
+  }
+
+  dd a {
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--shelf);
+  }
+
+  dd a:hover {
+    text-decoration-color: currentColor;
   }
 </style>

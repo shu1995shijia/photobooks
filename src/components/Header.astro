@@ -1,6 +1,7 @@
 ---
 import books from "../data/books.json";
 import { LOCATIONS, locationOf, type Book } from "../lib/book";
+import { suggestions } from "../lib/search";
 import { url } from "../lib/url";
 
 interface Props {
@@ -24,6 +25,9 @@ const views = [
 const currentView = views.find((view) => view.id === current);
 
 const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
+
+// What the search box offers to fill in: every title, name, publisher and so on.
+const searchSuggestions = suggestions(books as Book[]);
 ---
 
 <header class="header">
@@ -61,6 +65,40 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
       </span>
     </div>
   </div>
+  <!-- Out of sight until the pointer comes near (or it has focus, or a search). -->
+  <search class="search" data-search-box>
+    <label class="visually-hidden" for="book-search">
+      Search the books
+    </label>
+    <div class="search-field">
+      <input
+        id="book-search"
+        type="search"
+        placeholder="Search"
+        autocomplete="off"
+        spellcheck="false"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="false"
+        aria-controls="search-suggestions"
+        data-search-input
+        data-results={url("tile")}
+      />
+      <ul
+        id="search-suggestions"
+        class="suggestions"
+        role="listbox"
+        aria-label="Suggestions"
+        hidden
+        data-suggestions
+      ></ul>
+    </div>
+    <script
+      type="application/json"
+      id="search-suggestions-data"
+      set:html={JSON.stringify(searchSuggestions).replace(/</g, "\\u003c")}
+    />
+  </search>
   <nav aria-label="Site">
     <button type="button" class="view-link shuffle" hidden data-shuffle>
       Shuffle
@@ -212,6 +250,147 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
   }
 </script>
 
+<script>
+  import { suggest, type Suggestion } from "../lib/search";
+  import { currentSearch, setSearch } from "../scripts/search";
+
+  const input = document.querySelector<HTMLInputElement>("[data-search-input]");
+  const list = document.querySelector<HTMLElement>("[data-suggestions]");
+  if (input && list) {
+    const all: Suggestion[] = JSON.parse(
+      document.getElementById("search-suggestions-data")?.textContent ?? "[]",
+    );
+    let options: HTMLElement[] = [];
+    let active = -1;
+
+    const open = (yes: boolean) => {
+      list.hidden = !yes || options.length === 0;
+      input.setAttribute("aria-expanded", String(!list.hidden));
+    };
+
+    /** Highlights option `i` (none when -1) and keeps it in view. */
+    const highlight = (i: number) => {
+      options[active]?.removeAttribute("aria-selected");
+      active = i;
+      const option = options[active];
+      if (option) {
+        option.setAttribute("aria-selected", "true");
+        option.scrollIntoView({ block: "nearest" });
+        input.setAttribute("aria-activedescendant", option.id);
+      } else input.removeAttribute("aria-activedescendant");
+    };
+
+    /** Lists the suggestions matching what's typed, under a heading for each kind. */
+    const fill = () => {
+      const items: HTMLElement[] = [];
+      options = [];
+      active = -1;
+      input.removeAttribute("aria-activedescendant");
+      let kind = "";
+      for (const s of suggest(all, input.value)) {
+        if (s.kind !== kind) {
+          kind = s.kind;
+          const heading = document.createElement("li");
+          heading.className = "kind";
+          heading.setAttribute("role", "presentation");
+          heading.textContent = kind;
+          items.push(heading);
+        }
+        const option = document.createElement("li");
+        option.id = `suggestion-${options.length}`;
+        option.setAttribute("role", "option");
+        option.dataset.value = s.value;
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = String(s.count);
+        option.append(s.value, count);
+        options.push(option);
+        items.push(option);
+      }
+      list.replaceChildren(...items);
+      list.scrollTop = 0;
+    };
+
+    /** Leaves the box; on a page without a list of books (a book's own page), searches in the tile view. */
+    const done = () => {
+      open(false);
+      if (
+        input.value &&
+        !document.querySelector("[data-location][data-search]")
+      )
+        location.href = input.dataset.results!;
+      input.blur();
+    };
+
+    const pick = (value: string) => {
+      input.value = value;
+      setSearch(value);
+      done();
+    };
+
+    input.value = currentSearch();
+    input.addEventListener("focus", () => {
+      fill();
+      open(true);
+    });
+    input.addEventListener("blur", () => open(false));
+    input.addEventListener("input", () => {
+      setSearch(input.value.trim());
+      fill();
+      open(true);
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        if (list.hidden) open(true);
+        const step = event.key === "ArrowDown" ? 1 : -1;
+        highlight(Math.max(-1, Math.min(options.length - 1, active + step)));
+      } else if (event.key === "Enter") {
+        // Enter fills in the highlighted suggestion, or keeps what's typed;
+        // either way it's spent here, so it doesn't also open a book.
+        event.preventDefault();
+        event.stopPropagation();
+        const option = options[active];
+        if (option && !list.hidden) pick(option.dataset.value!);
+        else done();
+      } else if (event.key === "Escape") {
+        // Esc closes the suggestions first, then clears the search.
+        event.preventDefault();
+        if (!list.hidden) return open(false);
+        input.value = "";
+        setSearch("");
+        input.blur();
+      }
+    });
+    // Pressing on a suggestion mustn't blur the box before the click lands.
+    list.addEventListener("mousedown", (event) => event.preventDefault());
+    list.addEventListener("click", (event) => {
+      const option = (event.target as Element).closest<HTMLElement>(
+        "[role=option]",
+      );
+      if (option) pick(option.dataset.value!);
+    });
+    list.addEventListener("mousemove", (event) => {
+      const option = (event.target as Element).closest<HTMLElement>(
+        "[role=option]",
+      );
+      if (option && options.indexOf(option) !== active)
+        highlight(options.indexOf(option));
+    });
+    // "/" jumps to the search from anywhere but a field or an open book.
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey)
+        return;
+      if (document.querySelector("dialog[open]")) return;
+      const focused = document.activeElement;
+      if (focused?.closest("input, select, textarea, [contenteditable]"))
+        return;
+      event.preventDefault();
+      input.focus();
+    });
+  }
+</script>
+
 <style is:global>
   /* The cover the Shuffle highlight is on. */
   a.is-shuffle-pick .cover {
@@ -227,6 +406,139 @@ const INSTAGRAM = "https://www.instagram.com/jimmy_novacaine/";
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+  }
+
+  /* Title, search and links in three columns, so the search sits in the page's middle. */
+  @media (min-width: 721px) {
+    .header {
+      display: grid;
+      grid-template-columns: 1fr minmax(160px, 360px) 1fr;
+    }
+
+    nav {
+      justify-self: end;
+    }
+  }
+
+  /* The whole middle of the header is the hover target. */
+  .search {
+    flex: 1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+  }
+
+  .search-field {
+    position: relative;
+    width: 100%;
+  }
+
+  .search input {
+    width: 100%;
+    min-height: 36px;
+    padding: 0 2px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--shelf);
+    border-radius: 0;
+    outline: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .search input::placeholder {
+    color: var(--graphite);
+  }
+
+  .search input:focus {
+    border-bottom-color: var(--ink);
+  }
+
+  .search:hover input,
+  .search input:focus,
+  .search input:not(:placeholder-shown) {
+    opacity: 1;
+  }
+
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    max-height: min(420px, 60vh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: var(--wall);
+    border: 1px solid var(--shelf);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.08);
+  }
+
+  .suggestions[hidden] {
+    display: none;
+  }
+
+  .suggestions :global(.kind) {
+    padding: 10px 12px 4px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+
+  .suggestions :global([role="option"]) {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 7px 12px;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .suggestions :global([aria-selected="true"]) {
+    background: rgb(0 0 0 / 0.05);
+  }
+
+  .suggestions :global(.count) {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--graphite);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Without hover (a phone), it stays in sight, quietly. */
+  @media (hover: none) {
+    .search input {
+      opacity: 1;
+    }
+  }
+
+  /* On a narrow screen it takes its own row under the title. */
+  @media (max-width: 720px) {
+    .search {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .search input {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .search input {
+      transition: none;
+    }
   }
 
   .title {

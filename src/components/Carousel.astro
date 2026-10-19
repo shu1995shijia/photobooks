@@ -5,6 +5,7 @@ import {
   photographerLine,
   type Book,
 } from "../lib/book";
+import { searchText } from "../lib/search";
 import { url } from "../lib/url";
 import BookMeta from "./BookMeta.astro";
 import Cover from "./Cover.astro";
@@ -36,6 +37,7 @@ const places = [...new Set([...LOCATIONS, ...books.map(locationOf)])];
             data-slug={book.slug}
             data-announce={`${book.title} by ${byline}`}
             data-location={locationOf(book)}
+            data-search={searchText(book)}
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${total}`}
           >

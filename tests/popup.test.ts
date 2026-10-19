@@ -25,7 +25,15 @@ describe("popupData", () => {
     expect(entry.details).toEqual(["Watermark", "Color and black and white"]);
     expect(entry.rows).toEqual([
       ["Country or region", "Hong Kong"],
-      ["Tag", "中国题材"],
+      [
+        "Tag",
+        [
+          {
+            name: "中国题材",
+            href: expect.stringMatching(/\/tags\/zhong-guo-ti-cai$/),
+          },
+        ],
+      ],
       ["Location", "Brooklyn, NY"],
     ]);
     expect(entry.href).toMatch(new RegExp(`/books/${book.slug}$`));

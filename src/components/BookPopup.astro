@@ -127,13 +127,15 @@ const data = popupData(books as Book[]);
     font-weight: 700;
   }
 
-  .spread-label .name a {
+  .spread-label .name a,
+  .spread-label dd a {
     color: inherit;
     text-decoration-thickness: 1px;
     text-decoration-color: var(--shelf);
   }
 
-  .spread-label .name a:hover {
+  .spread-label .name a:hover,
+  .spread-label dd a:hover {
     text-decoration-color: currentColor;
   }
 

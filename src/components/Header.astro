@@ -13,13 +13,8 @@ const { current } = Astro.props;
 const places = [
   ...new Set([...LOCATIONS, ...(books as Book[]).map(locationOf)]),
 ];
-// With every location chosen, name the places that actually have books:
-// "New York City, NY", or "New York City, NY and Beijing, China".
-const withBooks = [...new Set((books as Book[]).map(locationOf))];
-const everywhere =
-  withBooks.length > 1
-    ? `${withBooks.slice(0, -1).join(", ")} and ${withBooks[withBooks.length - 1]}`
-    : withBooks[0];
+// The default, showing every book: "New York City, NY and Beijing, China".
+const everywhere = `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`;
 
 // The shelf view joins this list once it's built (see tasks/todo.md).
 const views = [

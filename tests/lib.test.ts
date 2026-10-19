@@ -153,8 +153,8 @@ describe("url", () => {
 
 describe("locationOf", () => {
   test("is the collection's location unless the book has its own", () => {
-    expect(COLLECTION_LOCATION).toBe("New York City, NY");
-    expect(locationOf({})).toBe("New York City, NY");
+    expect(COLLECTION_LOCATION).toBe("Brooklyn, NY");
+    expect(locationOf({})).toBe("Brooklyn, NY");
     expect(locationOf({ location: "Shanghai" })).toBe("Shanghai");
   });
 });

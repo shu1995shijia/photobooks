@@ -36,7 +36,7 @@ Fill in these fields, following the conventions already in `books.json`:
 | `year` | Year of this edition, as a number | |
 | `publisher` | Publisher of this edition | |
 | `tags` | Only these two exist | `"中国题材"` if the subject is China, `"中国摄影师"` if a photographer is Chinese. Otherwise `[]`. |
-| `location` | Leave out | Every book is in New York City, NY unless the user says otherwise. |
+| `location` | Leave out | Every book is in Brooklyn, NY unless the user says otherwise. |
 
 Never add anything private: purchase dates, prices paid or personal notes.
 

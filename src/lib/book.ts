@@ -15,7 +15,7 @@ export interface Book {
 }
 
 /** The places books are kept, offered in the header's location menu. */
-export const LOCATIONS = ["New York City, NY", "Beijing, China"] as const;
+export const LOCATIONS = ["Brooklyn, NY", "Beijing, China"] as const;
 
 /** Where a book is kept unless it says otherwise. */
 export const COLLECTION_LOCATION: string = LOCATIONS[0];

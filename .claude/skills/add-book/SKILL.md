@@ -35,7 +35,7 @@ Fill in these fields, following the conventions already in `books.json`:
 | `genre` | Slash-separated, broad first | e.g. `"Documentary Photography / Urban Japan"`. Start with an existing broad value (`Documentary`, `Documentary Photography`, `Street Photography`, `Portrait`, `Personal Documentary`, `Conceptual`, `Photography History`) and add up to three specifics. |
 | `year` | Year of this edition, as a number | |
 | `publisher` | Publisher of this edition | |
-| `tags` | Only these two exist | `"中国题材"` if the subject is China, `"中国摄影师"` if a photographer is Chinese. Otherwise `[]`. |
+| `tags` | Ask the user (step 4) | Work out which existing tags fit, to suggest them: today `"中国题材"` (China as subject) and `"中国摄影师"` (a Chinese photographer). |
 | `location` | Ask the user (step 4) | Where this copy is kept. Leave the field out for `"Brooklyn, NY"`, the default; include it for anywhere else. |
 
 Never add anything private: purchase dates, prices paid or personal notes.
@@ -53,12 +53,22 @@ Before adding anything, show the user **every attribute that will be added**, so
 | Genre | |
 | Year | |
 | Publisher | |
-| Tags | the tags, or "none" |
+| Tags | the tags the user chose in the tag question (below), or "none" |
 | Location | the location the user chose in the location question (below) |
 | Page address | `/books/<slug>`, worked out the way `npm run add-book` will (title, then first photographer, lowercased and hyphenated) |
 | Cover | where the image comes from (the user's file, or a URL), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed) |
 
-First ask where the book is kept, with AskUserQuestion: one option for each place in `LOCATIONS` in `src/lib/book.ts` (today **Brooklyn, NY** and **Beijing, China**), with Brooklyn, NY first and marked as the default. The user can type another place under "Other". Write a new place the way the existing ones are written ("City, State" in the US, "City, Country" elsewhere). Put the answer in the Location row. For anything other than Brooklyn, NY, add `"location"` to the JSON. For a place that isn't in `LOCATIONS` yet, also add it to that list, so it shows in the site's location menu, and commit that change with the book in step 7.
+First ask two questions in one AskUserQuestion call: where the book is kept, and its tags.
+
+**Tags.** List every tag in use on the site today, with how many books have it:
+
+```
+node -e 'const c={};for(const b of require("./src/data/books.json"))for(const t of b.tags)c[t]=(c[t]||0)+1;for(const [t,n] of Object.entries(c).sort((a,b)=>b[1]-a[1]))console.log(`${t}  ${n} books`)'
+```
+
+Ask with `multiSelect: true`. Give one option per tag (label: the tag; description: what it means, how many books have it, and "Suggested" if your research says it fits), plus a **No tags** option. AskUserQuestion allows at most four options, so if there are more than three tags, offer the three most used plus No tags, and list the rest in the question text so the user can type them under "Other". The user can also type a new tag there. Write a new tag the way the existing ones are written. Each tag gets its own page on the site (`/tags/<slug>`), so a new tag creates one. Put the chosen tags in the Tags row and in the JSON (`[]` for none).
+
+**Location.** Ask with one option for each place in `LOCATIONS` in `src/lib/book.ts` (today **Brooklyn, NY** and **Beijing, China**), with Brooklyn, NY first and marked as the default. The user can type another place under "Other". Write a new place the way the existing ones are written ("City, State" in the US, "City, Country" elsewhere). Put the answer in the Location row. For anything other than Brooklyn, NY, add `"location"` to the JSON. For a place that isn't in `LOCATIONS` yet, also add it to that list, so it shows in the site's location menu, and commit that change with the book in step 7.
 
 Give the source for each researched value in a third column, and mark anything uncertain. Under the table, also show the exact JSON you'll pass to `npm run add-book`. Then ask once with AskUserQuestion: **Add it** / **Change something**. Their "Add it" also covers publishing in step 7. If they change something, show the whole table again before adding. Then:
 

@@ -1,4 +1,6 @@
 ---
+import books from "../data/books.json";
+import { locationOf, type Book } from "../lib/book";
 import { url } from "../lib/url";
 
 interface Props {
@@ -7,6 +9,13 @@ interface Props {
 
 const { current } = Astro.props;
 
+// "New York City, NY", or "New York City, NY and Shanghai" once books are kept in more than one place.
+const places = [...new Set((books as Book[]).map(locationOf))];
+const where =
+  places.length > 1
+    ? `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`
+    : places[0];
+
 // The shelf view joins this list once it's built (see tasks/todo.md).
 const views = [
   { id: "carousel", label: "Carousel", href: url("carousel") },
@@ -14,9 +23,12 @@ const views = [
 ---
 
 <header class="header">
-  <a class="site-name" href={url("")}>
-    Photobooks
-  </a>
+  <div class="title">
+    <a class="site-name" href={url("")}>
+      Photobooks
+    </a>
+    <p class="location">A collection in {where}</p>
+  </div>
   <nav aria-label="Views">
     {views.map((view) => (
       <a
@@ -37,6 +49,18 @@ const views = [
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .location {
+    margin: 0;
+    font-size: 13px;
+    color: var(--graphite);
   }
 
   .site-name {

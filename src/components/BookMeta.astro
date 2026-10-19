@@ -1,9 +1,14 @@
 ---
-import { colorTypeLabel, photographerLine, type Book } from "../lib/book";
+import {
+  colorTypeLabel,
+  locationOf,
+  photographerLine,
+  type Book,
+} from "../lib/book";
 
 interface Props {
   book: Book;
-  /** Adds the fields a wall label leaves out: region, genre and tags. */
+  /** Adds the fields a wall label leaves out: region, genre, tags and where the copy is kept. */
   full?: boolean;
 }
 
@@ -17,6 +22,7 @@ const extra = full
         term: book.tags.length > 1 ? "Tags" : "Tag",
         value: book.tags.join(", "),
       },
+      { term: "Location", value: locationOf(book) },
     ].filter((row) => row.value)
   : [];
 ---

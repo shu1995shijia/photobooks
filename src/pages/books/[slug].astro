@@ -32,7 +32,12 @@ const { book, prev, next } = Astro.props;
 ---
 
 <Base title={`${book.title}, ${photographerLine(book)}: Photobooks`}>
-  <a class="back" href={url(`carousel#${book.slug}`)}>
+  <a
+    class="back"
+    href={url(`carousel#${book.slug}`)}
+    aria-keyshortcuts="ArrowLeft"
+    data-back
+  >
     Back to the carousel
   </a>
 
@@ -61,6 +66,32 @@ const { book, prev, next } = Astro.props;
     </a>
   </nav>
 </Base>
+
+<script>
+  // ← goes back to the carousel, on this book. Arriving from the carousel, going
+  // back in history restores it as it was; otherwise follow the back link.
+  const back = document.querySelector<HTMLAnchorElement>("[data-back]")!;
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft") return;
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+      return;
+    const focused = event.target;
+    if (
+      focused instanceof Element &&
+      focused.closest("input, select, textarea, [contenteditable]")
+    )
+      return;
+    event.preventDefault();
+    const from = document.referrer ? new URL(document.referrer) : undefined;
+    const carousel = new URL(back.href);
+    if (
+      from?.origin === location.origin &&
+      from.pathname.replace(/\/$/, "") === carousel.pathname.replace(/\/$/, "")
+    )
+      history.back();
+    else location.assign(back.href);
+  });
+</script>
 
 <style>
   .back {

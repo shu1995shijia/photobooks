@@ -88,3 +88,19 @@ describe("parseCatalog", () => {
     );
   });
 });
+
+describe("Location column", () => {
+  const header = "Name,Author / Photographer,Color Type,Country / Region,Genre,Publish Year,Publisher,Tags";
+
+  test("is optional: without it, books have no location of their own", () => {
+    const { books } = parseCatalog(`${header}\nSongbook,Alec Soth,Color,,,2015,,\n`);
+    expect(books[0].location).toBeUndefined();
+  });
+
+  test("is read when the export has it", () => {
+    const { books } = parseCatalog(
+      `${header},Location\nSongbook,Alec Soth,Color,,,2015,,, Shanghai \nExiles,Josef Koudelka,Black & White,,,1988,,,\n`,
+    );
+    expect(books.map((b) => b.location)).toEqual(["Shanghai", undefined]);
+  });
+});

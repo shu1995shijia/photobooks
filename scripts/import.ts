@@ -3,7 +3,7 @@
  *
  *   npm run import -- data/notion-export.csv
  *
- * Only the columns in COLUMNS reach the site; everything else in the export
+ * Only the columns in COLUMNS and OPTIONAL_COLUMNS reach the site; everything else in the export
  * (Purchase Date, Short Description, …) is dropped. Slugs already in
  * books.json are kept, so book URLs don't change on re-import.
  */
@@ -25,6 +25,11 @@ const COLUMNS = {
   year: "Publish Year",
   publisher: "Publisher",
   tags: "Tags",
+} as const;
+
+/** Public columns that may be missing from an export. */
+const OPTIONAL_COLUMNS = {
+  location: "Location", // where the copy is kept; COLLECTION_LOCATION otherwise
 } as const;
 
 type Row = Record<string, string | undefined>;
@@ -104,6 +109,7 @@ export function parseCatalog(
       year,
       publisher: optional(clean(row[COLUMNS.publisher])),
       tags: list(clean(row[COLUMNS.tags]), /,/),
+      location: optional(clean(row[OPTIONAL_COLUMNS.location])),
     };
     books.push(book);
   }

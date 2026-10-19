@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { colorTypeLabel, photographerLine, type Book } from "../src/lib/book";
+import {
+  COLLECTION_LOCATION,
+  colorTypeLabel,
+  locationOf,
+  photographerLine,
+  type Book,
+} from "../src/lib/book";
 import { baseSlug, latinPart, uniqueSlug } from "../src/lib/slug";
 import { sortBooks, surname } from "../src/lib/sort";
 import { url } from "../src/lib/url";
@@ -142,5 +148,13 @@ describe("url", () => {
   test("adds the base path once", () => {
     expect(url("carousel", "/photobooks")).toBe("/photobooks/carousel");
     expect(url("/carousel", "/photobooks/")).toBe("/photobooks/carousel");
+  });
+});
+
+describe("locationOf", () => {
+  test("is the collection's location unless the book has its own", () => {
+    expect(COLLECTION_LOCATION).toBe("New York City, NY");
+    expect(locationOf({})).toBe("New York City, NY");
+    expect(locationOf({ location: "Shanghai" })).toBe("Shanghai");
   });
 });

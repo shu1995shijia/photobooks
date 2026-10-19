@@ -11,6 +11,14 @@ export interface Book {
   year?: number;
   publisher?: string;
   tags: string[];
+  location?: string; // where this copy is kept, when it isn't COLLECTION_LOCATION
+}
+
+/** Where the collection is kept. A book's own location, when it has one, wins. */
+export const COLLECTION_LOCATION = "New York City, NY";
+
+export function locationOf(book: Pick<Book, "location">): string {
+  return book.location ?? COLLECTION_LOCATION;
 }
 
 /** "Robert Frank" or "Atget and Abbott"; "Photographer unknown" when empty. */

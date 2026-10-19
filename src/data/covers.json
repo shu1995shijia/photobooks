@@ -115,6 +115,16 @@
     "origin": "data/covers/beijing-a-travel-in-time-susanne-scherer.jpg",
     "checksum": "89dc2aadbb5fd5f5"
   },
+  "china-1948-1958-1959-henri-cartier-bresson": {
+    "src": "covers/china-1948-1958-1959-henri-cartier-bresson-600.webp",
+    "large": "covers/china-1948-1958-1959-henri-cartier-bresson-1200.webp",
+    "width": 600,
+    "height": 725,
+    "dominantColor": "#181818",
+    "source": "upload",
+    "origin": "data/covers/china-1948-1958-1959-henri-cartier-bresson.jpg",
+    "checksum": "b60cdbf295876789"
+  },
   "china-a-photo-history": {
     "src": "covers/china-a-photo-history-600.webp",
     "large": "covers/china-a-photo-history-1200.webp",
@@ -214,11 +224,12 @@
   "double-happiness-chien-chi-chang": {
     "src": "covers/double-happiness-chien-chi-chang-600.webp",
     "large": "covers/double-happiness-chien-chi-chang-1200.webp",
-    "width": 498,
-    "height": 340,
-    "dominantColor": "#181818",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/2122591-L.jpg?default=false"
+    "width": 600,
+    "height": 410,
+    "dominantColor": "#D8D8D8",
+    "source": "upload",
+    "origin": "data/covers/double-happiness-chien-chi-chang.webp",
+    "checksum": "51aab36143488235"
   },
   "elliott-erwitt-personal-best-elliott-erwitt": {
     "src": "covers/elliott-erwitt-personal-best-elliott-erwitt-600.webp",

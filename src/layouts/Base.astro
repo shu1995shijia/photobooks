@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import { url } from "../lib/url";
 
 interface Props {
   title: string;
@@ -17,6 +18,15 @@ const { title, current } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <!-- A bookcase: the tab icon, and what Safari shows for a bookmark or home-screen link. -->
+    <link rel="icon" href={url("favicon.svg")} type="image/svg+xml" />
+    <link
+      rel="icon"
+      href={url("favicon-32.png")}
+      type="image/png"
+      sizes="32x32"
+    />
+    <link rel="apple-touch-icon" href={url("apple-touch-icon.png")} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

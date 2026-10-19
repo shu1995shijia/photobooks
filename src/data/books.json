@@ -95,7 +95,7 @@
       "Greg Girard"
     ],
     "colorType": "Color",
-    "region": "China / Shanghai",
+    "region": "China",
     "genre": "Documentary",
     "year": 2007,
     "publisher": "The Magenta Foundation",
@@ -283,7 +283,7 @@
       "Berenice Abbott"
     ],
     "colorType": "Black & White",
-    "region": "France / USA",
+    "region": "France / United States",
     "genre": "Urban History",
     "year": 2018,
     "publisher": "Yale University Press",
@@ -391,7 +391,7 @@
       "Hedda Morrison"
     ],
     "colorType": "Black & White",
-    "region": "Austrilia",
+    "region": "China",
     "genre": "History",
     "year": 1985,
     "publisher": "Oxford University Press",
@@ -789,9 +789,15 @@
   },
   {
     "slug": "travels-of-a-photographer-in-china",
-    "title": "Travels of a photographer in China",
-    "photographers": [],
+    "title": "Travels of a Photographer in China, 1933–1946",
+    "photographers": [
+      "Hedda Morrison"
+    ],
     "colorType": "Black & White",
+    "region": "China",
+    "genre": "Documentary Photography / Photography History / Republican-Era China",
+    "year": 1987,
+    "publisher": "Oxford University Press",
     "tags": [
       "中国题材"
     ]
@@ -803,6 +809,10 @@
       "Brian Brake"
     ],
     "colorType": "Color",
+    "region": "Hong Kong",
+    "genre": "Documentary Photography / Urban / Travel",
+    "year": 1977,
+    "publisher": "Time-Life Books",
     "tags": [
       "中国题材"
     ]
@@ -814,6 +824,10 @@
       "Yann Layma"
     ],
     "colorType": "Color",
+    "region": "China",
+    "genre": "Documentary Photography / Travel / Contemporary China",
+    "year": 2003,
+    "publisher": "Harry N. Abrams",
     "tags": [
       "中国题材"
     ]
@@ -825,6 +839,8 @@
       "Brian Brake"
     ],
     "colorType": "Color",
+    "region": "China",
+    "genre": "Documentary Photography / Photojournalism / 1950s China",
     "year": 2009,
     "tags": [
       "中国题材"

@@ -36,7 +36,7 @@ Fill in these fields, following the conventions already in `books.json`:
 | `year` | Year of this edition, as a number | |
 | `publisher` | Publisher of this edition | |
 | `tags` | Only these two exist | `"中国题材"` if the subject is China, `"中国摄影师"` if a photographer is Chinese. Otherwise `[]`. |
-| `location` | Leave out | Every book is in Brooklyn, NY unless the user says otherwise. |
+| `location` | Ask the user (step 4) | Where this copy is kept. Leave the field out for `"Brooklyn, NY"`, the default; include it for anywhere else. |
 
 Never add anything private: purchase dates, prices paid or personal notes.
 
@@ -54,9 +54,11 @@ Before adding anything, show the user **every attribute that will be added**, so
 | Year | |
 | Publisher | |
 | Tags | the tags, or "none" |
-| Location | "Brooklyn, NY (default)", or the location the user gave |
+| Location | the location the user chose in the location question (below) |
 | Page address | `/books/<slug>`, worked out the way `npm run add-book` will (title, then first photographer, lowercased and hyphenated) |
 | Cover | where the image comes from (the user's file, or a URL), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed) |
+
+First ask where the book is kept, with AskUserQuestion: one option for each place in `LOCATIONS` in `src/lib/book.ts` (today **Brooklyn, NY** and **Beijing, China**), with Brooklyn, NY first and marked as the default. The user can type another place under "Other". Write a new place the way the existing ones are written ("City, State" in the US, "City, Country" elsewhere). Put the answer in the Location row. For anything other than Brooklyn, NY, add `"location"` to the JSON. For a place that isn't in `LOCATIONS` yet, also add it to that list, so it shows in the site's location menu, and commit that change with the book in step 7.
 
 Give the source for each researched value in a third column, and mark anything uncertain. Under the table, also show the exact JSON you'll pass to `npm run add-book`. Then ask once with AskUserQuestion: **Add it** / **Change something**. Their "Add it" also covers publishing in step 7. If they change something, show the whole table again before adding. Then:
 
@@ -98,7 +100,7 @@ Both must pass. The build should make one more book page than before.
 
 ## 7. Publish
 
-Commit only the files for this book: `data/added-books.json`, `src/data/books.json`, `src/data/covers.json`, `data/covers/<slug>.*`, `data/covers/originals/<slug>.*` (if flattened), and `public/covers/<slug>-*.webp`. Use a message like `Add <Title> (<Photographer>)`. Push to `main`, then watch the deploy:
+Commit only the files for this book: `data/added-books.json`, `src/data/books.json`, `src/data/covers.json`, `data/covers/<slug>.*`, `data/covers/originals/<slug>.*` (if flattened), `public/covers/<slug>-*.webp`, and `src/lib/book.ts` if you added a new location. Use a message like `Add <Title> (<Photographer>)`. Push to `main`, then watch the deploy:
 
 ```
 gh run watch $(gh run list --workflow deploy.yml --limit 1 --json databaseId -q '.[0].databaseId') --exit-status

@@ -557,6 +557,16 @@
     "origin": "data/covers/remembrance-garden-eugene-richards.jpeg",
     "checksum": "7d017e2a991d5bb4"
   },
+  "sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi": {
+    "src": "covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi-600.webp",
+    "large": "covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi-1200.webp",
+    "width": 600,
+    "height": 765,
+    "dominantColor": "#C8C8C8",
+    "source": "upload",
+    "origin": "data/covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi.jpg",
+    "checksum": "a5a8ab3db58b1556"
+  },
   "small-trades-irving-penn": {
     "src": "covers/small-trades-irving-penn-600.webp",
     "large": "covers/small-trades-irving-penn-1200.webp",

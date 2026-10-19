@@ -42,7 +42,23 @@ Never add anything private: purchase dates, prices paid or personal notes.
 
 ## 4. Confirm, then add
 
-Show the user the proposed entry as a short table, with your sources and anything you weren't sure of. Ask once with AskUserQuestion: **Add it** / **Change something**. Their "Add it" also covers publishing in step 7. Then:
+Before adding anything, show the user **every attribute that will be added**, so nothing goes in unseen. Use one table with a row for each of these, even when a value is empty or a default:
+
+| Row | What to show |
+|---|---|
+| Title | as it will appear |
+| Photographers | each name, as written |
+| Color type | Color / Black & White / Mixed |
+| Country / region | |
+| Genre | |
+| Year | |
+| Publisher | |
+| Tags | the tags, or "none" |
+| Location | "Brooklyn, NY (default)", or the location the user gave |
+| Page address | `/books/<slug>`, worked out the way `npm run add-book` will (title, then first photographer, lowercased and hyphenated) |
+| Cover | where the image comes from (the user's file, or a URL), its size, and what will be done to it: used as is, borders trimmed, or straightened (and whether `--aspect` will be needed) |
+
+Give the source for each researched value in a third column, and mark anything uncertain. Under the table, also show the exact JSON you'll pass to `npm run add-book`. Then ask once with AskUserQuestion: **Add it** / **Change something**. Their "Add it" also covers publishing in step 7. If they change something, show the whole table again before adding. Then:
 
 ```
 npm run add-book -- '<the entry as JSON>'

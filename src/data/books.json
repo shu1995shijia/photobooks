@@ -1215,5 +1215,33 @@
       "中国摄影师"
     ],
     "location": "Beijing, China"
+  },
+  {
+    "slug": "at-ease-china-1981-84-andrea-cavazzuti",
+    "title": "稍息：1981—1984年的中国 (At Ease: China, 1981–84)",
+    "photographers": [
+      "Andrea Cavazzuti (老安)"
+    ],
+    "colorType": "Black & White",
+    "region": "China",
+    "genre": "Street Photography / Daily Life / 1980s China",
+    "year": 2021,
+    "publisher": "上海文艺出版社 (单读)",
+    "tags": [],
+    "location": "Beijing, China"
+  },
+  {
+    "slug": "ttp-hayahisa-tomiyasu",
+    "title": "TTP",
+    "photographers": [
+      "Hayahisa Tomiyasu (富安隼久)"
+    ],
+    "colorType": "Color",
+    "region": "Germany",
+    "genre": "Conceptual / Typology / Everyday Life",
+    "year": 2018,
+    "publisher": "MACK",
+    "tags": [],
+    "location": "Beijing, China"
   }
 ]

@@ -9,7 +9,7 @@
  */
 
 import { chosenLocation, onLocation, shows } from "./location";
-import { onShuffle, randomIndex } from "./shuffle";
+import { onPick, onReorder, randomIndex, shuffled } from "./shuffle";
 
 export function wrap(index: number, total: number): number {
   return ((index % total) + total) % total;
@@ -84,8 +84,11 @@ export function initCarousel(root: HTMLElement): void {
   let index = indexFromHash();
   let announceTimer: ReturnType<typeof setTimeout> | undefined;
 
-  /** Shows only the books kept at `place` (all when null), staying on the current book if it's among them. */
-  function filter(place: string | null): void {
+  let place: string | null = null;
+
+  /** Shows only the books kept at `chosen` (all when null), staying on the current book if it's among them. */
+  function filter(chosen: string | null): void {
+    place = chosen;
     const current = slugs[index];
     const keep = allSlides.map((s) => shows(place, s.dataset.location));
     slides = allSlides.filter((_, i) => keep[i]);
@@ -245,8 +248,24 @@ export function initCarousel(root: HTMLElement): void {
 
   window.addEventListener("hashchange", () => go(indexFromHash()));
 
-  // Shuffle: spin forward to a random book, slowing down, then open it.
-  onShuffle(async () => {
+  // Shuffle: every book but the one in front moves to a random place, and
+  // the books on either side glide to their new positions. Only the order
+  // the carousel uses changes; the elements stay put (moving them would
+  // restart them, so they'd fade in rather than glide).
+  onReorder(() => {
+    if (total === 0) return;
+    const order = shuffled(allSlides.map((_, i) => i));
+    const newSlides = order.map((i) => allSlides[i]);
+    const newTicks = order.map((i) => allTicks[i]);
+    allSlides.splice(0, allSlides.length, ...newSlides);
+    allTicks.splice(0, allTicks.length, ...newTicks);
+    // The ticks are plain marks, so they can move: the red dot keeps showing where you are.
+    allTicks[0]?.parentElement?.append(...newTicks);
+    filter(place); // recounts, staying on the book in front
+  });
+
+  // Pick for me: spin forward to a random book, slowing down, then open it.
+  onPick(async () => {
     if (total === 0) return;
     const target = randomIndex(total, index);
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {

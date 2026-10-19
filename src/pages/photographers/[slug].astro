@@ -31,7 +31,7 @@ const count = photographer.books.length;
       </p>
     </div>
 
-    <ul class="books">
+    <ul class="books" data-shuffle-list>
       {photographer.books.map((book) => (
         <li data-location={locationOf(book)}>
           <a href={url(`books/${book.slug}`)} data-popup>

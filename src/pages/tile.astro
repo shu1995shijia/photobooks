@@ -26,7 +26,12 @@ const places = [...new Set([...LOCATIONS, ...sorted.map(locationOf)])];
     the row height, then the row stretches to the full width. Tiles grow in
     proportion to their width, so every cover in a row stays the same height.
   -->
-  <ul class="tiles" data-tiles data-locations={JSON.stringify(places)}>
+  <ul
+    class="tiles"
+    data-tiles
+    data-shuffle-list
+    data-locations={JSON.stringify(places)}
+  >
     {sorted.map((book) => (
       <li
         class="tile"

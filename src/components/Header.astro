@@ -5,7 +5,7 @@ import { suggestions } from "../lib/search";
 import { url } from "../lib/url";
 
 interface Props {
-  current?: "carousel" | "tile";
+  current?: "carousel" | "tile" | "about";
 }
 
 const { current } = Astro.props;
@@ -130,6 +130,13 @@ const searchSuggestions = suggestions(books as Book[]);
         ))}
       </ul>
     </div>
+    <a
+      class="view-link"
+      href={url("about")}
+      aria-current={current === "about" ? "page" : undefined}
+    >
+      About
+    </a>
     <a
       class="view-link instagram"
       href={INSTAGRAM}
@@ -658,6 +665,19 @@ const searchSuggestions = suggestions(books as Book[]);
 
   .view-link:hover {
     color: var(--ink);
+  }
+
+  /* The gallery red dot marks the page you're on (About). */
+  a.view-link[aria-current="page"] {
+    color: var(--ink);
+  }
+
+  a.view-link[aria-current="page"]::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red-dot);
   }
 
   .shuffle {

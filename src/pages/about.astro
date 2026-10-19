@@ -1,0 +1,106 @@
+---
+import Base from "../layouts/Base.astro";
+import books from "../data/books.json";
+import { locationOf, type Book } from "../lib/book";
+import { photographers } from "../lib/photographer";
+import { url } from "../lib/url";
+
+const all = books as Book[];
+const years = all.map((b) => b.year).filter((y): y is number => !!y);
+const places = [...new Set(all.map(locationOf))];
+const placesLine =
+  places.length > 1
+    ? `${places.slice(0, -1).join(", ")} and ${places[places.length - 1]}`
+    : places[0];
+
+// Counted from the catalog at build time, so they stay current as books are added.
+const facts = [
+  { term: "Books", value: String(all.length) },
+  { term: "Photographers", value: String(photographers(all).length) },
+  {
+    term: "Published",
+    value: `${Math.min(...years)} to ${Math.max(...years)}`,
+  },
+  { term: "Kept in", value: placesLine },
+];
+---
+
+<Base title="About: Photobooks" current="about">
+  <article class="about">
+    <h1>About</h1>
+    <p class="lede">A personal photobook collection of Shijia Shu.</p>
+
+    <dl class="facts">
+      {facts.map((fact) => (
+        <div>
+          <dt>{fact.term}</dt>
+          <dd>{fact.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <p class="links">
+      Browse the books in the <a href={url("carousel")}>carousel</a> or as{" "}
+      <a href={url("tile")}>tiles</a>, or follow along on{" "}
+      <a
+        href="https://www.instagram.com/jimmy_novacaine/"
+        rel="me noopener"
+        target="_blank"
+      >
+        Instagram
+      </a>
+      .
+    </p>
+  </article>
+</Base>
+
+<style>
+  .about {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-block: 24px 48px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .lede {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.35;
+  }
+
+  /* Set out like the facts on a wall label. */
+  .facts {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--shelf);
+    display: grid;
+    gap: 8px;
+  }
+
+  .facts div {
+    display: grid;
+    grid-template-columns: 9.5em 1fr;
+    gap: 16px;
+  }
+
+  .facts dt {
+    color: var(--graphite);
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .links {
+    margin: 0;
+    color: var(--graphite);
+  }
+</style>

@@ -10,9 +10,11 @@ import { url } from "../lib/url";
 
 // By slug, so the deck only changes when a book is added or removed.
 const all = [...(books as Book[])].sort((a, b) => a.slug.localeCompare(b.slug));
-const deck: DailyBook[] = all.map(({ slug, acquired }) =>
-  acquired ? { slug, acquired } : { slug },
-);
+const deck: DailyBook[] = all.map(({ slug, acquired }) => ({
+  slug,
+  ratio: coverRatio(slug),
+  ...(acquired ? { acquired } : {}),
+}));
 ---
 
 <Base
@@ -288,9 +290,11 @@ const deck: DailyBook[] = all.map(({ slug, acquired }) =>
     color: var(--graphite);
   }
 
+  /* Always one line, however long the date, so the shelf below never moves. */
   h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: min(28px, 6vw);
+    white-space: nowrap;
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -0.01em;
@@ -318,7 +322,7 @@ const deck: DailyBook[] = all.map(({ slug, acquired }) =>
   }
 
   .shelves {
-    --h: clamp(150px, 21vw, 290px); /* how tall the books stand */
+    --h: clamp(110px, 13.5vw, 200px); /* how tall the books stand */
 
     width: 100%;
     display: flex;
@@ -327,9 +331,14 @@ const deck: DailyBook[] = all.map(({ slug, acquired }) =>
     gap: 56px;
   }
 
-  /* A shelf: the books, then the board they stand on, a little wider than they are. */
+  /*
+   * A shelf: the books, then the board they stand on. Every day's shelf is
+   * the same width; the books are centred on it, and shrink only when a
+   * day's books wouldn't otherwise fit.
+   */
   .shelves :global(.unit) {
-    max-width: 100%;
+    /* SHELF_WIDTH in src/lib/daily.ts, plus the padding at each end */
+    width: min(100%, calc(var(--h) * 5.6));
     display: flex;
     flex-direction: column;
   }
@@ -337,11 +346,13 @@ const deck: DailyBook[] = all.map(({ slug, acquired }) =>
   .shelves :global(.ledge) {
     list-style: none;
     margin: 0;
-    padding: 0 clamp(18px, 4.5vw, 64px);
+    /* Always as tall as the day's book can be, so the shelf never moves. */
+    height: calc(var(--h) * 1.24);
+    padding: 0 calc(var(--h) * 0.2); /* the padding and GAP in src/lib/daily.ts */
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: clamp(14px, 2.2vw, 30px);
+    gap: calc(var(--h) * 0.1);
     position: relative;
     z-index: 1; /* the books stand in front of the board's top */
   }
@@ -553,6 +564,14 @@ const deck: DailyBook[] = all.map(({ slug, acquired }) =>
     /* Every shelf runs the width of the screen, like shelves on one wall. */
     .shelves :global(.unit) {
       width: 100%;
+    }
+
+    .shelves :global(.unit:first-child .ledge) {
+      height: calc(var(--h) * 1.5);
+    }
+
+    .shelves :global(.unit:last-child .ledge) {
+      height: var(--h);
     }
 
     /* The day's book stands alone on the top shelf. */

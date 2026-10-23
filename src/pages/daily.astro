@@ -1,0 +1,574 @@
+---
+import Base from "../layouts/Base.astro";
+import BookPopup from "../components/BookPopup.astro";
+import Cover from "../components/Cover.astro";
+import books from "../data/books.json";
+import type { Book } from "../lib/book";
+import { coverRatio } from "../lib/cover";
+import type { DailyBook } from "../lib/daily";
+import { url } from "../lib/url";
+
+// By slug, so the deck only changes when a book is added or removed.
+const all = [...(books as Book[])].sort((a, b) => a.slug.localeCompare(b.slug));
+const deck: DailyBook[] = all.map(({ slug, acquired }) =>
+  acquired ? { slug, acquired } : { slug },
+);
+---
+
+<Base
+  title="Photobooks: daily"
+  current="daily"
+  description="A few books from the collection, on the shelf for today."
+>
+  <section class="daily" data-daily data-deck={JSON.stringify(deck)}>
+    <div class="head">
+      <p class="eyebrow" data-eyebrow>
+        Today’s shelf
+      </p>
+      <h1 data-date>Daily</h1>
+      <nav class="days" aria-label="Other days">
+        <a href="?" data-day="prev" rel="prev">
+          ← Previous day
+        </a>
+        <a href="?" data-day="today" hidden>
+          Today
+        </a>
+        <a href="?" data-day="next" rel="next">
+          Next day →
+        </a>
+      </nav>
+    </div>
+
+    <!-- Filled in for the day by the script below: one shelf, or two on a phone. -->
+    <div class="shelves" data-shelves></div>
+
+    <div class="label" aria-live="polite" data-label></div>
+
+    <noscript>
+      <p class="none">
+        The daily shelf needs JavaScript. Every book is in the{" "}
+        {[<a href={url("tile")}>Tile</a>, " view."]}
+      </p>
+    </noscript>
+  </section>
+
+  <!-- Every book, ready to be put on the shelf. Nothing here loads until it is. -->
+  <template data-pool>
+    {all.map((book) => (
+      <li
+        class="book"
+        data-slug={book.slug}
+        style={`--ratio: ${coverRatio(book.slug)}`}
+      >
+        <a href={url(`books/${book.slug}`)} data-popup>
+          <Cover book={book} sizes="(max-width: 720px) 60vw, 320px" />
+        </a>
+      </li>
+    ))}
+  </template>
+  <BookPopup />
+</Base>
+
+<script>
+  import type { PopupBook } from "../lib/popup";
+  import {
+    FIRST_DAY,
+    dailyShelf,
+    dateOf,
+    dayNumber,
+    todayIn,
+    type DailyBook,
+  } from "../lib/daily";
+
+  const root = document.querySelector<HTMLElement>("[data-daily]")!;
+  const deck: DailyBook[] = JSON.parse(root.dataset.deck ?? "[]");
+  const details: Record<string, PopupBook> = JSON.parse(
+    document.getElementById("book-popup-data")?.textContent ?? "{}",
+  );
+  const template = document.querySelector<HTMLTemplateElement>("[data-pool]")!;
+  const pool = new Map(
+    [...template.content.querySelectorAll<HTMLElement>("[data-slug]")].map(
+      (li) => [li.dataset.slug!, li],
+    ),
+  );
+  const shelves = root.querySelector<HTMLElement>("[data-shelves]")!;
+  const label = root.querySelector<HTMLElement>("[data-label]")!;
+  const heading = root.querySelector<HTMLElement>("[data-date]")!;
+  const eyebrow = root.querySelector<HTMLElement>("[data-eyebrow]")!;
+  const dayLinks = Object.fromEntries(
+    [...root.querySelectorAll<HTMLAnchorElement>("[data-day]")].map((a) => [
+      a.dataset.day!,
+      a,
+    ]),
+  ) as Record<"prev" | "today" | "next", HTMLAnchorElement>;
+  const phone = matchMedia("(max-width: 720px)");
+
+  const today = () => todayIn();
+
+  /** The day in the address, kept between the first shelf and today. */
+  function chosenDay(): string {
+    const asked = new URLSearchParams(location.search).get("date") ?? "";
+    const day = dayNumber(asked);
+    if (Number.isNaN(day)) return today();
+    const first = dayNumber(FIRST_DAY);
+    const last = dayNumber(today());
+    return dateOf(Math.min(last, Math.max(first, day)));
+  }
+
+  const longDate = (date: string) =>
+    new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
+      timeZone: "UTC",
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+
+  const el = <K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className?: string,
+    text?: string,
+  ) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+
+  let shown = "";
+  let featured = "";
+  let note = "";
+
+  /** The wall label under the shelf: the day's book, or the one being pointed at. */
+  function showLabel(slug: string): void {
+    const book = details[slug];
+    if (!book) return;
+    const kind = el("p", "kind");
+    if (slug === featured) {
+      kind.append(el("span", "dot"), note);
+    } else kind.textContent = "Also on the shelf";
+    const title = el("p", "title");
+    title.append(
+      el("em", undefined, book.title),
+      book.year ? `, ${book.year}` : "",
+    );
+    label.replaceChildren(
+      kind,
+      el("p", "name", book.byline),
+      title,
+      ...book.details.map((d) => el("p", "detail", d)),
+    );
+  }
+
+  /** One shelf: the books standing on a red steel shelf, against its backboard. */
+  function ledge(slugs: string[]): HTMLElement {
+    const unit = el("div", "unit");
+    const list = el("ul", "ledge");
+    for (const slug of slugs) {
+      const item = pool.get(slug)?.cloneNode(true) as HTMLElement | undefined;
+      if (!item) continue;
+      if (slug === featured) item.classList.add("featured");
+      const link = item.querySelector("a")!;
+      link.addEventListener("pointerenter", () => showLabel(slug));
+      link.addEventListener("focus", () => showLabel(slug));
+      link.addEventListener("pointerleave", () => showLabel(featured));
+      link.addEventListener("blur", () => showLabel(featured));
+      list.append(item);
+    }
+    const board = el("div", "board");
+    board.setAttribute("aria-hidden", "true");
+    unit.append(list, board);
+    return unit;
+  }
+
+  function render(): void {
+    const date = chosenDay();
+    const shelf = dailyShelf(deck, date);
+    shown = date;
+    if (!shelf) return;
+    featured = shelf.featured;
+    const years = shelf.anniversary;
+    note = years
+      ? `In the collection ${years === 1 ? "a year" : `${years} years`} ago today`
+      : date === today()
+        ? "Today’s book"
+        : "The day’s book";
+
+    const isToday = date === today();
+    eyebrow.textContent = isToday ? "Today’s shelf" : "The shelf for";
+    heading.textContent = longDate(date);
+    document.title = isToday
+      ? "Photobooks: daily"
+      : `Photobooks: daily, ${longDate(date)}`;
+
+    const day = dayNumber(date);
+    const link = (a: HTMLAnchorElement, to: string | undefined) => {
+      a.hidden = !to;
+      if (to) a.href = to === today() ? "?" : `?date=${to}`;
+    };
+    link(
+      dayLinks.prev,
+      day > dayNumber(FIRST_DAY) ? dateOf(day - 1) : undefined,
+    );
+    link(dayLinks.next, isToday ? undefined : dateOf(day + 1));
+    link(dayLinks.today, isToday ? undefined : today());
+
+    const others = shelf.slugs.filter((s) => s !== featured);
+    shelves.replaceChildren(
+      ...(phone.matches
+        ? [ledge([featured]), ledge(others)]
+        : [ledge(shelf.slugs)]),
+    );
+    showLabel(featured);
+  }
+
+  function go(href: string): void {
+    history.pushState(null, "", href);
+    render();
+  }
+
+  for (const a of Object.values(dayLinks))
+    a.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return;
+      event.preventDefault();
+      go(a.href);
+    });
+
+  // ← and → move a day, unless a book is open or something else has the keys.
+  document.addEventListener("keydown", (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+      return;
+    if (document.querySelector("dialog[open]")) return;
+    if (document.activeElement?.closest("input, select, textarea")) return;
+    const to =
+      event.key === "ArrowLeft"
+        ? dayLinks.prev
+        : event.key === "ArrowRight"
+          ? dayLinks.next
+          : undefined;
+    if (!to || to.hidden) return;
+    event.preventDefault();
+    go(to.href);
+  });
+
+  // Back and Forward between days. A book's popup has its own history
+  // entries; closing it comes back to the same day, which needs no redraw.
+  window.addEventListener("popstate", (event) => {
+    if ((event.state as { bookPopup?: string } | null)?.bookPopup) return;
+    if (!location.pathname.replace(/\/$/, "").endsWith("/daily")) return;
+    if (chosenDay() !== shown) render();
+  });
+  phone.addEventListener("change", render);
+  render();
+</script>
+
+<style>
+  .daily {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-block: 16px 64px;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .days {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: var(--graphite);
+  }
+
+  .days a {
+    text-decoration: none;
+    padding: 4px 0;
+  }
+
+  .days a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .days a[hidden] {
+    display: none;
+  }
+
+  .shelves {
+    --h: clamp(150px, 21vw, 290px); /* how tall the books stand */
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+  }
+
+  /* A shelf: the books, then the board they stand on, a little wider than they are. */
+  .shelves :global(.unit) {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shelves :global(.ledge) {
+    list-style: none;
+    margin: 0;
+    padding: 0 clamp(18px, 4.5vw, 64px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(14px, 2.2vw, 30px);
+    position: relative;
+    z-index: 1; /* the books stand in front of the board's top */
+  }
+
+  /*
+   * The top of a red steel bookshelf, in matte powder coat, seen straight
+   * on and a little from above: a low lip at the back, then the shelf and
+   * its thin front edge. No shine, only broad, gentle light from above the
+   * middle: the top catches the most, the lip less, the front edge least;
+   * each falls off toward the ends, and the lip darkens toward the shelf.
+   * Under it, its shadow on the wall.
+   */
+  .shelves :global(.board) {
+    --red: #c23b2c;
+    --falloff: linear-gradient(
+      90deg,
+      rgb(70 5 0 / 0.11),
+      transparent 32%,
+      transparent 68%,
+      rgb(70 5 0 / 0.11)
+    );
+
+    position: relative;
+    height: 20px;
+    margin-top: -9px; /* the books stand a little back from the front edge */
+    background:
+      var(--falloff),
+      linear-gradient(rgb(90 10 0 / 0.16), transparent 60%) top / 100% 13px
+        no-repeat,
+      linear-gradient(transparent, rgb(70 5 0 / 0.12)) bottom / 100% 7px
+        no-repeat,
+      linear-gradient(#cd4a37 0 13px, #a6301f 13px);
+    border-radius: 1px;
+    box-shadow:
+      0 1px 1px rgb(0 0 0 / 0.12),
+      0 22px 26px -16px rgb(0 0 0 / 0.32),
+      0 6px 8px -4px rgb(0 0 0 / 0.1);
+  }
+
+  /* A low lip rises from the back of the shelf, behind the books. */
+  .shelves :global(.board)::before {
+    content: "";
+    position: absolute;
+    inset: auto 6px calc(100% - 3px);
+    height: calc(var(--h) * 0.2);
+    background:
+      var(--falloff),
+      linear-gradient(
+        rgb(255 240 230 / 0.06),
+        transparent 35%,
+        rgb(70 5 0 / 0.16)
+      ),
+      var(--red);
+    border-radius: 1px 1px 0 0;
+    box-shadow: 0 10px 24px -8px rgb(0 0 0 / 0.18);
+  }
+
+  .shelves :global(.book) {
+    position: relative;
+    flex: 0 1 calc(var(--h) * var(--ratio));
+    min-width: 0;
+  }
+
+  /*
+   * Each book's shadow on the lip just behind it: soft, and falling a
+   * little to the right, away from the light.
+   */
+  .shelves :global(.book)::before {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: -16px;
+    bottom: 5px;
+    height: calc(var(--h) * 0.2 - 2px);
+    background: linear-gradient(90deg, rgb(70 5 0 / 0.42), rgb(70 5 0 / 0.3));
+    border-radius: 0 6px 0 0;
+    filter: blur(4px);
+    z-index: -1;
+  }
+
+  /* Where the book meets the board, a soft dark line. */
+  .shelves :global(.book)::after {
+    content: "";
+    position: absolute;
+    inset: auto -4% -3px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      rgb(40 25 10 / 0.45),
+      transparent
+    );
+    z-index: -1;
+  }
+
+  .shelves :global(.book.featured) {
+    flex-basis: calc(var(--h) * 1.24 * var(--ratio));
+  }
+
+  .shelves :global(.book a) {
+    position: relative;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* Light from the upper left: each book's shadow falls on the wall behind, to the right. */
+  .shelves :global(.book .cover) {
+    width: 100%;
+    border-radius: 1px 2px 2px 1px;
+    box-shadow:
+      inset 0 0 0 1px rgb(0 0 0 / 0.08),
+      1px 0 1px rgb(0 0 0 / 0.18),
+      8px -2px 16px -4px rgb(0 0 0 / 0.28);
+    transition: box-shadow 0.35s ease;
+  }
+
+  /* A hardcover's hinge groove near the spine, and a faint sheen. */
+  .shelves :global(.book a)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0.16),
+        rgb(255 255 255 / 0.14) 1.2%,
+        rgb(0 0 0 / 0.14) 2.6%,
+        rgb(255 255 255 / 0.06) 3.6%,
+        transparent 5%
+      ),
+      linear-gradient(
+        115deg,
+        rgb(255 255 255 / 0.14),
+        transparent 35%,
+        transparent 70%,
+        rgb(0 0 0 / 0.06)
+      );
+  }
+
+  /* Taken off the shelf a little. */
+  .shelves :global(.book a:hover),
+  .shelves :global(.book a:focus-visible),
+  .shelves :global(.book a.is-shuffle-pick) {
+    transform: translateY(-8px);
+  }
+
+  .shelves :global(.book a:hover .cover),
+  .shelves :global(.book a:focus-visible .cover) {
+    box-shadow:
+      inset 0 0 0 1px rgb(0 0 0 / 0.08),
+      1px 0 1px rgb(0 0 0 / 0.18),
+      10px 6px 22px -4px rgb(0 0 0 / 0.32);
+  }
+
+  .label {
+    width: min(100%, 460px);
+    min-height: 8.5em; /* so the page doesn't jump as it changes */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .label :global(p) {
+    margin: 0;
+  }
+
+  .label :global(.kind) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+
+  /* The red dot of a gallery label, for the day's pick. */
+  .label :global(.dot) {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red-dot);
+  }
+
+  .label :global(.name) {
+    font-weight: 700;
+  }
+
+  .label :global(.detail) {
+    color: var(--graphite);
+  }
+
+  .none {
+    margin: 0;
+    color: var(--graphite);
+  }
+
+  @media (max-width: 720px) {
+    .shelves {
+      --h: min(46vw, 210px);
+      gap: 44px;
+    }
+
+    /* Every shelf runs the width of the screen, like shelves on one wall. */
+    .shelves :global(.unit) {
+      width: 100%;
+    }
+
+    /* The day's book stands alone on the top shelf. */
+    .shelves :global(.book.featured) {
+      flex-basis: calc(var(--h) * 1.5 * var(--ratio));
+      max-width: 70vw;
+    }
+
+    .shelves :global(.unit:last-child) {
+      --h: 30vw;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shelves :global(.book a) {
+      transition: none;
+    }
+  }
+</style>

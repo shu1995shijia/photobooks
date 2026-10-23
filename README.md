@@ -8,6 +8,7 @@ A personal catalog of photobooks, hung like a small gallery.
 
 - **Carousel:** large covers in a Cover Flow, one book at a time. Use ←/→, drag, swipe or the buttons to move.
 - **Tile:** every cover stitched edge to edge in full-width rows. **Shuffle** puts them in a random order.
+- **Daily:** a shelf of five books for the day, the day's book in the middle, the same for everyone (New York time). Every book comes round before any returns, and a book bought on this day in an earlier year becomes the day's book. ← and → go to other days.
 - **Pick for me:** spins to a random book and opens it.
 - **Book popup:** clicking a cover opens the book over the page, flipping open beside its cover. Esc, ← or Back closes it. Every book also has its own page at `/books/<slug>`.
 - **Photographer and tag pages:** `/photographers/<name>` and `/tags/<tag>` show all of a photographer's books, or all the books with a tag.
@@ -81,7 +82,7 @@ scripts/                import, covers, add-book, corners, flatten
 src/data/               books.json and covers.json, read by every page
 src/lib/                book model, sorting, slugs, search, photographers, tags
 src/components/         header, cover, wall label, carousel, book popup
-src/pages/              carousel, tile, books/, photographers/, tags/
+src/pages/              carousel, tile, daily, books/, photographers/, tags/
 src/scripts/            browser code: carousel, popup, shuffle, location, search
 tests/                  unit tests
 ```

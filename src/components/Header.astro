@@ -5,7 +5,7 @@ import { suggestions } from "../lib/search";
 import { url } from "../lib/url";
 
 interface Props {
-  current?: "carousel" | "tile" | "about";
+  current?: "carousel" | "tile" | "daily" | "about";
 }
 
 const { current } = Astro.props;
@@ -17,10 +17,11 @@ const places = [
 // The default, showing every book.
 const everywhere = "all locations";
 
-// The shelf view joins this list once it's built (see tasks/todo.md).
+// The shelf of every book joins this list once it's built (see tasks/todo.md).
 const views = [
   { id: "carousel", label: "Carousel", href: url("carousel") },
   { id: "tile", label: "Tile", href: url("tile") },
+  { id: "daily", label: "Daily", href: url("daily") },
 ] as const;
 const currentView = views.find((view) => view.id === current);
 

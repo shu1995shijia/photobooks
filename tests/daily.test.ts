@@ -1,15 +1,30 @@
 import { describe, expect, test } from "vitest";
 import {
+  FEATURED_SCALE,
   FIRST_DAY,
+  GAP,
+  SHELF_WIDTH,
   dailyShelf,
   dateOf,
   dayNumber,
-  shelfFor,
   todayIn,
   yearsSince,
+  type DailyBook,
 } from "../src/lib/daily";
 
-const books = Array.from({ length: 23 }, (_, i) => `book-${i}`);
+// Portrait, square and landscape covers, as on the real shelf.
+const RATIOS = [0.72, 0.8, 1, 1.25, 0.66, 0.75];
+const list: DailyBook[] = Array.from({ length: 23 }, (_, i) => ({
+  slug: `book-${String(i).padStart(2, "0")}`,
+  ratio: RATIOS[i % RATIOS.length],
+}));
+const ratio = (slug: string) => list.find((b) => b.slug === slug)!.ratio;
+/** How much of the shelf a day's books take up. */
+const width = (slugs: string[], featured: string, gaps: number[]) =>
+  slugs.reduce(
+    (w, s, i) => w + ratio(s) * (s === featured ? FEATURED_SCALE : 1) + gaps[i],
+    0,
+  );
 const days = (from: string, count: number) =>
   Array.from({ length: count }, (_, i) => dateOf(dayNumber(from) + i));
 
@@ -28,34 +43,60 @@ describe("dates", () => {
   });
 });
 
-describe("shelfFor", () => {
+describe("filling the shelf", () => {
+  const shelf = (date: string) => dailyShelf(list, date)!;
+
   test("is the same every time for a date, and differs the next day", () => {
-    expect(shelfFor(books, "2026-11-03")).toEqual(
-      shelfFor(books, "2026-11-03"),
-    );
-    expect(shelfFor(books, "2026-11-03")).not.toEqual(
-      shelfFor(books, "2026-11-04"),
-    );
+    expect(shelf("2026-11-03")).toEqual(shelf("2026-11-03"));
+    expect(shelf("2026-11-03").slugs).not.toEqual(shelf("2026-11-04").slugs);
   });
 
-  test("never puts a book on the shelf twice", () => {
+  test("fills the shelf without overflowing it or repeating a book", () => {
     for (const date of days(FIRST_DAY, 60)) {
-      const shelf = shelfFor(books, date);
-      expect(shelf).toHaveLength(5);
-      expect(new Set(shelf).size).toBe(5);
+      const { slugs, featured, gaps } = shelf(date);
+      expect(new Set(slugs).size).toBe(slugs.length);
+      expect(gaps).toHaveLength(slugs.length);
+      expect(width(slugs, featured, gaps)).toBeLessThanOrEqual(
+        SHELF_WIDTH + 1e-9,
+      );
+      expect(slugs.length).toBeGreaterThanOrEqual(2);
     }
   });
 
-  test("shows every book before any comes back", () => {
-    // 23 books, 5 a day: the first 4 days deal 20 different books.
-    const seen = days(FIRST_DAY, 4).flatMap((d) => shelfFor(books, d));
-    expect(new Set(seen).size).toBe(20);
+  test("spaces the books unevenly, and differently each day", () => {
+    for (const date of days(FIRST_DAY, 30)) {
+      const { gaps } = shelf(date);
+      expect(gaps[0]).toBe(0);
+      for (const g of gaps.slice(1)) expect(g).toBeGreaterThan(0);
+      if (gaps.length > 2)
+        expect(new Set(gaps.slice(1)).size).toBeGreaterThan(1);
+    }
+    const all = days(FIRST_DAY, 30).flatMap((d) => shelf(d).gaps.slice(1));
+    expect(Math.min(...all)).toBeLessThan(GAP * 0.6);
+    expect(Math.max(...all)).toBeGreaterThan(GAP * 1.6);
   });
 
-  test("copes with fewer books than shelf spaces, and with none", () => {
-    expect(shelfFor(["a", "b"], FIRST_DAY).sort()).toEqual(["a", "b"]);
-    expect(shelfFor([], FIRST_DAY)).toEqual([]);
-    expect(shelfFor(books, "not a date")).toEqual([]);
+  test("puts more books up on some days than others", () => {
+    const counts = new Set(
+      days(FIRST_DAY, 30).map((d) => shelf(d).slugs.length),
+    );
+    expect(counts.size).toBeGreaterThan(1);
+  });
+
+  test("shows every book before any comes back", () => {
+    const seen: string[] = [];
+    for (const date of days(FIRST_DAY, 30)) {
+      seen.push(...shelf(date).slugs);
+      if (seen.length >= list.length) break;
+    }
+    const first = seen.slice(0, list.length - 3);
+    expect(new Set(first).size).toBe(first.length);
+  });
+
+  test("has no shelf before the first day, for no books, or a bad date", () => {
+    expect(dailyShelf(list, dateOf(dayNumber(FIRST_DAY) - 1))).toBeUndefined();
+    expect(dailyShelf([], FIRST_DAY)).toBeUndefined();
+    expect(dailyShelf(list, "not a date")).toBeUndefined();
   });
 });
 
@@ -78,27 +119,26 @@ describe("yearsSince", () => {
   });
 });
 
-describe("dailyShelf", () => {
-  const list = books.map((slug) => ({ slug }));
-
-  test("puts the day's book in the middle", () => {
-    const shelf = dailyShelf(list, "2026-11-03")!;
-    expect(shelf.slugs).toHaveLength(5);
-    expect(shelf.slugs[2]).toBe(shelf.featured);
-    expect(shelf.anniversary).toBeUndefined();
+describe("the day's book", () => {
+  test("stands in the middle", () => {
+    const { slugs, featured, anniversary } = dailyShelf(list, "2026-11-03")!;
+    expect(slugs.indexOf(featured)).toBe(Math.floor((slugs.length - 1) / 2));
+    expect(anniversary).toBeUndefined();
   });
 
-  test("an anniversary makes that book the day's book", () => {
-    const withDates = [
+  test("is the book with an anniversary that day", () => {
+    const withDates: DailyBook[] = [
       ...list,
-      { slug: "a-dream", acquired: "2024-11-03" },
-      { slug: "older", acquired: "2021-11-03" },
+      { slug: "a-dream", ratio: 0.75, acquired: "2024-11-03" },
+      { slug: "older", ratio: 0.75, acquired: "2021-11-03" },
     ];
-    const shelf = dailyShelf(withDates, "2026-11-03")!;
-    expect(shelf.featured).toBe("older");
-    expect(shelf.anniversary).toBe(5);
-    expect(shelf.slugs).toHaveLength(5);
-    expect(shelf.slugs[2]).toBe("older");
-    expect(new Set(shelf.slugs).size).toBe(5);
+    const { slugs, featured, anniversary } = dailyShelf(
+      withDates,
+      "2026-11-03",
+    )!;
+    expect(featured).toBe("older");
+    expect(anniversary).toBe(5);
+    expect(slugs.indexOf("older")).toBe(Math.floor((slugs.length - 1) / 2));
+    expect(new Set(slugs).size).toBe(slugs.length);
   });
 });

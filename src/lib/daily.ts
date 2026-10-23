@@ -1,13 +1,27 @@
 /**
- * The daily shelf: a few books a day, the same for everyone that day. The
- * books are dealt from a shuffled deck: no book comes back until every other
- * one has had its turn, then the deck is shuffled again. Everything follows
- * from the date, so the site stays static. (Adding a book reshuffles the
- * deck, so earlier days can change after the catalog does.)
+ * The daily shelf: a shelf of one size, filled with books each day, the same
+ * for everyone that day. The books are dealt from a shuffled deck, as many as
+ * fit side by side, so a day of wide books has fewer than a day of narrow
+ * ones. No book comes back until every other one has had its turn, then the
+ * deck is shuffled again. Everything follows from the date, so the site stays
+ * static. (Adding a book reshuffles the deck, so earlier days can change
+ * after the catalog does.)
+ *
+ * Widths are measured in book heights: a cover's width is its ratio, the
+ * day's book stands FEATURED_SCALE times taller, and the shelf (see
+ * src/pages/daily.astro) is SHELF_WIDTH wide with GAP between books, on
+ * average: each day spaces its books a little unevenly, some close together
+ * and some further apart, as books stand on a real shelf.
  */
 
-/** How many books stand on the shelf each day. */
-export const SHELF_SIZE = 5;
+/** The room on the shelf for books and the gaps between them. */
+export const SHELF_WIDTH = 5.2;
+export const GAP = 0.1;
+export const FEATURED_SCALE = 1.24;
+/** The narrowest and widest a gap can be, as parts of GAP. */
+const GAP_RANGE = [0.25, 2.2] as const;
+/** How far down the deck to look for a book that fits the space left. */
+const LOOKAHEAD = 4;
 /** Whose "today" the shelf follows, so visitors anywhere see the same one. */
 export const SHELF_TIME_ZONE = "America/New_York";
 /** The first shelf; the page goes back no further. */
@@ -68,37 +82,6 @@ function deck<T>(items: readonly T[], round: number): T[] {
 }
 
 /**
- * The books on the shelf on `date`, dealt from the decks in turn. When a
- * deck runs out partway through a shelf, the rest come from the next deck,
- * skipping any already on this shelf.
- */
-export function shelfFor<T>(
-  items: readonly T[],
-  date: string,
-  size = SHELF_SIZE,
-): T[] {
-  const day = dayNumber(date) - dayNumber(FIRST_DAY);
-  const n = items.length;
-  if (n === 0 || Number.isNaN(day)) return [];
-  const count = Math.min(size, n);
-  // Days before the first shelf still get a shelf; they just count backwards.
-  let at = (((day * count) % n) + n) % n;
-  let round = Math.floor((day * count) / n);
-  const out: T[] = [];
-  let current = deck(items, round);
-  while (out.length < count) {
-    if (at === n) {
-      round++;
-      at = 0;
-      current = deck(items, round);
-    }
-    const item = current[at++];
-    if (!out.includes(item)) out.push(item);
-  }
-  return out;
-}
-
-/**
  * How many years ago `acquired` was, if `date` is its anniversary; only for
  * full dates, and not on the day itself. A book bought on February 29 has
  * its anniversary on February 28 in other years.
@@ -120,6 +103,8 @@ export function yearsSince(
 
 export interface DailyBook {
   slug: string;
+  /** The cover's width over its height. */
+  ratio: number;
   acquired?: string;
 }
 
@@ -127,37 +112,109 @@ export interface DailyShelf {
   /** Left to right, with the featured book in the middle. */
   slugs: string[];
   featured: string;
+  /** The space before each book, in book heights: none before the first. */
+  gaps: number[];
   /** Set when the featured book joined the collection on this day, years ago. */
   anniversary?: number;
 }
 
 /**
- * The shelf for `date`. A book that joined the collection on this day in an
- * earlier year is the day's book (the longest-held one, if there are a few);
- * otherwise it's the first one dealt. Either way it stands in the middle.
+ * `count` uneven gaps for `day`, scaled down if needed to fit in `room`, the
+ * space the day's books leave. Their own seed, so changing how the books are
+ * spaced never changes which books they are.
+ */
+function gapsFor(day: number, count: number, room: number): number[] {
+  const random = seeded(day * 2246822519 + 7);
+  const [low, high] = GAP_RANGE;
+  const gaps = Array.from(
+    { length: count },
+    () => GAP * (low + random() * (high - low)),
+  );
+  const scale = Math.min(1, room / gaps.reduce((a, b) => a + b, 0));
+  return gaps.map((g) => g * scale);
+}
+
+/**
+ * The book that joined the collection on `date` in an earlier year (the
+ * longest-held one, if there are a few), and how many years ago.
+ */
+function anniversaryOn(books: readonly DailyBook[], date: string) {
+  return books
+    .map((book) => ({ book, years: yearsSince(book.acquired, date) }))
+    .filter(
+      (a): a is { book: DailyBook; years: number } => a.years !== undefined,
+    )
+    .sort(
+      (a, b) => b.years - a.years || a.book.slug.localeCompare(b.book.slug),
+    )[0];
+}
+
+/**
+ * The shelf for `date`. Each day since FIRST_DAY takes books from the front
+ * of the deck: the first is the day's book (unless a book has its
+ * anniversary that day, which then is), then more while they fit. A book too
+ * wide for the space left waits at the front for the next day, while the
+ * next few are tried. Days before FIRST_DAY get no shelf.
  */
 export function dailyShelf(
   books: readonly DailyBook[],
   date: string,
-  size = SHELF_SIZE,
 ): DailyShelf | undefined {
-  const dealt = shelfFor(
-    books.map((b) => b.slug),
-    date,
-    size,
-  );
-  if (dealt.length === 0) return undefined;
-  const anniversaries = books
-    .map((b) => ({ slug: b.slug, years: yearsSince(b.acquired, date) }))
-    .filter((a): a is { slug: string; years: number } => a.years !== undefined)
-    .sort((a, b) => b.years - a.years || a.slug.localeCompare(b.slug));
-  const special = anniversaries[0];
-  const featured = special?.slug ?? dealt[0];
-  const others = dealt.filter((s) => s !== featured).slice(0, dealt.length - 1);
-  const middle = Math.floor(others.length / 2);
-  return {
-    slugs: [...others.slice(0, middle), featured, ...others.slice(middle)],
-    featured,
-    anniversary: special?.years,
+  const first = dayNumber(FIRST_DAY);
+  const last = dayNumber(date);
+  if (books.length === 0 || Number.isNaN(last) || last < first)
+    return undefined;
+  const sorted = [...books].sort((a, b) => a.slug.localeCompare(b.slug));
+  const queue: DailyBook[] = [];
+  let round = 0;
+  const fill = () => {
+    while (queue.length < LOOKAHEAD + 2) queue.push(...deck(sorted, round++));
   };
+
+  let shelf: DailyShelf | undefined;
+  for (let day = first; day <= last; day++) {
+    const today = dateOf(day);
+    fill();
+    const special = anniversaryOn(sorted, today);
+    const featured = special?.book ?? queue.shift()!;
+    const chosen: DailyBook[] = [];
+    let used = featured.ratio * FEATURED_SCALE;
+    let misses = 0;
+    for (let i = 0; misses < LOOKAHEAD && i < queue.length;) {
+      const book = queue[i];
+      const taken =
+        book.slug === featured.slug || chosen.some((c) => c.slug === book.slug);
+      if (!taken && used + GAP + book.ratio <= SHELF_WIDTH) {
+        used += GAP + book.ratio;
+        chosen.push(book);
+        queue.splice(i, 1);
+        fill();
+      } else {
+        misses++;
+        i++;
+      }
+    }
+    if (day === last) {
+      const others = chosen.map((b) => b.slug);
+      const middle = Math.floor(others.length / 2);
+      shelf = {
+        slugs: [
+          ...others.slice(0, middle),
+          featured.slug,
+          ...others.slice(middle),
+        ],
+        featured: featured.slug,
+        gaps: [
+          0,
+          ...gapsFor(
+            day,
+            others.length,
+            SHELF_WIDTH - used + GAP * others.length,
+          ),
+        ],
+        anniversary: special?.years,
+      };
+    }
+  }
+  return shelf;
 }

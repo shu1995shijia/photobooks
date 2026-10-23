@@ -19,7 +19,13 @@
  * Google often answers "quota exceeded" and only Open Library is used.
  */
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import { extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -32,7 +38,16 @@ const BOOKS = "src/data/books.json";
 const INDEX = "src/data/covers.json";
 const OVERRIDES = "data/cover-overrides.json";
 const UPLOADS = "data/covers";
-const IMAGE_TYPES = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".tif", ".tiff"]);
+const IMAGE_TYPES = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".avif",
+  ".gif",
+  ".tif",
+  ".tiff",
+]);
 const OUT_DIR = "public/covers";
 const WIDTHS = { small: 600, large: 1200 } as const;
 /** Smaller images are usually "no cover" placeholders or thumbnails. */
@@ -75,7 +90,10 @@ export function withRetries(
   return async (url) => {
     for (let attempt = 0; ; attempt++) {
       const res = await fetcher(url);
-      if (![500, 502, 503, 504].includes(res.status) || attempt >= delaysMs.length)
+      if (
+        ![500, 502, 503, 504].includes(res.status) ||
+        attempt >= delaysMs.length
+      )
         return res;
       await new Promise((r) => setTimeout(r, delaysMs[attempt]));
     }
@@ -84,7 +102,9 @@ export function withRetries(
 
 /** The title to search with: the romanized part, without parentheses. */
 function searchTitle(book: Book): string {
-  return latinPart(book.title).replace(/[()（）]/g, " ").trim();
+  return latinPart(book.title)
+    .replace(/[()（）]/g, " ")
+    .trim();
 }
 
 /**
@@ -144,7 +164,9 @@ export async function editionCovers(
   workKey: string,
   fetcher: Fetcher,
 ): Promise<string[]> {
-  const res = await fetcher(`https://openlibrary.org${workKey}/editions.json?limit=50`);
+  const res = await fetcher(
+    `https://openlibrary.org${workKey}/editions.json?limit=50`,
+  );
   if (!res.ok) return [];
   const { entries = [] } = (await res.json()) as {
     entries?: { covers?: number[] }[];
@@ -174,9 +196,15 @@ export async function searchGoogle(
   let q = `intitle:${searchTitle(book)}`;
   const author = searchAuthor(book);
   if (author) q += ` inauthor:${author}`;
-  const params = new URLSearchParams({ q, maxResults: "20", printType: "books" });
+  const params = new URLSearchParams({
+    q,
+    maxResults: "20",
+    printType: "books",
+  });
   if (apiKey) params.set("key", apiKey);
-  const res = await fetcher(`https://www.googleapis.com/books/v1/volumes?${params}`);
+  const res = await fetcher(
+    `https://www.googleapis.com/books/v1/volumes?${params}`,
+  );
   if (res.status === 429) throw new QuotaError("Google Books quota exceeded");
   if (!res.ok) throw new Error(`Google Books answered ${res.status}`);
   const { items = [] } = (await res.json()) as { items?: GoogleVolume[] };
@@ -213,7 +241,10 @@ export async function findCover<T>(
 ): Promise<T | undefined> {
   for (const search of [sources.openLibrary, sources.google]) {
     if (!search) continue;
-    for (const match of rankMatches(book, await search(book)).slice(0, MATCHES_TO_TRY)) {
+    for (const match of rankMatches(book, await search(book)).slice(
+      0,
+      MATCHES_TO_TRY,
+    )) {
       const result = await use(match);
       if (result !== undefined) return result;
     }
@@ -268,7 +299,10 @@ const OUTLINE_PX = 3;
  * any trim of an upload must stop at the book's edge rather than inside a pale
  * cover: an upload is often the whole cover, with a pale margin of its own.
  */
-export async function trimBorder(original: Buffer, upload = false): Promise<Buffer> {
+export async function trimBorder(
+  original: Buffer,
+  upload = false,
+): Promise<Buffer> {
   const image = await shaveOutline(original);
   const { width = 0, height = 0 } = await sharp(image).metadata();
   try {
@@ -277,7 +311,9 @@ export async function trimBorder(original: Buffer, upload = false): Promise<Buff
       .toBuffer({ resolveWithObject: true });
     const kept = Math.min(info.width / width, info.height / height);
     if (!upload) return kept >= MIN_TRIM_KEEP ? data : original;
-    return kept >= MIN_TRIM_KEEP_UPLOAD && (await stopsAtEdge(image, data)) ? data : original;
+    return kept >= MIN_TRIM_KEEP_UPLOAD && (await stopsAtEdge(image, data))
+      ? data
+      : original;
   } catch {
     return original; // a single-colour image has nothing to trim to
   }
@@ -288,25 +324,55 @@ async function shaveOutline(image: Buffer): Promise<Buffer> {
   const { width = 0, height = 0 } = await sharp(image).metadata();
   if (width < 100 || height < 100) return image;
   const pixel = (x: number, y: number) =>
-    sharp(image).removeAlpha().extract({ left: x, top: y, width: 1, height: 1 }).raw().toBuffer();
-  const [corner, inside] = await Promise.all([pixel(0, 0), pixel(OUTLINE_PX, OUTLINE_PX)]);
-  if (Math.max(...[0, 1, 2].map((c) => Math.abs(corner[c] - inside[c]))) <= TRIM_THRESHOLD) return image;
+    sharp(image)
+      .removeAlpha()
+      .extract({ left: x, top: y, width: 1, height: 1 })
+      .raw()
+      .toBuffer();
+  const [corner, inside] = await Promise.all([
+    pixel(0, 0),
+    pixel(OUTLINE_PX, OUTLINE_PX),
+  ]);
+  if (
+    Math.max(...[0, 1, 2].map((c) => Math.abs(corner[c] - inside[c]))) <=
+    TRIM_THRESHOLD
+  )
+    return image;
   return sharp(image)
-    .extract({ left: OUTLINE_PX, top: OUTLINE_PX, width: width - 2 * OUTLINE_PX, height: height - 2 * OUTLINE_PX })
+    .extract({
+      left: OUTLINE_PX,
+      top: OUTLINE_PX,
+      width: width - 2 * OUTLINE_PX,
+      height: height - 2 * OUTLINE_PX,
+    })
     .png()
     .toBuffer();
 }
 
 /** Whether every side of the trimmed image is mostly unlike the original's border colour. */
-async function stopsAtEdge(original: Buffer, trimmed: Buffer): Promise<boolean> {
-  const border = await sharp(original).removeAlpha().extract({ left: 0, top: 0, width: 1, height: 1 }).raw().toBuffer();
-  const { data, info } = await sharp(trimmed).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+async function stopsAtEdge(
+  original: Buffer,
+  trimmed: Buffer,
+): Promise<boolean> {
+  const border = await sharp(original)
+    .removeAlpha()
+    .extract({ left: 0, top: 0, width: 1, height: 1 })
+    .raw()
+    .toBuffer();
+  const { data, info } = await sharp(trimmed)
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
   const { width, height, channels } = info;
   const stands = (x: number, y: number) => {
     const i = (y * width + x) * channels;
-    return Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - border[c]))) > EDGE_THRESHOLD;
+    return (
+      Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - border[c]))) >
+      EDGE_THRESHOLD
+    );
   };
-  const share = (points: [number, number][]) => points.filter(([x, y]) => stands(x, y)).length / points.length;
+  const share = (points: [number, number][]) =>
+    points.filter(([x, y]) => stands(x, y)).length / points.length;
   const dx = Math.round(width * EDGE_INSET);
   const dy = Math.round(height * EDGE_INSET);
   const xs = Array.from({ length: width - 2 * dx }, (_, x) => x + dx);
@@ -325,14 +391,21 @@ async function saveCover(
   image: Buffer,
   origin: string,
   source: CoverEntry["source"],
+  trim = true,
 ): Promise<CoverEntry> {
-  image = await trimBorder(image, source === "upload");
+  if (trim) image = await trimBorder(image, source === "upload");
   const { width = 0 } = await sharp(image).metadata();
   if (width < MIN_WIDTH) throw new Error(`image is only ${width}px wide`);
   mkdirSync(OUT_DIR, { recursive: true });
 
-  const sizes = {} as Record<keyof typeof WIDTHS, { width: number; height: number }>;
-  for (const [size, max] of Object.entries(WIDTHS) as [keyof typeof WIDTHS, number][]) {
+  const sizes = {} as Record<
+    keyof typeof WIDTHS,
+    { width: number; height: number }
+  >;
+  for (const [size, max] of Object.entries(WIDTHS) as [
+    keyof typeof WIDTHS,
+    number,
+  ][]) {
     const info = await sharp(image)
       .resize({ width: max, withoutEnlargement: true })
       .webp({ quality: 80 })
@@ -352,6 +425,14 @@ async function saveCover(
   };
 }
 
+/** Marks an upload as already cut to the cover's edge. */
+const EXACT = /\.exact$/;
+
+/** Whether an upload is used as it is, without trimming its border. */
+export function isExact(file: string): boolean {
+  return EXACT.test(file.slice(0, -extname(file).length).trim().toLowerCase());
+}
+
 export interface Uploads {
   bySlug: Record<string, string>; // slug → file name
   /** Image files whose name isn't a slug, each with the closest slug, if any. */
@@ -360,15 +441,24 @@ export interface Uploads {
 
 /**
  * Pairs images in data/covers with books by file name: "the-americans-robert-frank.jpg".
- * Other files (this folder's README) are ignored.
+ * A name ending in ".exact" ("the-americans-robert-frank.exact.jpg") is the cover
+ * exactly as it should look, used without trimming. Other files (this folder's
+ * README) are ignored.
  */
-export function matchUploads(files: readonly string[], slugs: readonly string[]): Uploads {
+export function matchUploads(
+  files: readonly string[],
+  slugs: readonly string[],
+): Uploads {
   const known = new Set(slugs);
   const result: Uploads = { bySlug: {}, unknown: [] };
   for (const file of [...files].sort()) {
     const ext = extname(file).toLowerCase();
     if (!IMAGE_TYPES.has(ext)) continue;
-    const name = file.slice(0, -ext.length).trim().toLowerCase();
+    const name = file
+      .slice(0, -ext.length)
+      .trim()
+      .toLowerCase()
+      .replace(EXACT, "");
     if (known.has(name)) result.bySlug[name] = file;
     else result.unknown.push({ file, suggestion: closestSlug(name, slugs) });
   }
@@ -376,7 +466,10 @@ export function matchUploads(files: readonly string[], slugs: readonly string[])
 }
 
 /** The slug sharing the most words with a file name like "Pocari Sweat 2018", if it shares at least half. */
-function closestSlug(name: string, slugs: readonly string[]): string | undefined {
+function closestSlug(
+  name: string,
+  slugs: readonly string[],
+): string | undefined {
   // One- and two-letter words (the "s" in eBay's "s-l960.jpg") match too much by chance.
   const words = baseSlug(name)
     .split("-")
@@ -396,7 +489,9 @@ function checksum(data: Buffer): string {
 }
 
 function readJson<T>(path: string, fallback: T): T {
-  return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as T) : fallback;
+  return existsSync(path)
+    ? (JSON.parse(readFileSync(path, "utf8")) as T)
+    : fallback;
 }
 
 async function main(): Promise<void> {
@@ -424,7 +519,9 @@ async function main(): Promise<void> {
       } catch (error) {
         if (!(error instanceof QuotaError)) throw error;
         googleAvailable = false;
-        console.warn("Google Books quota exceeded; using Open Library only for the rest of this run.");
+        console.warn(
+          "Google Books quota exceeded; using Open Library only for the rest of this run.",
+        );
         return [];
       }
     },
@@ -448,12 +545,26 @@ async function main(): Promise<void> {
         const path = `${UPLOADS}/${upload}`;
         const data = readFileSync(path);
         const sum = checksum(data);
-        if (fileExists && old.source === "upload" && old.checksum === sum && !redo) {
+        if (
+          fileExists &&
+          old.source === "upload" &&
+          old.checksum === sum &&
+          !redo
+        ) {
           index[book.slug] = old;
           kept++;
           continue;
         }
-        index[book.slug] = { ...(await saveCover(book.slug, data, path, "upload")), checksum: sum };
+        index[book.slug] = {
+          ...(await saveCover(
+            book.slug,
+            data,
+            path,
+            "upload",
+            !isExact(upload),
+          )),
+          checksum: sum,
+        };
         console.log(`${label}: uploaded file ${upload}`);
         found++;
         continue;
@@ -470,7 +581,12 @@ async function main(): Promise<void> {
 
       if (override) {
         // An override always wins; it's only redone when its value changes.
-        if (fileExists && old.source === "override" && old.origin === override && !redo) {
+        if (
+          fileExists &&
+          old.source === "override" &&
+          old.origin === override &&
+          !redo
+        ) {
           index[book.slug] = old;
           kept++;
           continue;
@@ -488,7 +604,12 @@ async function main(): Promise<void> {
 
       if (fileExists && old.source !== "override") {
         index[book.slug] = redo
-          ? await saveCover(book.slug, await loadImage(old.origin, fetcher), old.origin, old.source)
+          ? await saveCover(
+              book.slug,
+              await loadImage(old.origin, fetcher),
+              old.origin,
+              old.source,
+            )
           : old;
         kept++;
         continue;
@@ -497,7 +618,8 @@ async function main(): Promise<void> {
       const problems: string[] = [];
       const entry = await findCover(book, sources, async (match) => {
         const urls = match.imageUrl ? [match.imageUrl] : [];
-        if (match.workKey) urls.push(...(await editionCovers(match.workKey, fetcher)));
+        if (match.workKey)
+          urls.push(...(await editionCovers(match.workKey, fetcher)));
         for (const imageUrl of new Set(urls)) {
           try {
             const saved = await saveCover(
@@ -506,7 +628,9 @@ async function main(): Promise<void> {
               imageUrl,
               match.source,
             );
-            console.log(`${label}: ${match.source} (“${match.title}”, ${match.authors.join(", ")})`);
+            console.log(
+              `${label}: ${match.source} (“${match.title}”, ${match.authors.join(", ")})`,
+            );
             return saved;
           } catch (error) {
             problems.push((error as Error).message);
@@ -516,7 +640,9 @@ async function main(): Promise<void> {
       });
       if (!entry) {
         misses.push(book.slug);
-        const why = problems.length ? `matched, but ${[...new Set(problems)].join("; ")}` : "no match";
+        const why = problems.length
+          ? `matched, but ${[...new Set(problems)].join("; ")}`
+          : "no match";
         console.log(`${label}: ${why}`);
         continue;
       }
@@ -538,12 +664,18 @@ async function main(): Promise<void> {
     `\n${total} of ${books.length} books have a cover (${found} new, ${kept} kept); ${misses.length} missed.`,
   );
   if (uploads.unknown.length) {
-    console.warn(`\nThese files in ${UPLOADS}/ aren't named after a book, so they weren't used:`);
+    console.warn(
+      `\nThese files in ${UPLOADS}/ aren't named after a book, so they weren't used:`,
+    );
     for (const { file, suggestion } of uploads.unknown)
-      console.warn(`  ${file}${suggestion ? ` (did you mean ${suggestion}${extname(file)}?)` : ""}`);
+      console.warn(
+        `  ${file}${suggestion ? ` (did you mean ${suggestion}${extname(file)}?)` : ""}`,
+      );
   }
   if (misses.length && !uploadsOnly) {
-    console.log(`Upload a cover to ${UPLOADS}/<slug>.jpg, or add one to ${OVERRIDES} as an image URL or an ISBN:`);
+    console.log(
+      `Upload a cover to ${UPLOADS}/<slug>.jpg, or add one to ${OVERRIDES} as an image URL or an ISBN:`,
+    );
     for (const slug of misses) console.log(`  ${slug}`);
   }
 
@@ -554,7 +686,9 @@ async function main(): Promise<void> {
     if (width < GOOD_WIDTH) lowRes.push(`  ${slug} (${width}px wide)`);
   }
   if (lowRes.length) {
-    console.log(`\nThese covers are under ${GOOD_WIDTH}px wide and may look soft; a larger image in ${UPLOADS}/ would help:`);
+    console.log(
+      `\nThese covers are under ${GOOD_WIDTH}px wide and may look soft; a larger image in ${UPLOADS}/ would help:`,
+    );
     for (const line of lowRes) console.log(line);
   }
 }

@@ -11,6 +11,7 @@ import sharp from "sharp";
 import {
   findCover,
   isbnOf,
+  isExact,
   matchUploads,
   searchAuthor,
   searchOpenLibrary,
@@ -55,7 +56,9 @@ describe("titleScore", () => {
         "Assignment Shanghai",
       ),
     ).toBe(1);
-    expect(titleScore("Phantom Shanghai", "Phantom Shanghai: photographs")).toBe(1);
+    expect(
+      titleScore("Phantom Shanghai", "Phantom Shanghai: photographs"),
+    ).toBe(1);
   });
 
   test("uses the English part of a mixed-script title", () => {
@@ -69,7 +72,9 @@ describe("titleScore", () => {
 
   test("doesn't shorten a title down to the photographer's name", () => {
     expect(
-      titleScore("Lartigue: Life in Color", "Lartigue", ["Jacques Henri Lartigue"]),
+      titleScore("Lartigue: Life in Color", "Lartigue", [
+        "Jacques Henri Lartigue",
+      ]),
     ).toBeLessThan(0.8);
     expect(
       titleScore("Elliott Erwitt: Personal Best", "Elliott Erwitt: Snaps", [
@@ -93,7 +98,9 @@ describe("authorMatches", () => {
       ]),
     ).toBe(true);
     expect(
-      authorMatches(book({ photographers: ["Eugène Atget"] }), ["Eugene Atget"]),
+      authorMatches(book({ photographers: ["Eugène Atget"] }), [
+        "Eugene Atget",
+      ]),
     ).toBe(true);
   });
 });
@@ -115,20 +122,33 @@ describe("bestMatch", () => {
   });
 
   test("accepts a close title by the right photographer", () => {
-    const right = candidate({ title: "The Americans", authors: ["Robert Frank"] });
+    const right = candidate({
+      title: "The Americans",
+      authors: ["Robert Frank"],
+    });
     expect(bestMatch(americans, [right])).toBe(right);
   });
 
   test("prefers the edition from the same year", () => {
-    const later = candidate({ title: "The Americans", authors: ["Robert Frank"], year: 2008 });
-    const first = candidate({ title: "The Americans", authors: ["Robert Frank"], year: 1959 });
+    const later = candidate({
+      title: "The Americans",
+      authors: ["Robert Frank"],
+      year: 2008,
+    });
+    const first = candidate({
+      title: "The Americans",
+      authors: ["Robert Frank"],
+      year: 1959,
+    });
     expect(bestMatch(americans, [later, first])).toBe(first);
   });
 
   test("a book with no photographer needs the exact title and year", () => {
     const history = book({ title: "China: A Photo History", year: 1988 });
     expect(
-      bestMatch(history, [candidate({ title: "China: a photo history", year: 1990 })]),
+      bestMatch(history, [
+        candidate({ title: "China: a photo history", year: 1990 }),
+      ]),
     ).toBeUndefined();
     const exact = candidate({ title: "China: a photo history", year: 1988 });
     expect(bestMatch(history, [exact])).toBe(exact);
@@ -136,13 +156,23 @@ describe("bestMatch", () => {
 });
 
 describe("findCover", () => {
-  const americans = book({ title: "The Americans", photographers: ["Robert Frank"] });
-  const right = candidate({ title: "The Americans", authors: ["Robert Frank"] });
+  const americans = book({
+    title: "The Americans",
+    photographers: ["Robert Frank"],
+  });
+  const right = candidate({
+    title: "The Americans",
+    authors: ["Robert Frank"],
+  });
   const keep = async (c: Candidate) => c;
 
   test("uses Open Library first and skips Google when it matches", async () => {
     const google = vi.fn(async () => [{ ...right, source: "google" as const }]);
-    const found = await findCover(americans, { openLibrary: async () => [right], google }, keep);
+    const found = await findCover(
+      americans,
+      { openLibrary: async () => [right], google },
+      keep,
+    );
     expect(found).toBe(right);
     expect(google).not.toHaveBeenCalled();
   });
@@ -151,7 +181,10 @@ describe("findCover", () => {
     const fromGoogle = { ...right, source: "google" as const };
     const found = await findCover(
       americans,
-      { openLibrary: async () => [candidate({ title: "Other" })], google: async () => [fromGoogle] },
+      {
+        openLibrary: async () => [candidate({ title: "Other" })],
+        google: async () => [fromGoogle],
+      },
       keep,
     );
     expect(found).toBe(fromGoogle);
@@ -180,11 +213,15 @@ describe("findCover", () => {
 
 describe("searchAuthor", () => {
   test("uses the full name, without editor notes", () => {
-    expect(searchAuthor(book({ photographers: ["Robert Frank"] }))).toBe("Robert Frank");
-    expect(searchAuthor(book({ photographers: ["Jean-Claude Gautrand (ed.)"] }))).toBe(
-      "Jean-Claude Gautrand",
+    expect(searchAuthor(book({ photographers: ["Robert Frank"] }))).toBe(
+      "Robert Frank",
     );
-    expect(searchAuthor(book({ photographers: ["Zhang Xiao（张晓）"] }))).toBe("Zhang Xiao");
+    expect(
+      searchAuthor(book({ photographers: ["Jean-Claude Gautrand (ed.)"] })),
+    ).toBe("Jean-Claude Gautrand");
+    expect(searchAuthor(book({ photographers: ["Zhang Xiao（张晓）"] }))).toBe(
+      "Zhang Xiao",
+    );
     expect(searchAuthor(book({}))).toBeUndefined();
   });
 });
@@ -194,8 +231,16 @@ describe("searchOpenLibrary", () => {
     const fetcher = vi.fn(async (_url: string) =>
       Response.json({
         docs: [
-          { title: "The Americans", author_name: ["Robert Frank"], cover_i: 42 },
-          { key: "/works/OL1W", title: "The Americans", author_name: ["Robert Frank"] },
+          {
+            title: "The Americans",
+            author_name: ["Robert Frank"],
+            cover_i: 42,
+          },
+          {
+            key: "/works/OL1W",
+            title: "The Americans",
+            author_name: ["Robert Frank"],
+          },
         ],
       }),
     );
@@ -210,7 +255,10 @@ describe("searchOpenLibrary", () => {
     expect(results[0].imageUrl).toBe(
       "https://covers.openlibrary.org/b/id/42-L.jpg?default=false",
     );
-    expect(results[1]).toMatchObject({ imageUrl: undefined, workKey: "/works/OL1W" });
+    expect(results[1]).toMatchObject({
+      imageUrl: undefined,
+      workKey: "/works/OL1W",
+    });
   });
 });
 
@@ -229,18 +277,25 @@ describe("isbnOf", () => {
 
 describe("trimBorder", () => {
   const cover = (size: number, color: string) =>
-    sharp({ create: { width: size, height: size, channels: 3, background: color } })
+    sharp({
+      create: { width: size, height: size, channels: 3, background: color },
+    })
       .png()
       .toBuffer();
   const framed = async (inner: number, color: string) =>
-    sharp({ create: { width: 400, height: 400, channels: 3, background: "#ffffff" } })
+    sharp({
+      create: { width: 400, height: 400, channels: 3, background: "#ffffff" },
+    })
       .composite([{ input: await cover(inner, color), gravity: "centre" }])
       .png()
       .toBuffer();
 
   test("cuts a white border away", async () => {
     const out = await trimBorder(await framed(340, "#28465c"));
-    expect(await sharp(out).metadata()).toMatchObject({ width: 340, height: 340 });
+    expect(await sharp(out).metadata()).toMatchObject({
+      width: 340,
+      height: 340,
+    });
   });
 
   test("leaves a pale cover alone rather than trimming it to its lettering", async () => {
@@ -251,7 +306,9 @@ describe("trimBorder", () => {
   test("won't trim deep into a pale cover, even for an upload", async () => {
     // A white cover on white: all the trim finds is two bits of lettering.
     const mark = await cover(20, "#000000");
-    const image = await sharp({ create: { width: 400, height: 400, channels: 3, background: "#ffffff" } })
+    const image = await sharp({
+      create: { width: 400, height: 400, channels: 3, background: "#ffffff" },
+    })
       .composite([
         { input: mark, left: 100, top: 100 },
         { input: mark, left: 280, top: 280 },
@@ -266,12 +323,18 @@ describe("trimBorder", () => {
       .extend({ top: 2, bottom: 2, left: 2, right: 2, background: "#a8a8a8" })
       .png()
       .toBuffer();
-    expect(await sharp(await trimBorder(image)).metadata()).toMatchObject({ width: 340, height: 340 });
+    expect(await sharp(await trimBorder(image)).metadata()).toMatchObject({
+      width: 340,
+      height: 340,
+    });
   });
 
   test("trims an upload deeper, for a product photo of the book on a backdrop", async () => {
     const out = await trimBorder(await framed(260, "#28465c"), true);
-    expect(await sharp(out).metadata()).toMatchObject({ width: 260, height: 260 });
+    expect(await sharp(out).metadata()).toMatchObject({
+      width: 260,
+      height: 260,
+    });
   });
 });
 
@@ -306,7 +369,10 @@ describe("withRetries", () => {
 });
 
 describe("matchUploads", () => {
-  const slugs = ["pocari-sweat-yoshiyuki-okuyama", "the-americans-robert-frank"];
+  const slugs = [
+    "pocari-sweat-yoshiyuki-okuyama",
+    "the-americans-robert-frank",
+  ];
 
   test("pairs an image named after a slug with that book, whatever its extension's case", () => {
     const { bySlug, unknown } = matchUploads(
@@ -320,20 +386,38 @@ describe("matchUploads", () => {
     expect(unknown).toEqual([]);
   });
 
+  test("pairs a file marked .exact with its book, to be used without trimming", () => {
+    const file = "the-americans-robert-frank.exact.png";
+    expect(matchUploads([file], slugs).bySlug).toEqual({
+      "the-americans-robert-frank": file,
+    });
+    expect(isExact(file)).toBe(true);
+    expect(isExact("the-americans-robert-frank.png")).toBe(false);
+  });
+
   test("ignores files that aren't images, such as the folder's README", () => {
-    expect(matchUploads(["README.md", ".DS_Store"], slugs)).toEqual({ bySlug: {}, unknown: [] });
+    expect(matchUploads(["README.md", ".DS_Store"], slugs)).toEqual({
+      bySlug: {},
+      unknown: [],
+    });
   });
 
   test("reports a misnamed image with the closest slug", () => {
-    expect(matchUploads(["Pocari Sweat 2018.webp", "holiday.jpg"], slugs).unknown).toEqual([
-      { file: "Pocari Sweat 2018.webp", suggestion: "pocari-sweat-yoshiyuki-okuyama" },
+    expect(
+      matchUploads(["Pocari Sweat 2018.webp", "holiday.jpg"], slugs).unknown,
+    ).toEqual([
+      {
+        file: "Pocari Sweat 2018.webp",
+        suggestion: "pocari-sweat-yoshiyuki-okuyama",
+      },
       { file: "holiday.jpg", suggestion: undefined },
     ]);
   });
 
   test("doesn't guess from one-letter words, as in a shop's file name", () => {
-    expect(matchUploads(["s-l960.webp"], [...slugs, "china-adagio-andrew-s-t-wong"]).unknown).toEqual([
-      { file: "s-l960.webp", suggestion: undefined },
-    ]);
+    expect(
+      matchUploads(["s-l960.webp"], [...slugs, "china-adagio-andrew-s-t-wong"])
+        .unknown,
+    ).toEqual([{ file: "s-l960.webp", suggestion: undefined }]);
   });
 });

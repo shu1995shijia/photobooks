@@ -9,6 +9,11 @@ the file is `the-americans-robert-frank.jpg`.
 JPEG, PNG, WebP, AVIF, GIF and TIFF all work. Use an image at least 600px wide
 (1200px or more looks best). A plain white border around the cover is trimmed off.
 
+A pale cover with no background around it can be mistaken for a border and
+trimmed into. If the image is already cut exactly to the cover's edge, add
+`.exact` before the extension (`the-americans-robert-frank.exact.jpg`) and it's
+used as it is.
+
 ## On github.com
 
 1. Open this folder (`data/covers`) in the repository.

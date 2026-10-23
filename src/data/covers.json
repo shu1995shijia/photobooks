@@ -12,12 +12,12 @@
   "24-mails-from-railway-cheng-xin-hao": {
     "src": "covers/24-mails-from-railway-cheng-xin-hao-600.webp",
     "large": "covers/24-mails-from-railway-cheng-xin-hao-1200.webp",
-    "width": 378,
-    "height": 640,
+    "width": 376,
+    "height": 639,
     "dominantColor": "#F8F8F8",
     "source": "upload",
     "origin": "data/covers/24-mails-from-railway-cheng-xin-hao.avif",
-    "checksum": "f485cd3869a7d491"
+    "checksum": "699d32d01ad03540"
   },
   "a-dream-yoshihiko-ueda": {
     "src": "covers/a-dream-yoshihiko-ueda-600.webp",
@@ -71,11 +71,12 @@
   "as-it-is-rinko-kawauchi": {
     "src": "covers/as-it-is-rinko-kawauchi-600.webp",
     "large": "covers/as-it-is-rinko-kawauchi-1200.webp",
-    "width": 512,
-    "height": 664,
-    "dominantColor": "#384848",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/35/iv88oBCre_4q6NtU.jpeg"
+    "width": 495,
+    "height": 645,
+    "dominantColor": "#283838",
+    "source": "upload",
+    "origin": "data/covers/as-it-is-rinko-kawauchi.png",
+    "checksum": "0c8f59b938bc6548"
   },
   "assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns": {
     "src": "covers/assignment-shanghai-photographs-on-the-eve-of-revolution-jack-birns-600.webp",
@@ -120,10 +121,11 @@
     "src": "covers/behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan-600.webp",
     "large": "covers/behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan-1200.webp",
     "width": 600,
-    "height": 478,
+    "height": 476,
     "dominantColor": "#282828",
-    "source": "google",
-    "origin": "https://books.google.com/books/content?id=fKVTcPFUqGEC&printsec=frontcover&img=1&zoom=1&source=gbs_api&fife=w1200"
+    "source": "upload",
+    "origin": "data/covers/behind-the-great-wall-of-china-photographs-from-1870-to-the-present-metropolitan.png",
+    "checksum": "6027cad933b9efb0"
   },
   "beijing-a-travel-in-time-susanne-scherer": {
     "src": "covers/beijing-a-travel-in-time-susanne-scherer-600.webp",
@@ -159,11 +161,11 @@
     "src": "covers/china-a-photo-history-600.webp",
     "large": "covers/china-a-photo-history-1200.webp",
     "width": 600,
-    "height": 658,
+    "height": 659,
     "dominantColor": "#080808",
     "source": "upload",
     "origin": "data/covers/china-a-photo-history.webp",
-    "checksum": "c40d19fec0cf6ada"
+    "checksum": "7c0fe68b35722c42"
   },
   "china-adagio-andrew-s-t-wong": {
     "src": "covers/china-adagio-andrew-s-t-wong-600.webp",
@@ -245,12 +247,12 @@
   "color-photography-a-working-manual-henry-horenstein": {
     "src": "covers/color-photography-a-working-manual-henry-horenstein-600.webp",
     "large": "covers/color-photography-a-working-manual-henry-horenstein-1200.webp",
-    "width": 425,
-    "height": 500,
+    "width": 422,
+    "height": 497,
     "dominantColor": "#E8E8B8",
     "source": "upload",
     "origin": "data/covers/color-photography-a-working-manual-henry-horenstein.webp",
-    "checksum": "73deed217adcc405"
+    "checksum": "bcb2675fe5a3ddc6"
   },
   "coney-island-peter-cranser": {
     "src": "covers/coney-island-peter-cranser-600.webp",
@@ -266,11 +268,11 @@
     "src": "covers/country-of-ambition-yan-ming-600.webp",
     "large": "covers/country-of-ambition-yan-ming-1200.webp",
     "width": 600,
-    "height": 492,
+    "height": 490,
     "dominantColor": "#A8A8A8",
     "source": "upload",
-    "origin": "data/covers/country-of-ambition-yan-ming.png",
-    "checksum": "60183909b8334563"
+    "origin": "data/covers/country-of-ambition-yan-ming.exact.png",
+    "checksum": "14c8e192fb210376"
   },
   "do-i-know-you-eugene-richards": {
     "src": "covers/do-i-know-you-eugene-richards-600.webp",
@@ -304,20 +306,22 @@
   "elliott-erwitt-personal-best-elliott-erwitt": {
     "src": "covers/elliott-erwitt-personal-best-elliott-erwitt-600.webp",
     "large": "covers/elliott-erwitt-personal-best-elliott-erwitt-1200.webp",
-    "width": 600,
-    "height": 792,
+    "width": 592,
+    "height": 796,
     "dominantColor": "#E8E8E8",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/34/slRY84I1_OikzyP.jpeg"
+    "source": "upload",
+    "origin": "data/covers/elliott-erwitt-personal-best-elliott-erwitt.png",
+    "checksum": "6b661401a1c08a26"
   },
   "eugene-atget-paris-jean-claude-gautrand": {
     "src": "covers/eugene-atget-paris-jean-claude-gautrand-600.webp",
     "large": "covers/eugene-atget-paris-jean-claude-gautrand-1200.webp",
-    "width": 587,
+    "width": 564,
     "height": 800,
     "dominantColor": "#F8F8F8",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/02/gBc6R5zhd_4vxXnC.jpeg"
+    "source": "upload",
+    "origin": "data/covers/eugene-atget-paris-jean-claude-gautrand.png",
+    "checksum": "89087702aa1b64eb"
   },
   "exiles-josef-koudelka": {
     "src": "covers/exiles-josef-koudelka-600.webp",
@@ -432,8 +436,9 @@
     "width": 600,
     "height": 787,
     "dominantColor": "#181818",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/93/TEd27oDBd_ODVWXC.jpeg"
+    "source": "upload",
+    "origin": "data/covers/jal-76-88-greg-girard.png",
+    "checksum": "72110aa4e144f856"
   },
   "jet-lag-chien-chi-chang": {
     "src": "covers/jet-lag-chien-chi-chang-600.webp",
@@ -466,12 +471,12 @@
   "lartigue-life-in-color-jacques-henri-lartigue": {
     "src": "covers/lartigue-life-in-color-jacques-henri-lartigue-600.webp",
     "large": "covers/lartigue-life-in-color-jacques-henri-lartigue-1200.webp",
-    "width": 413,
-    "height": 462,
+    "width": 411,
+    "height": 460,
     "dominantColor": "#E8E8E8",
     "source": "upload",
     "origin": "data/covers/lartigue-life-in-color-jacques-henri-lartigue.webp",
-    "checksum": "9832fdeb434e8257"
+    "checksum": "ba779334acc662a0"
   },
   "life-magazine-april-30-1971-inside-china-various-photographers": {
     "src": "covers/life-magazine-april-30-1971-inside-china-various-photographers-600.webp",
@@ -489,8 +494,9 @@
     "width": 600,
     "height": 403,
     "dominantColor": "#E8C868",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/f4/3kyn08DEP_2rQH3A.jpeg"
+    "source": "upload",
+    "origin": "data/covers/life-studies-aya-fujioka.png",
+    "checksum": "de54cbfeb1dca0f5"
   },
   "magnum-china-magnum-photos": {
     "src": "covers/magnum-china-magnum-photos-600.webp",
@@ -505,11 +511,11 @@
     "src": "covers/memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun-600.webp",
     "large": "covers/memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun-1200.webp",
     "width": 600,
-    "height": 767,
+    "height": 765,
     "dominantColor": "#B8B8A8",
     "source": "upload",
-    "origin": "data/covers/memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun.jpg",
-    "checksum": "1d64ec06499c8f83"
+    "origin": "data/covers/memories-of-the-east-street-in-xi-an-images-words-and-narratives-song-qun.exact.png",
+    "checksum": "aadfd594bc799395"
   },
   "migrant-workers-tang-haowu": {
     "src": "covers/migrant-workers-tang-haowu-600.webp",
@@ -545,11 +551,11 @@
     "src": "covers/my-home-yoshihiko-ueda-600.webp",
     "large": "covers/my-home-yoshihiko-ueda-1200.webp",
     "width": 433,
-    "height": 600,
+    "height": 598,
     "dominantColor": "#E8E8C8",
     "source": "upload",
     "origin": "data/covers/my-home-yoshihiko-ueda.jpg",
-    "checksum": "d3bdb91577f665ac"
+    "checksum": "d99a43a3242894ba"
   },
   "old-paris-and-changing-new-york-eugene-atget": {
     "src": "covers/old-paris-and-changing-new-york-eugene-atget-600.webp",
@@ -575,19 +581,21 @@
     "src": "covers/parallel-universes-of-children-ugur-gallenkus-600.webp",
     "large": "covers/parallel-universes-of-children-ugur-gallenkus-1200.webp",
     "width": 600,
-    "height": 600,
+    "height": 598,
     "dominantColor": "#181818",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/7f/pGILzSFo_PLrrzP.jpeg"
+    "source": "upload",
+    "origin": "data/covers/parallel-universes-of-children-ugur-gallenkus.png",
+    "checksum": "aa55780bb58533c1"
   },
   "parallel-universes-of-war-peace-ugur-gallenkus": {
     "src": "covers/parallel-universes-of-war-peace-ugur-gallenkus-600.webp",
     "large": "covers/parallel-universes-of-war-peace-ugur-gallenkus-1200.webp",
     "width": 600,
-    "height": 605,
+    "height": 604,
     "dominantColor": "#E8E8E8",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/28/QpFv55Oty_sk3kiF.jpeg"
+    "source": "upload",
+    "origin": "data/covers/parallel-universes-of-war-peace-ugur-gallenkus.png",
+    "checksum": "c5c3220fe647cdf1"
   },
   "parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei": {
     "src": "covers/parican-xiang-ba-li-can-ying-mu-cun-yi-bing-wei-600.webp",
@@ -611,11 +619,12 @@
   "photos-hiroshi-hatano": {
     "src": "covers/photos-hiroshi-hatano-600.webp",
     "large": "covers/photos-hiroshi-hatano-1200.webp",
-    "width": 570,
-    "height": 796,
+    "width": 565,
+    "height": 789,
     "dominantColor": "#E8E8E8",
-    "source": "override",
-    "origin": "https://d2w8mc4ffkqyzk.cloudfront.net/i/c5/97jAwDYwI_Px6Lme.jpeg"
+    "source": "upload",
+    "origin": "data/covers/photos-hiroshi-hatano.exact.png",
+    "checksum": "9dc722e45c1abc5b"
   },
   "picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann": {
     "src": "covers/picturesque-china-a-journey-through-twelve-provinces-ernst-boerschmann-600.webp",
@@ -645,7 +654,7 @@
     "dominantColor": "#F8F8F8",
     "source": "upload",
     "origin": "data/covers/pocari-sweat-yoshiyuki-okuyama.webp",
-    "checksum": "c4e1cc252b0f7407"
+    "checksum": "a3073eca02657c89"
   },
   "poles-frank-breuer": {
     "src": "covers/poles-frank-breuer-600.webp",
@@ -681,11 +690,11 @@
     "src": "covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi-600.webp",
     "large": "covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi-1200.webp",
     "width": 600,
-    "height": 765,
+    "height": 768,
     "dominantColor": "#C8C8C8",
     "source": "upload",
-    "origin": "data/covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi.jpg",
-    "checksum": "a5a8ab3db58b1556"
+    "origin": "data/covers/sinayakana-tane-rou-ren-de-zhong-zi-rinko-kawauchi.exact.png",
+    "checksum": "df1457e48522bf19"
   },
   "small-trades-irving-penn": {
     "src": "covers/small-trades-irving-penn-600.webp",
@@ -701,11 +710,11 @@
     "src": "covers/songbook-alec-soth-600.webp",
     "large": "covers/songbook-alec-soth-1200.webp",
     "width": 600,
-    "height": 580,
+    "height": 578,
     "dominantColor": "#989838",
     "source": "upload",
     "origin": "data/covers/songbook-alec-soth.png",
-    "checksum": "8eec7b8cb5bca14c"
+    "checksum": "fc8cd14bd4669ee3"
   },
   "the-americans-robert-frank": {
     "src": "covers/the-americans-robert-frank-600.webp",
@@ -731,11 +740,11 @@
     "src": "covers/the-day-i-was-born-eugene-richards-600.webp",
     "large": "covers/the-day-i-was-born-eugene-richards-1200.webp",
     "width": 600,
-    "height": 818,
+    "height": 824,
     "dominantColor": "#181818",
     "source": "upload",
     "origin": "data/covers/the-day-i-was-born-eugene-richards.png",
-    "checksum": "d16ae049e6a7e97c"
+    "checksum": "395ddfd0759b9f20"
   },
   "the-decisive-moment-henri-cartier-bresson": {
     "src": "covers/the-decisive-moment-henri-cartier-bresson-600.webp",
@@ -790,11 +799,12 @@
   "the-polaroid-book-steve-crist": {
     "src": "covers/the-polaroid-book-steve-crist-600.webp",
     "large": "covers/the-polaroid-book-steve-crist-1200.webp",
-    "width": 407,
-    "height": 489,
+    "width": 390,
+    "height": 473,
     "dominantColor": "#080808",
-    "source": "openlibrary",
-    "origin": "https://covers.openlibrary.org/b/id/12345230-L.jpg?default=false"
+    "source": "upload",
+    "origin": "data/covers/the-polaroid-book-steve-crist.png",
+    "checksum": "049ad0d4d00995e2"
   },
   "travels-of-a-photographer-in-china": {
     "src": "covers/travels-of-a-photographer-in-china-600.webp",
